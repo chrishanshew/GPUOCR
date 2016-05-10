@@ -1,0 +1,16 @@
+# Pods
+Pods/
+
+# Xcode
+*.xcuserstate
+*/build/*
+*.xcworkspace
+xcuserdata/
+.xccheckout
+
+# AppCode
+.idea/
+
+# DS_Store
+.DS_Store
+Alexandria/.DS_Store
