@@ -30,7 +30,8 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 - (instancetype)initForRecognitionWithLanguage:(NSString *)language;
 
 // Default 1 bpp
-- (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
+- (void)setImageWithData:(NSMutableData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
+//- (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 
 - (void)recognize;
 - (void)detect;

@@ -10,9 +10,10 @@
 
 #import "CHOCRRecognitionOutput.h"
 
-@interface CHOCRRecognitionOutput ()
-
-@property(nonatomic, strong) CHTesseract* tesseract;
+@interface CHOCRRecognitionOutput () {
+    CHTesseract *_tesseract;
+    NSOperationQueue *_operationQueue;
+}
 
 -(void (^)())analyzeLayoutBlock;
 
@@ -26,6 +27,8 @@
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
         _tesseract = [[CHTesseract alloc]initForRecognitionWithLanguage:language];
+        _operationQueue = [[NSOperationQueue alloc] init];
+        _operationQueue.maxConcurrentOperationCount = 1;
         [self setNewFrameAvailableBlock:[self analyzeLayoutBlock]];
     }
     return self;
@@ -36,6 +39,8 @@
     if (self) {
         _delegate = delegate;
         _tesseract = [[CHTesseract alloc]initForRecognitionWithLanguage:language];
+        _operationQueue = [[NSOperationQueue alloc] init];
+        _operationQueue.maxConcurrentOperationCount = 1;
         [self setNewFrameAvailableBlock:[self analyzeLayoutBlock]];
     }
     return self;
@@ -45,32 +50,34 @@
 
 -(void (^)())analyzeLayoutBlock {
     __block CHOCRRecognitionOutput *weakSelf = self;
+    __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
-        if (weakSelf.enabled) {
+        if (weakSelf.enabled && _operationQueue.operationCount == 0) {
             [weakSelf willBeginRecognitionWithOutput:weakSelf];
             [weakSelf lockFramebufferForReading];
             
 
-            unsigned char * outputBytes = [weakSelf rawBytesForImage];
+            GLubyte * outputBytes = [weakSelf rawBytesForImage];
             int height = weakSelf.maximumOutputSize.height;
             int width = weakSelf.maximumOutputSize.width;
 
-            unsigned char * mappedBytes = (unsigned char *)malloc(width * height);
-            int index = 0;
+            NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
 
-            // Iterate the RGBA Bytes and the use the last byte (alpha) to create a 1 bit monochrome image
-            for (int i = 4; i < ((4 * width) * height) - 4; i+=4) {
-                mappedBytes[index++] = outputBytes[i];
+            // Read last byte (alpha) for RBGA pixels
+            for (int i = 4; i < ((4 * width) * height) + 4; i+=4) {
+                [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
-
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                [weakSelf.tesseract setImage:mappedBytes withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                CHOCRRecognitionResult *result = [weakSelf.tesseract recognizeAtLevel: CHTesseractAnalysisLevelBlock];
-                [weakSelf.tesseract clear];
-                [weakSelf output:weakSelf didFinishRecognitionWithResult:result];
-            });
             
             [weakSelf unlockFramebufferAfterReading];
+            
+            if (_operationQueue.operationCount == 0) {
+                [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
+                    [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
+                    CHOCRRecognitionResult *result = [weakTesseract recognizeAtLevel: CHTesseractAnalysisLevelBlock];
+                    [weakTesseract clear];
+                    [weakSelf output:weakSelf didFinishRecognitionWithResult:result];
+                }]];
+            }
         }
     };
 }

@@ -8,10 +8,10 @@
 
 #import "CHOCRAnalysisOutput.h"
 
-@interface CHOCRAnalysisOutput ()
-
-@property (nonatomic, strong)CHTesseract *tesseract;
-@property (nonatomic) dispatch_queue_t queue;
+@interface CHOCRAnalysisOutput () {
+    CHTesseract *_tesseract;
+    NSOperationQueue *_operationQueue;
+}
 
 -(void (^)())analyzeLayoutBlock;
 
@@ -24,7 +24,10 @@
 -(instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat {
     self = [self initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat withDelegate: nil];
     if (self) {
-
+        _tesseract = [[CHTesseract alloc] initForAnalysis];
+        _operationQueue = [[NSOperationQueue alloc] init];
+        _operationQueue.maxConcurrentOperationCount = 1;
+        [self setNewFrameAvailableBlock: self.analyzeLayoutBlock];
     }
     return self;
 }
@@ -34,7 +37,8 @@
     if (self) {
         _delegate = delegate;
         _tesseract = [[CHTesseract alloc] initForAnalysis];
-        _queue = dispatch_queue_create("com.chrishanshew.tesseract.analysisoutput", DISPATCH_QUEUE_SERIAL);
+        _operationQueue = [[NSOperationQueue alloc] init];
+        _operationQueue.maxConcurrentOperationCount = 1;
         [self setNewFrameAvailableBlock: self.analyzeLayoutBlock];
     }
     return self;
@@ -44,33 +48,35 @@
 
 -(void (^)())analyzeLayoutBlock {
     __block CHOCRAnalysisOutput *weakSelf = self;
+    __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
-        if (weakSelf.enabled) {
-            weakSelf.enabled = NO;
-            [weakSelf lockFramebufferForReading];
+        if (weakSelf.enabled && _operationQueue.operationCount == 0) {
             [weakSelf willBeginAnalysisWithOutput:weakSelf];
-
-            unsigned char * outputBytes = [weakSelf rawBytesForImage];
+            [weakSelf lockFramebufferForReading];
+            
+            
+            GLubyte * outputBytes = [weakSelf rawBytesForImage];
             int height = weakSelf.maximumOutputSize.height;
             int width = weakSelf.maximumOutputSize.width;
-
-            unsigned char * mappedBytes = (unsigned char *)malloc(width * height);
-            int index = 0;
-
-            // Iterate the RGBA Bytes and the use the last byte (alpha) to create a 1 bit monochrome image
-            for (int i = 4; i < ((4 * width) * height) - 4; i+=4) {
-                mappedBytes[index++] = outputBytes[i];
+            
+            NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
+            
+            // TODO: Optimizable?
+            // Read last byte (alpha) for RBGA pixels
+            for (int i = 4; i < ((4 * width) * height) + 4; i+=4) {
+                [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
-
+            
             [weakSelf unlockFramebufferAfterReading];
-
-            dispatch_async(_queue, ^{
-                [weakSelf.tesseract setImage:mappedBytes withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                CHOCRAnalysisResult *result = [weakSelf.tesseract analyzeLayoutAtLevel:weakSelf.level];
-                [weakSelf.tesseract clear];
-                [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
-                weakSelf.enabled = YES;
-            });
+            
+            if (_operationQueue.operationCount == 0) {
+                [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
+                    [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
+                    CHOCRAnalysisResult *result = [weakTesseract analyzeLayoutAtLevel: CHTesseractAnalysisLevelTextLine];
+                    [weakTesseract clear];
+                    [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
+                }]];
+            }
         }
     };
 }
