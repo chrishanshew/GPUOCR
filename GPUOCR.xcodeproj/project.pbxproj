@@ -26,7 +26,7 @@
 		0CED206F1CE284E0001F79E9 /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20621CE28416001F79E9 /* libGPUImage.a */; };
 		0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20701CE28669001F79E9 /* CHOCRAnalysisOutput.m */; };
 		0CED20771CE2866A001F79E9 /* CHOCRRecognitionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20711CE28669001F79E9 /* CHOCRRecognitionOutput.m */; };
-		0CED20781CE2866A001F79E9 /* CHOCRDrawRectFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20741CE28669001F79E9 /* CHOCRDrawRectFilter.m */; };
+		0CED20781CE2866A001F79E9 /* CHOCRDrawResultFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20741CE28669001F79E9 /* CHOCRDrawResultFilter.m */; };
 		0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207B1CE28673001F79E9 /* CHTesseract.mm */; };
 		0CED20841CE28673001F79E9 /* CHRecognitionResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207D1CE28673001F79E9 /* CHRecognitionResult.m */; };
 		0CED20851CE28673001F79E9 /* CHAnalysisResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207F1CE28673001F79E9 /* CHAnalysisResult.m */; };
@@ -96,8 +96,8 @@
 		0CED20711CE28669001F79E9 /* CHOCRRecognitionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRRecognitionOutput.m; sourceTree = "<group>"; };
 		0CED20721CE28669001F79E9 /* CHOCRRecognitionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRRecognitionOutput.h; sourceTree = "<group>"; };
 		0CED20731CE28669001F79E9 /* CHOCRAnalysisOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRAnalysisOutput.h; sourceTree = "<group>"; };
-		0CED20741CE28669001F79E9 /* CHOCRDrawRectFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRDrawRectFilter.m; sourceTree = "<group>"; };
-		0CED20751CE28669001F79E9 /* CHOCRDrawRectFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRDrawRectFilter.h; sourceTree = "<group>"; };
+		0CED20741CE28669001F79E9 /* CHOCRDrawResultFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRDrawResultFilter.m; sourceTree = "<group>"; };
+		0CED20751CE28669001F79E9 /* CHOCRDrawResultFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRDrawResultFilter.h; sourceTree = "<group>"; };
 		0CED20791CE28673001F79E9 /* CHRecognitionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRecognitionResult.h; sourceTree = "<group>"; };
 		0CED207A1CE28673001F79E9 /* CHTesseract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseract.h; sourceTree = "<group>"; };
 		0CED207B1CE28673001F79E9 /* CHTesseract.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CHTesseract.mm; sourceTree = "<group>"; };
@@ -252,8 +252,8 @@
 				0CED20701CE28669001F79E9 /* CHOCRAnalysisOutput.m */,
 				0CED20721CE28669001F79E9 /* CHOCRRecognitionOutput.h */,
 				0CED20711CE28669001F79E9 /* CHOCRRecognitionOutput.m */,
-				0CED20751CE28669001F79E9 /* CHOCRDrawRectFilter.h */,
-				0CED20741CE28669001F79E9 /* CHOCRDrawRectFilter.m */,
+				0CED20751CE28669001F79E9 /* CHOCRDrawResultFilter.h */,
+				0CED20741CE28669001F79E9 /* CHOCRDrawResultFilter.m */,
 			);
 			path = GPUImage;
 			sourceTree = "<group>";
@@ -424,7 +424,7 @@
 				0CED20851CE28673001F79E9 /* CHAnalysisResult.m in Sources */,
 				0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */,
 				0CED20861CE28673001F79E9 /* Result.m in Sources */,
-				0CED20781CE2866A001F79E9 /* CHOCRDrawRectFilter.m in Sources */,
+				0CED20781CE2866A001F79E9 /* CHOCRDrawResultFilter.m in Sources */,
 				0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */,
 				0CED20841CE28673001F79E9 /* CHRecognitionResult.m in Sources */,
 				0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */,

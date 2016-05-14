@@ -1,5 +1,5 @@
 //
-//  CHOCRDrawRectFilter.m
+//  CHOCRDrawResultFilter.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 2/13/16.
@@ -8,10 +8,10 @@
 
 #import <OpenGLES/gltypes.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHOCRDrawRectFilter.h"
+#import "CHOCRDrawResultFilter.h"
 #import "Result.h"
 
-@interface CHOCRDrawRectFilter () {
+@interface CHOCRDrawResultFilter () {
     GLint lineWidthUniform, lineColorUniform;
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
@@ -46,7 +46,7 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
  }
 );
 
-@implementation CHOCRDrawRectFilter
+@implementation CHOCRDrawResultFilter
 
 - (id)init {
     

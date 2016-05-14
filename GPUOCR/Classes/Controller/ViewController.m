@@ -11,7 +11,7 @@
 #import "GPUImage.h"
 #import "CHOCRRecognitionOutput.h"
 #import "CHOCRAnalysisOutput.h"
-#import "CHOCRDrawRectFilter.h"
+#import "CHOCRDrawResultFilter.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4.0
 
@@ -28,7 +28,7 @@
     GPUImageFilterGroup *_uiFilterGroup;
     GPUImageFilterGroup *_ocrFilterGroup;
 
-    CHOCRDrawRectFilter *_drawRect;
+    CHOCRDrawResultFilter *_drawRect;
 }
 
 @end
@@ -91,7 +91,7 @@
         [gammaFilter addTarget:blendFilter];
         [blendFilter addTarget:(GPUImageView *)self.view];
 
-        _drawRect = [[CHOCRDrawRectFilter alloc] init];
+        _drawRect = [[CHOCRDrawResultFilter alloc] init];
         [_drawRect forceProcessingAtSize:CGSizeMake(720, 1080)];
         [_drawRect addTarget:blendFilter];
 
@@ -142,7 +142,6 @@
 #pragma mark - CHOCRAnaylsisOutputDelegate
 
 - (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHAnalysisResult *)result {
-    NSLog(@"Box Count: %lu", (unsigned long)result.boxes.count);
     [_drawRect setResults:result.boxes];
 }
 

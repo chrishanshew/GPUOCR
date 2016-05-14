@@ -1,5 +1,5 @@
 //
-//  CHOCRDrawRectFilter.h
+//  CHOCRDrawResultFilter.h
 //  CHOCR
 //
 //  Created by Chris Hanshew on 2/13/16.
@@ -8,7 +8,7 @@
 
 #import "GPUImage.h"
 
-@interface CHOCRDrawRectFilter : GPUImageFilter
+@interface CHOCRDrawResultFilter : GPUImageFilter
 
 @property(nonatomic, strong, readonly) NSArray *results;
 
