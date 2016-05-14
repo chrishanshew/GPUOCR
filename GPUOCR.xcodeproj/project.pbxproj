@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C5B1CD31CE6C3F200964D2E /* CHImageProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */; };
 		0CED202D1CE28181001F79E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED202C1CE28181001F79E9 /* main.m */; };
 		0CED20361CE28181001F79E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20341CE28181001F79E9 /* Main.storyboard */; };
 		0CED20381CE28181001F79E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20371CE28181001F79E9 /* Assets.xcassets */; };
@@ -24,8 +25,8 @@
 		0CED20771CE2866A001F79E9 /* CHOCRRecognitionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20711CE28669001F79E9 /* CHOCRRecognitionOutput.m */; };
 		0CED20781CE2866A001F79E9 /* CHOCRDrawRectFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20741CE28669001F79E9 /* CHOCRDrawRectFilter.m */; };
 		0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207B1CE28673001F79E9 /* CHTesseract.mm */; };
-		0CED20841CE28673001F79E9 /* CHOCRRecognitionResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207D1CE28673001F79E9 /* CHOCRRecognitionResult.m */; };
-		0CED20851CE28673001F79E9 /* CHOCRAnalysisResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207F1CE28673001F79E9 /* CHOCRAnalysisResult.m */; };
+		0CED20841CE28673001F79E9 /* CHRecognitionResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207D1CE28673001F79E9 /* CHRecognitionResult.m */; };
+		0CED20851CE28673001F79E9 /* CHAnalysisResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207F1CE28673001F79E9 /* CHAnalysisResult.m */; };
 		0CED20861CE28673001F79E9 /* Result.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20801CE28673001F79E9 /* Result.m */; };
 		0CED20871CE28673001F79E9 /* CHDetectionResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20821CE28673001F79E9 /* CHDetectionResult.m */; };
 		0CED20891CE28715001F79E9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20881CE28715001F79E9 /* CoreGraphics.framework */; };
@@ -62,6 +63,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C5B1CD11CE6C3F200964D2E /* CHImageProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHImageProcessor.h; sourceTree = "<group>"; };
+		0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHImageProcessor.m; sourceTree = "<group>"; };
 		0CED20281CE28181001F79E9 /* GPUOCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUOCR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CED202C1CE28181001F79E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0CED20351CE28181001F79E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -87,13 +90,13 @@
 		0CED20731CE28669001F79E9 /* CHOCRAnalysisOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRAnalysisOutput.h; sourceTree = "<group>"; };
 		0CED20741CE28669001F79E9 /* CHOCRDrawRectFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRDrawRectFilter.m; sourceTree = "<group>"; };
 		0CED20751CE28669001F79E9 /* CHOCRDrawRectFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRDrawRectFilter.h; sourceTree = "<group>"; };
-		0CED20791CE28673001F79E9 /* CHOCRRecognitionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRRecognitionResult.h; sourceTree = "<group>"; };
+		0CED20791CE28673001F79E9 /* CHRecognitionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRecognitionResult.h; sourceTree = "<group>"; };
 		0CED207A1CE28673001F79E9 /* CHTesseract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseract.h; sourceTree = "<group>"; };
 		0CED207B1CE28673001F79E9 /* CHTesseract.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CHTesseract.mm; sourceTree = "<group>"; };
-		0CED207C1CE28673001F79E9 /* CHOCRAnalysisResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRAnalysisResult.h; sourceTree = "<group>"; };
-		0CED207D1CE28673001F79E9 /* CHOCRRecognitionResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRRecognitionResult.m; sourceTree = "<group>"; };
+		0CED207C1CE28673001F79E9 /* CHAnalysisResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHAnalysisResult.h; sourceTree = "<group>"; };
+		0CED207D1CE28673001F79E9 /* CHRecognitionResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRecognitionResult.m; sourceTree = "<group>"; };
 		0CED207E1CE28673001F79E9 /* Result.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Result.h; sourceTree = "<group>"; };
-		0CED207F1CE28673001F79E9 /* CHOCRAnalysisResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRAnalysisResult.m; sourceTree = "<group>"; };
+		0CED207F1CE28673001F79E9 /* CHAnalysisResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHAnalysisResult.m; sourceTree = "<group>"; };
 		0CED20801CE28673001F79E9 /* Result.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Result.m; sourceTree = "<group>"; };
 		0CED20811CE28673001F79E9 /* CHDetectionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHDetectionResult.h; sourceTree = "<group>"; };
 		0CED20821CE28673001F79E9 /* CHDetectionResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHDetectionResult.m; sourceTree = "<group>"; };
@@ -134,6 +137,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C5B1CD01CE6C3AA00964D2E /* Processor */ = {
+			isa = PBXGroup;
+			children = (
+				0C5B1CD11CE6C3F200964D2E /* CHImageProcessor.h */,
+				0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */,
+			);
+			path = Processor;
+			sourceTree = "<group>";
+		};
 		0CED201F1CE28181001F79E9 = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +211,7 @@
 				0CED20531CE283BC001F79E9 /* Controller */,
 				0CED20561CE283BC001F79E9 /* GPUImage */,
 				0CED20571CE283BC001F79E9 /* Tesseract */,
+				0C5B1CD01CE6C3AA00964D2E /* Processor */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -232,10 +245,10 @@
 			children = (
 				0CED207A1CE28673001F79E9 /* CHTesseract.h */,
 				0CED207B1CE28673001F79E9 /* CHTesseract.mm */,
-				0CED20791CE28673001F79E9 /* CHOCRRecognitionResult.h */,
-				0CED207D1CE28673001F79E9 /* CHOCRRecognitionResult.m */,
-				0CED207C1CE28673001F79E9 /* CHOCRAnalysisResult.h */,
-				0CED207F1CE28673001F79E9 /* CHOCRAnalysisResult.m */,
+				0CED20791CE28673001F79E9 /* CHRecognitionResult.h */,
+				0CED207D1CE28673001F79E9 /* CHRecognitionResult.m */,
+				0CED207C1CE28673001F79E9 /* CHAnalysisResult.h */,
+				0CED207F1CE28673001F79E9 /* CHAnalysisResult.m */,
 				0CED207E1CE28673001F79E9 /* Result.h */,
 				0CED20801CE28673001F79E9 /* Result.m */,
 				0CED20811CE28673001F79E9 /* CHDetectionResult.h */,
@@ -390,14 +403,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CED20851CE28673001F79E9 /* CHOCRAnalysisResult.m in Sources */,
+				0CED20851CE28673001F79E9 /* CHAnalysisResult.m in Sources */,
 				0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */,
 				0CED20861CE28673001F79E9 /* Result.m in Sources */,
 				0CED20781CE2866A001F79E9 /* CHOCRDrawRectFilter.m in Sources */,
-				0CED20841CE28673001F79E9 /* CHOCRRecognitionResult.m in Sources */,
+				0CED20841CE28673001F79E9 /* CHRecognitionResult.m in Sources */,
 				0CED20581CE283BC001F79E9 /* AppDelegate.m in Sources */,
 				0CED20871CE28673001F79E9 /* CHDetectionResult.m in Sources */,
 				0CED20901CE295AD001F79E9 /* CHGPUOCRViewController.mm in Sources */,
+				0C5B1CD31CE6C3F200964D2E /* CHImageProcessor.m in Sources */,
 				0CED202D1CE28181001F79E9 /* main.m in Sources */,
 				0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */,
 				0CED20591CE283BC001F79E9 /* ViewController.m in Sources */,

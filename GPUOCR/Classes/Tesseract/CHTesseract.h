@@ -10,8 +10,8 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "CHDetectionResult.h"
 
-@class CHOCRAnalysisResult;
-@class CHOCRRecognitionResult;
+@class CHAnalysisResult;
+@class CHRecognitionResult;
 
 typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
     CHTesseractAnalysisLevelBlock = 0,
@@ -36,9 +36,9 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 - (void)recognize;
 - (void)detect;
 - (NSString *)recognizeText;
-- (CHOCRRecognitionResult *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHRecognitionResult *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
 - (NSString *)hOCRText;
-- (CHOCRAnalysisResult *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHAnalysisResult *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
 
 - (void)setVariableNamed:(NSString *)named withValue:(NSString *)value;
 

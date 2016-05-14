@@ -143,7 +143,7 @@
 
 #pragma mark - CHOCRRecognitionOutputDelegate
 
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHOCRRecognitionResult *)result {
+- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHRecognitionResult *)result {
     [_drawRect setResults:result.boxes];
 }
 
@@ -153,7 +153,7 @@
 
 #pragma mark - CHOCRAnaylsisOutputDelegate
 
-- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHOCRAnalysisResult *)result {
+- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHAnalysisResult *)result {
     NSLog(@"Box Count: %lu", (unsigned long)result.boxes.count);
     [_drawRect setResults:result.boxes];
 }

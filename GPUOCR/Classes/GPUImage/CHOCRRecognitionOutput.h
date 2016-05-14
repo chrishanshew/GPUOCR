@@ -7,14 +7,14 @@
 //
 
 #import "GPUImage.h"
-#import "CHOCRRecognitionResult.h"
+#import "CHRecognitionResult.h"
 
 @class CHOCRRecognitionOutput;
 
 @protocol CHOCRRecogntionOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHOCRRecognitionResult *)result;
+- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHRecognitionResult *)result;
 
 @optional
 - (void)willBeginRecognitionWithOutput:(CHOCRRecognitionOutput *)output;

@@ -13,7 +13,7 @@
 #import "osdetect.h"
 #import "allheaders.h"
 #import "CHOCRDrawRectFilter.h"
-#import "CHOCRAnalysisResult.h"
+#import "CHAnalysisResult.h"
 
 
 #define kAVCaptureVideoPreviewZPosition -1

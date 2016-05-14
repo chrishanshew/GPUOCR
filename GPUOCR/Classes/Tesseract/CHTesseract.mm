@@ -12,7 +12,7 @@
 #import "baseapi.h"
 #import "osdetect.h"
 #import "CHOCRRecognitionOutput.h"
-#import "CHOCRRecognitionResult.h"
+#import "CHRecognitionResult.h"
 
 namespace tesseract {
     class TessBaseAPI;
@@ -91,7 +91,7 @@ namespace tesseract {
     return [NSString stringWithUTF8String:_tesseract->GetUTF8Text()];
 }
 
-- (CHOCRRecognitionResult *)recognizeAtLevel:(CHTesseractAnalysisLevel)level {
+- (CHRecognitionResult *)recognizeAtLevel:(CHTesseractAnalysisLevel)level {
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
     _tesseract->Recognize(0);
     tesseract::ResultIterator* iterator = _tesseract->GetIterator();
@@ -135,7 +135,7 @@ namespace tesseract {
 
     } while (iterator->Next((tesseract::PageIteratorLevel)level));
     
-    CHOCRRecognitionResult *result = [[CHOCRRecognitionResult alloc] init];
+    CHRecognitionResult *result = [[CHRecognitionResult alloc] init];
     result.boxes = boxes;
 
     delete iterator;
@@ -147,7 +147,7 @@ namespace tesseract {
     return [NSString stringWithUTF8String:_tesseract->GetHOCRText(0)];
 }
 
-- (CHOCRAnalysisResult *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
+- (CHAnalysisResult *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
     tesseract::PageIterator *iterator = _tesseract->AnalyseLayout();
 
     if (iterator) {
@@ -184,7 +184,7 @@ namespace tesseract {
             index++;
         } while (iterator->Next((tesseract::PageIteratorLevel)level));
 
-        CHOCRAnalysisResult *result = [[CHOCRAnalysisResult alloc] init];
+        CHAnalysisResult *result = [[CHAnalysisResult alloc] init];
         result.boxes = boxes;
 
         delete iterator;

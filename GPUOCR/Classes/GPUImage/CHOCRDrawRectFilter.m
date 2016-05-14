@@ -96,46 +96,58 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 
         NSUInteger currentVertexIndex = 0;
 
+//        for (Result *result in _results) {
+//
+//            CGRect normalizedRect = result.rect;
+//
+//            leftStart = CGPointMake(normalizedRect.origin.x, normalizedRect.origin.y + normalizedRect.size.height);
+//            leftEnd = CGPointMake(normalizedRect.origin.x, normalizedRect.origin.y);
+//            topEnd =  CGPointMake(normalizedRect.origin.x + normalizedRect.size.width, normalizedRect.origin.y);
+//            rightEnd = CGPointMake(topEnd.x, normalizedRect.origin.y + normalizedRect.size.height);
+//
+//            // Left
+//            // Start
+//            lineCoordinates[currentVertexIndex++] = leftStart.x;
+//            lineCoordinates[currentVertexIndex++] = leftStart.y;
+//            // End
+//            lineCoordinates[currentVertexIndex++] = leftEnd.x;
+//            lineCoordinates[currentVertexIndex++] = leftEnd.y;
+//
+//            // Top
+//            // Start
+//            lineCoordinates[currentVertexIndex++] = leftEnd.x;
+//            lineCoordinates[currentVertexIndex++] = leftEnd.y;
+//            // End
+//            lineCoordinates[currentVertexIndex++] = topEnd.x;
+//            lineCoordinates[currentVertexIndex++] = topEnd.y;
+//
+//            // Right
+//            // Start
+//            lineCoordinates[currentVertexIndex++] = topEnd.x;
+//            lineCoordinates[currentVertexIndex++] = topEnd.y;
+//            // End
+//            lineCoordinates[currentVertexIndex++] = rightEnd.x;
+//            lineCoordinates[currentVertexIndex++] = rightEnd.y;
+//
+//            // Bottom
+//            // Start
+//            lineCoordinates[currentVertexIndex++] = rightEnd.x;
+//            lineCoordinates[currentVertexIndex++] = rightEnd.y;
+//            // End
+//            lineCoordinates[currentVertexIndex++] = leftStart.x;
+//            lineCoordinates[currentVertexIndex++] = leftStart.y;
+//        }
+
+        // baselines
         for (Result *result in _results) {
 
-            CGRect normalizedRect = result.rect;
-
-            leftStart = CGPointMake(normalizedRect.origin.x, normalizedRect.origin.y + normalizedRect.size.height);
-            leftEnd = CGPointMake(normalizedRect.origin.x, normalizedRect.origin.y);
-            topEnd =  CGPointMake(normalizedRect.origin.x + normalizedRect.size.width, normalizedRect.origin.y);
-            rightEnd = CGPointMake(topEnd.x, normalizedRect.origin.y + normalizedRect.size.height);
-
-            // Left
+            // Baseline
             // Start
-            lineCoordinates[currentVertexIndex++] = leftStart.x;
-            lineCoordinates[currentVertexIndex++] = leftStart.y;
+            lineCoordinates[currentVertexIndex++] = result.start.x;
+            lineCoordinates[currentVertexIndex++] = result.start.y;
             // End
-            lineCoordinates[currentVertexIndex++] = leftEnd.x;
-            lineCoordinates[currentVertexIndex++] = leftEnd.y;
-
-            // Top
-            // Start
-            lineCoordinates[currentVertexIndex++] = leftEnd.x;
-            lineCoordinates[currentVertexIndex++] = leftEnd.y;
-            // End
-            lineCoordinates[currentVertexIndex++] = topEnd.x;
-            lineCoordinates[currentVertexIndex++] = topEnd.y;
-
-            // Right
-            // Start
-            lineCoordinates[currentVertexIndex++] = topEnd.x;
-            lineCoordinates[currentVertexIndex++] = topEnd.y;
-            // End
-            lineCoordinates[currentVertexIndex++] = rightEnd.x;
-            lineCoordinates[currentVertexIndex++] = rightEnd.y;
-
-            // Bottom
-            // Start
-            lineCoordinates[currentVertexIndex++] = rightEnd.x;
-            lineCoordinates[currentVertexIndex++] = rightEnd.y;
-            // End
-            lineCoordinates[currentVertexIndex++] = leftStart.x;
-            lineCoordinates[currentVertexIndex++] = leftStart.y;
+            lineCoordinates[currentVertexIndex++] = result.end.x;
+            lineCoordinates[currentVertexIndex++] = result.end.y;
         }
 
         glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -148,7 +160,7 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
         glEnable(GL_BLEND);
         
         glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, lineCoordinates);
-        glDrawArrays(GL_LINES, 0, ((unsigned int)_results.count * 8));
+        glDrawArrays(GL_LINES, 0, ((unsigned int)_results.count * 2));
 
         glDisable(GL_BLEND);
 

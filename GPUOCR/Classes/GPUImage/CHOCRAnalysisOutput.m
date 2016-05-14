@@ -72,7 +72,7 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHOCRAnalysisResult *result = [weakTesseract analyzeLayoutAtLevel: CHTesseractAnalysisLevelTextLine];
+                    CHAnalysisResult *result = [weakTesseract analyzeLayoutAtLevel: CHTesseractAnalysisLevelWord];
                     [weakTesseract clear];
                     [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
                 }]];
@@ -89,7 +89,7 @@
     }
 }
 
--(void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHOCRAnalysisResult *)result {
+-(void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHAnalysisResult *)result {
     if ([_delegate respondsToSelector:@selector(output:didFinishAnalysisWithResult:)]) {
         [_delegate output:output didFinishAnalysisWithResult:result];
     }
