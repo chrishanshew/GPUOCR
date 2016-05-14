@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CHTesseract.h"
 
-@interface CHOCRAnalysisResult : NSObject
+@interface CHAnalysisResult : NSObject
 
 @property(nonatomic)CHTesseractAnalysisLevel level;
 @property(nonatomic)CGSize imageSize;

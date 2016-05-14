@@ -4,9 +4,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CHOCRAnalysisResult.h"
+#import "CHAnalysisResult.h"
 
-@interface CHOCRRecognitionResult : CHOCRAnalysisResult
+@interface CHRecognitionResult : CHAnalysisResult
 
 @property(nonatomic, strong)NSString* text;
 

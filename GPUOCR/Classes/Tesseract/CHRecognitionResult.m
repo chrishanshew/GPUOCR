@@ -3,9 +3,9 @@
 // Copyright (c) 2016 Chris Hanshew Software, LLC. All rights reserved.
 //
 
-#import "CHOCRRecognitionResult.h"
+#import "CHRecognitionResult.h"
 
-@implementation CHOCRRecognitionResult
+@implementation CHRecognitionResult
 
 - (NSString *)description {
     return _text;

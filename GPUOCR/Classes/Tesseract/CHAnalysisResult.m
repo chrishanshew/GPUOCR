@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Chris Hanshew Software, LLC. All rights reserved.
 //
 
-#import "CHOCRAnalysisResult.h"
+#import "CHAnalysisResult.h"
 
-@implementation CHOCRAnalysisResult
+@implementation CHAnalysisResult
 
 @end
