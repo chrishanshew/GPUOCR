@@ -7,4 +7,5 @@
 
 
 @interface CHImageProcessor : NSObject
+
 @end

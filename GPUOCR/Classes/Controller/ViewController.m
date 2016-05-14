@@ -72,10 +72,6 @@
         
         GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
         [blendFilter forceProcessingAtSize:CGSizeMake(720, 1280)];
-        
-        
-        
-//        [_stillCamera addTarget:adaptiveThresholdFilter];
     }
     return self;
 }
@@ -105,14 +101,6 @@
     } else {
         // Rear Camera not available, present alert
     }
-    
-//    if ([GPUImageStillCamera isBackFacingCameraPresent]) {
-//        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPreset1280x720];
-//        [_stillCamera addTarget:(GPUImageView *) self.view];
-//    } else {
-//        // Rear Camera not available, present alert
-//    }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0C5B1CD31CE6C3F200964D2E /* CHImageProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */; };
+		0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */; };
+		0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */; };
+		0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CE31CE6D57F00964D2E /* MenuCell.m */; };
 		0CED202D1CE28181001F79E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED202C1CE28181001F79E9 /* main.m */; };
 		0CED20361CE28181001F79E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20341CE28181001F79E9 /* Main.storyboard */; };
 		0CED20381CE28181001F79E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20371CE28181001F79E9 /* Assets.xcassets */; };
@@ -32,7 +35,6 @@
 		0CED20891CE28715001F79E9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20881CE28715001F79E9 /* CoreGraphics.framework */; };
 		0CED208C1CE294B6001F79E9 /* libtesseract.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED208A1CE294B6001F79E9 /* libtesseract.a */; };
 		0CED208D1CE294B6001F79E9 /* liblept.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED208B1CE294B6001F79E9 /* liblept.a */; };
-		0CED20901CE295AD001F79E9 /* CHGPUOCRViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0CED208E1CE295AD001F79E9 /* CHGPUOCRViewController.mm */; };
 		0CED20971CE296A0001F79E9 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20961CE296A0001F79E9 /* tessdata */; };
 		0CED209E1CE29CB3001F79E9 /* eng.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209C1CE29CB3001F79E9 /* eng.traineddata */; };
 		0CED209F1CE29CB3001F79E9 /* osd.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209D1CE29CB3001F79E9 /* osd.traineddata */; };
@@ -65,6 +67,12 @@
 /* Begin PBXFileReference section */
 		0C5B1CD11CE6C3F200964D2E /* CHImageProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHImageProcessor.h; sourceTree = "<group>"; };
 		0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHImageProcessor.m; sourceTree = "<group>"; };
+		0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
+		0C5B1CDE1CE6CF0F00964D2E /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
+		0C5B1CE21CE6D57F00964D2E /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
+		0C5B1CE31CE6D57F00964D2E /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		0CED20281CE28181001F79E9 /* GPUOCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUOCR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CED202C1CE28181001F79E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0CED20351CE28181001F79E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -103,8 +111,6 @@
 		0CED20881CE28715001F79E9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0CED208A1CE294B6001F79E9 /* libtesseract.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtesseract.a; path = ../bin/libtesseract.a; sourceTree = "<group>"; };
 		0CED208B1CE294B6001F79E9 /* liblept.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblept.a; path = ../bin/liblept.a; sourceTree = "<group>"; };
-		0CED208E1CE295AD001F79E9 /* CHGPUOCRViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CHGPUOCRViewController.mm; sourceTree = "<group>"; };
-		0CED208F1CE295AD001F79E9 /* CHGPUOCRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHGPUOCRViewController.h; sourceTree = "<group>"; };
 		0CED20961CE296A0001F79E9 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = ../tessdata; sourceTree = "<group>"; };
 		0CED209C1CE29CB3001F79E9 /* eng.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = eng.traineddata; path = ../tessdata/eng.traineddata; sourceTree = "<group>"; };
 		0CED209D1CE29CB3001F79E9 /* osd.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = osd.traineddata; path = ../tessdata/osd.traineddata; sourceTree = "<group>"; };
@@ -144,6 +150,15 @@
 				0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */,
 			);
 			path = Processor;
+			sourceTree = "<group>";
+		};
+		0C5B1CE11CE6D54B00964D2E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0C5B1CE21CE6D57F00964D2E /* MenuCell.h */,
+				0C5B1CE31CE6D57F00964D2E /* MenuCell.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		0CED201F1CE28181001F79E9 = {
@@ -212,6 +227,7 @@
 				0CED20561CE283BC001F79E9 /* GPUImage */,
 				0CED20571CE283BC001F79E9 /* Tesseract */,
 				0C5B1CD01CE6C3AA00964D2E /* Processor */,
+				0C5B1CE11CE6D54B00964D2E /* View */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -219,10 +235,12 @@
 		0CED20531CE283BC001F79E9 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				0CED208F1CE295AD001F79E9 /* CHGPUOCRViewController.h */,
-				0CED208E1CE295AD001F79E9 /* CHGPUOCRViewController.mm */,
 				0CED20541CE283BC001F79E9 /* ViewController.h */,
 				0CED20551CE283BC001F79E9 /* ViewController.m */,
+				0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */,
+				0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */,
+				0C5B1CDE1CE6CF0F00964D2E /* MenuViewController.h */,
+				0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -407,11 +425,13 @@
 				0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */,
 				0CED20861CE28673001F79E9 /* Result.m in Sources */,
 				0CED20781CE2866A001F79E9 /* CHOCRDrawRectFilter.m in Sources */,
+				0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */,
 				0CED20841CE28673001F79E9 /* CHRecognitionResult.m in Sources */,
+				0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */,
 				0CED20581CE283BC001F79E9 /* AppDelegate.m in Sources */,
 				0CED20871CE28673001F79E9 /* CHDetectionResult.m in Sources */,
-				0CED20901CE295AD001F79E9 /* CHGPUOCRViewController.mm in Sources */,
 				0C5B1CD31CE6C3F200964D2E /* CHImageProcessor.m in Sources */,
+				0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */,
 				0CED202D1CE28181001F79E9 /* main.m in Sources */,
 				0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */,
 				0CED20591CE283BC001F79E9 /* ViewController.m in Sources */,
