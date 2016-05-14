@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-
-@class CHTesseract;
+#import "CHTesseract.h"
 
 @interface Result : NSObject
 
@@ -32,6 +31,8 @@
 
 // Iterator Level
 @property(nonatomic) CHTesseractAnalysisLevel level;
+
+@property(nonatomic) CGSize imageSize;
 
 // Computed Geometry
 @property(nonatomic, readonly, getter=getRect) CGRect rect;

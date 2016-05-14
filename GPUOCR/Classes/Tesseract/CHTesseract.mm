@@ -20,7 +20,6 @@ namespace tesseract {
 
 @interface CHTesseract() {
     tesseract::TessBaseAPI *_tesseract;
-    const unsigned char * _pixels;
     NSMutableData *_pixelData;
 }
 
@@ -61,7 +60,7 @@ namespace tesseract {
     if (self) {
         [self configureTesseractEnvironment];
         _tesseract = new tesseract::TessBaseAPI;
-        _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_SPARSE_TEXT);
+        _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO);
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSString *tessdataPath = [bundle resourcePath];
         _tesseract->Init([[tessdataPath stringByAppendingString:@"/"]cStringUsingEncoding:NSUTF8StringEncoding], [language cStringUsingEncoding:NSUTF8StringEncoding]);

@@ -10,6 +10,9 @@
 
 @interface CHOCRDrawRectFilter : GPUImageFilter
 
--(instancetype)initWithRect:(CGRect)rect;
+@property(nonatomic, strong, readonly) NSArray *results;
+
+-(void)renderResultsWithFrameTime:(CMTime)frameTime;
+-(void)setResults:(NSArray *)results;
 
 @end

@@ -28,6 +28,7 @@
     GPUImageFilterGroup *_uiFilterGroup;
     GPUImageFilterGroup *_ocrFilterGroup;
 
+    CHOCRDrawRectFilter *_drawRect;
 }
 
 @end
@@ -69,8 +70,6 @@
         [_videoCamera addTarget:adaptiveThresholdFilter];
         
         
-        CHOCRDrawRectFilter *drawRect = [[CHOCRDrawRectFilter alloc] init];
-        
         GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
         [blendFilter forceProcessingAtSize:CGSizeMake(720, 1280)];
         
@@ -86,25 +85,23 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
+        
         [_videoCamera setCaptureSessionPreset:AVCaptureSessionPreset1280x720];
-        CHOCRDrawRectFilter *drawRect = [[CHOCRDrawRectFilter alloc] init];
-        
-//        GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-//        [blendFilter forceProcessingAtSize:CGSizeMake(720, 1280)];
-//        
-//        [drawRect addTarget:blendFilter];
-//        [blendFilter addTarget:(GPUImageView*)self.view];
-//        [_videoCamera addTarget:(GPUImageView *) drawRect];
-        
+
         GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
         [blendFilter forceProcessingAtSize:CGSizeMake(720, 1280)];
         GPUImageGammaFilter *gammaFilter = [[GPUImageGammaFilter alloc] init];
         [_videoCamera addTarget:gammaFilter];
         [gammaFilter addTarget:blendFilter];
-        
-        [drawRect addTarget:blendFilter];
-        
         [blendFilter addTarget:(GPUImageView *)self.view];
+
+        _drawRect = [[CHOCRDrawRectFilter alloc] init];
+        [_drawRect forceProcessingAtSize:CGSizeMake(720, 1080)];
+        [_drawRect addTarget:blendFilter];
+
+        [gammaFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
+            [_drawRect renderResultsWithFrameTime:time];
+        }];
     } else {
         // Rear Camera not available, present alert
     }
@@ -121,13 +118,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [_videoCamera startCameraCapture];
-    //[_stillCamera startCameraCapture];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [_videoCamera stopCameraCapture];
-    //[_stillCamera stopCameraCapture];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -149,7 +144,7 @@
 #pragma mark - CHOCRRecognitionOutputDelegate
 
 - (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHOCRRecognitionResult *)result {
-   
+    [_drawRect setResults:result.boxes];
 }
 
 - (void)willBeginRecognitionWithOutput:(CHOCRRecognitionOutput *)output {
@@ -160,7 +155,7 @@
 
 - (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHOCRAnalysisResult *)result {
     NSLog(@"Box Count: %lu", (unsigned long)result.boxes.count);
-    [_stillCamera resumeCameraCapture];
+    [_drawRect setResults:result.boxes];
 }
 
 - (void)willBeginAnalysisWithOutput:(CHOCRAnalysisOutput *)output {
