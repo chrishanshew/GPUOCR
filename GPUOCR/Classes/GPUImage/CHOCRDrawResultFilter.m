@@ -9,7 +9,7 @@
 #import <OpenGLES/gltypes.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "CHOCRDrawResultFilter.h"
-#import "Result.h"
+#import "CHResult.h"
 
 @interface CHOCRDrawResultFilter () {
     GLint lineWidthUniform, lineColorUniform;
@@ -99,7 +99,7 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 
         NSUInteger currentVertexIndex = 0;
 
-        for (Result *result in _results) {
+        for (CHResult *result in _results) {
 
             rect = result.rect;
 

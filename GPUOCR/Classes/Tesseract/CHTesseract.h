@@ -8,10 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHDetectionResult.h"
 
-@class CHAnalysisResult;
-@class CHRecognitionResult;
+@class CHResultGroup;
 
 typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
     CHTesseractAnalysisLevelBlock = 0,
@@ -30,16 +28,16 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 - (instancetype)initForRecognitionWithLanguage:(NSString *)language;
 
 // Default 1 bpp
-- (void)setImageWithData:(NSMutableData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
-//- (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
+- (void)setImageWithData:(NSData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
+- (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 
 - (void)recognize;
-- (void)detect;
 - (NSString *)recognizeText;
-- (CHRecognitionResult *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
-- (NSString *)hOCRText;
-- (CHAnalysisResult *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHResultGroup *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHResultGroup *)detectionAtLevel:(CHTesseractAnalysisLevel)level;
 
+- (NSString *)hOCRText;
 - (void)setVariableNamed:(NSString *)named withValue:(NSString *)value;
 
 - (void)clear;

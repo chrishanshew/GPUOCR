@@ -10,12 +10,11 @@
 #import "CHTesseract.h"
 
 @class CHOCRAnalysisOutput;
-@class CHAnalysisResult;
 
 @protocol CHOCRAnalysisOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHAnalysisResult *)result;
+- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result;
 
 @optional
 - (void)willBeginAnalysisWithOutput:(CHOCRAnalysisOutput *)output;

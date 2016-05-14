@@ -1,5 +1,5 @@
 //
-//  Result.h
+//  CHResult.h
 //  CHTesseract
 //
 //  Created by Chris Hanshew on 5/19/14.
@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHTesseract.h"
 
-@interface Result : NSObject
+@interface CHResult : NSObject
 
 // Position Index
 @property(nonatomic) NSUInteger index; // Detection index relative to other results in group
@@ -29,13 +28,7 @@
 @property(nonatomic) CGPoint start;
 @property(nonatomic) CGPoint end;
 
-// Iterator Level
-@property(nonatomic) CHTesseractAnalysisLevel level;
-
-@property(nonatomic) CGSize imageSize;
-
 // Computed Geometry
 @property(nonatomic, readonly, getter=getRect) CGRect rect;
-@property(nonatomic, readonly, getter=getSlope) double slope;
 
 @end

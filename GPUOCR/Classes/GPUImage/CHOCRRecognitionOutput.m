@@ -73,7 +73,7 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHRecognitionResult *result = [weakTesseract recognizeAtLevel: CHTesseractAnalysisLevelBlock];
+                    CHResultGroup *result = [weakTesseract recognizeAtLevel: CHTesseractAnalysisLevelBlock];
                     [weakTesseract clear];
                     [weakSelf output:weakSelf didFinishRecognitionWithResult:result];
                 }]];
@@ -84,7 +84,7 @@
 
 #pragma mark - Delegate
 
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHRecognitionResult *)result {
+- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
     if ([_delegate respondsToSelector:@selector(output:didFinishRecognitionWithResult:)]) {
         [_delegate output:output didFinishRecognitionWithResult:result];
     }

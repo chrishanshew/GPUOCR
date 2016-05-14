@@ -1,14 +1,11 @@
 //
-//  CHOCRAnalysisOutput.m
-//  CHOCR
-//
-//  Created by Chris Hanshew on 5/19/14.
-//  Copyright (c) 2014 Chris Hanshew Software, LLC. All rights reserved.
+// Created by Chris Hanshew on 5/14/16.
+// Copyright (c) 2016 Chris Hanshew. All rights reserved.
 //
 
-#import "CHOCRAnalysisOutput.h"
+#import "CHOCRDetectionOutput.h"
 
-@interface CHOCRAnalysisOutput () {
+@interface CHOCRDetectionOutput () {
     CHTesseract *_tesseract;
     NSOperationQueue *_operationQueue;
 }
@@ -17,7 +14,7 @@
 
 @end
 
-@implementation CHOCRAnalysisOutput
+@implementation CHOCRDetectionOutput
 
 #pragma mark - Init
 
@@ -29,11 +26,11 @@
     return self;
 }
 
-- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat withDelegate:(id<CHOCRAnalysisOutputDelegate>)delegate {
+- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat withDelegate:(id<CHOCRDetectionOutputDelegate>)delegate {
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
         _delegate = delegate;
-        _tesseract = [[CHTesseract alloc] initForAnalysis];
+        _tesseract = [[CHTesseract alloc] initForOrientationDetection];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 1;
         [self setNewFrameAvailableBlock: self.analyzeLayoutBlock];
@@ -41,37 +38,37 @@
     return self;
 }
 
+
 #pragma mark - New Frame Available Block
 
 -(void (^)())analyzeLayoutBlock {
-    __block CHOCRAnalysisOutput *weakSelf = self;
+    __block CHOCRDetectionOutput *weakSelf = self;
     __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
         if (weakSelf.enabled && _operationQueue.operationCount == 0) {
-            [weakSelf willBeginAnalysisWithOutput:weakSelf];
             [weakSelf lockFramebufferForReading];
-            
-            
+
+
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
             int height = weakSelf.maximumOutputSize.height;
             int width = weakSelf.maximumOutputSize.width;
-            
+
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
-            
+
             // TODO: Optimizable?
             // Read last byte (alpha) for RBGA pixels
             for (int i = 4; i < ((4 * width) * height) + 4; i+=4) {
                 [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
-            
+
             [weakSelf unlockFramebufferAfterReading];
-            
+
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract analyzeLayoutAtLevel: CHTesseractAnalysisLevelTextLine];
+                    CHResultGroup *result = [weakTesseract detectionAtLevel: CHTesseractAnalysisLevelTextLine];
+                    [weakSelf output:self didFinishDetectionWithResult:result];
                     [weakTesseract clear];
-                    [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
                 }]];
             }
         }
@@ -80,15 +77,15 @@
 
 #pragma mark - Delegate
 
-- (void)willBeginAnalysisWithOutput:(CHOCRAnalysisOutput *)output {
-    if ([_delegate respondsToSelector:@selector(willBeginAnalysisWithOutput:)]) {
-        [_delegate willBeginAnalysisWithOutput:output];
+- (void)willBeginDetectionWithOutput:(CHOCRDetectionOutput *)output {
+    if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
+        [_delegate willBeginDetectionWithOutput:output];
     }
 }
 
--(void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishAnalysisWithResult:)]) {
-        [_delegate output:output didFinishAnalysisWithResult:result];
+-(void)output:(CHOCRDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
+    if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
+        [_delegate output:output didFinishDetectionWithResult:result];
     }
 }
 

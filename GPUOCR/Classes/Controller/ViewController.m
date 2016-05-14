@@ -11,11 +11,12 @@
 #import "GPUImage.h"
 #import "CHOCRRecognitionOutput.h"
 #import "CHOCRAnalysisOutput.h"
+#import "CHOCRDetectionOutput.h"
 #import "CHOCRDrawResultFilter.h"
 
-#define kDefaultAdaptiveThresholderBlurRadius 4.0
+#define kDefaultAdaptiveThresholderBlurRadius 1.0
 
-@interface ViewController () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate> {
+@interface ViewController () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate, CHOCRDetectionOutputDelegate> {
     // Inputs
     GPUImageVideoCamera *_videoCamera;
     GPUImageStillCamera *_stillCamera;
@@ -23,6 +24,7 @@
     // OCR Output
     CHOCRRecognitionOutput *_recognitionOutput;
     CHOCRAnalysisOutput *_analysisOutput;
+    CHOCRDetectionOutput *_detectionOutput;
     
     // Filter Groups
     GPUImageFilterGroup *_uiFilterGroup;
@@ -43,7 +45,6 @@
          */
         _videoCamera = [[GPUImageVideoCamera alloc] init];
         _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-        _videoCamera.horizontallyMirrorRearFacingCamera = YES;
 
         _stillCamera = [[GPUImageStillCamera alloc] init];
         _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
@@ -62,7 +63,10 @@
         
         // Analysis Output
         _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:CGSizeMake(720, 1280) resultsInBGRAFormat:YES withDelegate:self];
-        
+
+        // DetectionOutput
+        _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:CGSizeMake(720, 1280) resultsInBGRAFormat:YES withDelegate:self];
+
         [adaptiveThresholdFilter addTarget:_analysisOutput];
         
         _ocrFilterGroup = [[GPUImageFilterGroup alloc] init];
@@ -129,24 +133,34 @@
     
 }
 
-#pragma mark - CHOCRRecognitionOutputDelegate
+#pragma mark - <CHOCRRecognitionOutputDelegate>
 
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHRecognitionResult *)result {
-    [_drawRect setResults:result.boxes];
+- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
+    [_drawRect setResults:result.results];
 }
 
 - (void)willBeginRecognitionWithOutput:(CHOCRRecognitionOutput *)output {
     
 }
 
-#pragma mark - CHOCRAnaylsisOutputDelegate
+#pragma mark - <CHOCRAnaylsisOutputDelegate>
 
-- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHAnalysisResult *)result {
-    [_drawRect setResults:result.boxes];
+- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
+    [_drawRect setResults:result.results];
 }
 
 - (void)willBeginAnalysisWithOutput:(CHOCRAnalysisOutput *)output {
     
+}
+
+#pragma mark - <CHOCRDetectionOutputDelegate>
+
+- (void)output:(CHOCRDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
+    [_drawRect setResults:result.results];
+}
+
+- (void)willBeginDetectionWithOutput:(CHOCRDetectionOutput *)output {
+
 }
 
 @end
