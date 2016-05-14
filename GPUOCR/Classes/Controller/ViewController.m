@@ -43,7 +43,8 @@
          */
         _videoCamera = [[GPUImageVideoCamera alloc] init];
         _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-        
+        _videoCamera.horizontallyMirrorRearFacingCamera = YES;
+
         _stillCamera = [[GPUImageStillCamera alloc] init];
         _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
         
@@ -58,7 +59,6 @@
         
         // Recognition Output
         _recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:CGSizeMake(720, 1280) resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
-        
         
         // Analysis Output
         _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:CGSizeMake(720, 1280) resultsInBGRAFormat:YES withDelegate:self];
@@ -92,7 +92,7 @@
         [blendFilter addTarget:(GPUImageView *)self.view];
 
         _drawRect = [[CHOCRDrawResultFilter alloc] init];
-        [_drawRect forceProcessingAtSize:CGSizeMake(720, 1080)];
+        [_drawRect forceProcessingAtSize:CGSizeMake(720, 1280)];
         [_drawRect addTarget:blendFilter];
 
         [gammaFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
