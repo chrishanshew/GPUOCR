@@ -6,28 +6,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Image View Controller-->
-        <scene sceneID="ap8-n0-UZr">
-            <objects>
-                <viewController id="fa0-SA-Cdd" customClass="ImageViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="N71-Rr-nFw"/>
-                        <viewControllerLayoutGuide type="bottom" id="FIO-2K-2FL"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="b16-EU-wPG">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LRD-jh-yDz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-709" y="298"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LivePreviewController" id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -62,7 +44,7 @@
         <!--Settings View Controller-->
         <scene sceneID="OW2-io-OAW">
             <objects>
-                <viewController id="NBq-BK-4hE" customClass="SettingsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsViewController" id="NBq-BK-4hE" customClass="SettingsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Tyt-zJ-p79"/>
                         <viewControllerLayoutGuide type="bottom" id="WZK-4R-VGS"/>
@@ -79,13 +61,6 @@
                                 </view>
                                 <blurEffect style="light"/>
                             </visualEffectView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YYS-vO-aGC" userLabel="Dismiss">
-                                <rect key="frame" x="526" y="16" width="54" height="30"/>
-                                <state key="normal" title="Dismiss"/>
-                                <connections>
-                                    <action selector="onDismissTouched:" destination="NBq-BK-4hE" eventType="touchUpInside" id="kzi-rS-sRY"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hze-t3-HWx">
                                 <rect key="frame" x="20" y="20" width="39" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -209,6 +184,13 @@
                                     <action selector="onSelectDimensionValueChange:" destination="NBq-BK-4hE" eventType="valueChanged" id="7mK-HH-wtE"/>
                                 </connections>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YYS-vO-aGC" userLabel="Dismiss">
+                                <rect key="frame" x="526" y="570" width="54" height="30"/>
+                                <state key="normal" title="Dismiss"/>
+                                <connections>
+                                    <action selector="onDismissTouched:" destination="NBq-BK-4hE" eventType="touchUpInside" id="kzi-rS-sRY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -216,7 +198,6 @@
                             <constraint firstItem="mOg-IV-JG1" firstAttribute="top" secondItem="Cfr-61-f8A" secondAttribute="bottom" constant="20" id="156-oG-jat"/>
                             <constraint firstItem="mOg-IV-JG1" firstAttribute="centerX" secondItem="MaI-F8-6tZ" secondAttribute="centerX" id="17t-Uz-PD6"/>
                             <constraint firstItem="rD9-YA-miJ" firstAttribute="top" secondItem="KeR-vX-5HY" secondAttribute="bottom" constant="15" id="1dG-J7-Nrn"/>
-                            <constraint firstItem="YYS-vO-aGC" firstAttribute="top" secondItem="Tyt-zJ-p79" secondAttribute="bottom" constant="-4" id="4Ro-fk-tC6"/>
                             <constraint firstItem="Cfr-61-f8A" firstAttribute="trailing" secondItem="GVL-JP-ZtP" secondAttribute="trailing" id="4X8-g8-Ssd"/>
                             <constraint firstItem="ke7-46-Rlb" firstAttribute="centerX" secondItem="MaI-F8-6tZ" secondAttribute="centerX" id="6MG-sR-Rxu"/>
                             <constraint firstItem="Y7t-rm-r1v" firstAttribute="bottom" secondItem="GVL-JP-ZtP" secondAttribute="top" constant="-30" id="6WF-Lp-XKC"/>
@@ -229,6 +210,7 @@
                             <constraint firstItem="oy7-MJ-EAN" firstAttribute="centerX" secondItem="MaI-F8-6tZ" secondAttribute="centerX" id="Eha-Cu-5VC"/>
                             <constraint firstAttribute="leadingMargin" secondItem="rD9-YA-miJ" secondAttribute="leading" id="FmM-YG-jCL"/>
                             <constraint firstAttribute="leadingMargin" secondItem="IUa-k7-4ea" secondAttribute="leading" id="IIU-ig-uFj"/>
+                            <constraint firstItem="WZK-4R-VGS" firstAttribute="top" secondItem="YYS-vO-aGC" secondAttribute="bottom" id="IK6-6k-MIr"/>
                             <constraint firstItem="ZZg-cN-zaX" firstAttribute="height" secondItem="MaI-F8-6tZ" secondAttribute="height" id="KZS-6l-36f"/>
                             <constraint firstItem="IUa-k7-4ea" firstAttribute="top" secondItem="ke7-46-Rlb" secondAttribute="bottom" constant="15" id="OAM-gD-97R"/>
                             <constraint firstItem="Cfr-61-f8A" firstAttribute="centerX" secondItem="MaI-F8-6tZ" secondAttribute="centerX" id="QDs-GQ-dWr"/>
@@ -237,6 +219,7 @@
                             <constraint firstItem="3ab-0R-xNu" firstAttribute="top" secondItem="IUa-k7-4ea" secondAttribute="bottom" constant="10" id="UmV-y4-JrK"/>
                             <constraint firstItem="Cfr-61-f8A" firstAttribute="width" secondItem="GVL-JP-ZtP" secondAttribute="width" id="VrW-sa-jSz"/>
                             <constraint firstItem="KeR-vX-5HY" firstAttribute="centerX" secondItem="MaI-F8-6tZ" secondAttribute="centerX" id="asL-gM-ao0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="YYS-vO-aGC" secondAttribute="trailing" id="b1b-3m-6bu"/>
                             <constraint firstItem="hze-t3-HWx" firstAttribute="top" secondItem="Tyt-zJ-p79" secondAttribute="bottom" id="egg-lQ-agU"/>
                             <constraint firstItem="GVL-JP-ZtP" firstAttribute="top" secondItem="3ab-0R-xNu" secondAttribute="bottom" constant="20" id="fmL-o9-12k"/>
                             <constraint firstItem="ZZg-cN-zaX" firstAttribute="centerY" secondItem="MaI-F8-6tZ" secondAttribute="centerY" id="gD1-X1-eKP"/>
@@ -248,7 +231,6 @@
                             <constraint firstItem="Yji-jS-eqR" firstAttribute="leading" secondItem="MaI-F8-6tZ" secondAttribute="leadingMargin" id="lab-s9-QSZ"/>
                             <constraint firstItem="3ab-0R-xNu" firstAttribute="leading" secondItem="MaI-F8-6tZ" secondAttribute="leadingMargin" id="mZe-kc-L1T"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Yji-jS-eqR" secondAttribute="trailing" id="nQN-GE-N3n"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="YYS-vO-aGC" secondAttribute="trailing" id="ojx-ph-Tvb"/>
                             <constraint firstItem="eCv-2c-F0E" firstAttribute="centerX" secondItem="MaI-F8-6tZ" secondAttribute="centerX" id="ooA-Ih-DTB"/>
                             <constraint firstItem="ke7-46-Rlb" firstAttribute="width" secondItem="Yji-jS-eqR" secondAttribute="width" id="pIY-nb-pfX"/>
                             <constraint firstItem="KeR-vX-5HY" firstAttribute="width" secondItem="Yji-jS-eqR" secondAttribute="width" id="pb6-tA-Apt"/>
