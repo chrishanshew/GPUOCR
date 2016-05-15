@@ -79,7 +79,7 @@
         _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
         _detectionOutput.level = _level;
 
-        [adaptiveThresholdFilter addTarget:_analysisOutput];
+        [adaptiveThresholdFilter addTarget:_detectionOutput];
         
         _ocrFilterGroup = [[GPUImageFilterGroup alloc] init];
         [_ocrFilterGroup setInitialFilters:@[adaptiveThresholdFilter, _analysisOutput]];

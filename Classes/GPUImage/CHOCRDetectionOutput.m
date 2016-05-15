@@ -54,13 +54,13 @@
             int width = weakSelf.maximumOutputSize.width;
 
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
-            
+
             // TODO: Optimizable?
             // Read last byte (alpha) for RBGA pixels
             for (int i = 0; i < ((4 * width) * height); i+=4) {
                 [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
-            
+
             [weakSelf unlockFramebufferAfterReading];
 
             if (_operationQueue.operationCount == 0) {

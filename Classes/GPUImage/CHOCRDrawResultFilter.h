@@ -12,9 +12,7 @@
 
 @property(nonatomic, strong, readonly) NSArray *results;
 
--(void)setResults:(NSArray *)results;
 -(void)renderResultsWithFrameTime:(CMTime)frameTime;
--(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
--(void)setLineWidth:(float)width;
+-(void)setResults:(NSArray *)results;
 
 @end

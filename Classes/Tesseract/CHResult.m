@@ -20,7 +20,7 @@
 //}
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"===\nIndex: %lu\nBaseline  Rect: %@", (unsigned long)_index, CGRectCreateDictionaryRepresentation([self getRect])];
+    return [NSString stringWithFormat:@"===\nIndex: %lu\nBaseline  Rect: %@", _index, CGRectCreateDictionaryRepresentation([self getRect])];
 }
 
 @end

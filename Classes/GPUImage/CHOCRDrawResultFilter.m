@@ -12,10 +12,12 @@
 #import "CHResult.h"
 
 @interface CHOCRDrawResultFilter () {
-    GLfloat _lineWidth;
-    GLfloat _widthUniform, _heightUniform, _colorUniform;
+    GLint lineWidthUniform, lineColorUniform;
+    GLfloat _widthUniform, _heightUniform;
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
+    GLuint _projectionUniform;
+    CATransform3D _transform3D;
 }
 
 @end
@@ -38,15 +40,13 @@ NSString *const kCHOCRDrawRectVertexShader = SHADER_STRING
 
 NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 (
-        uniform vec4 lineColor;
+ //uniform vec3 lineColor;
  
  void main()
  {
-     gl_FragColor = lineColor;
+     gl_FragColor = vec4(1.0,0,0, 1.0);
  }
 );
-
-GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 0.0};
 
 @implementation CHOCRDrawResultFilter
 
@@ -65,10 +65,8 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 0.0};
     runSynchronouslyOnVideoProcessingQueue(^{
         _widthUniform = [filterProgram uniformIndex:@"width"];
         _heightUniform = [filterProgram uniformIndex:@"height"];
-        _colorUniform =[filterProgram uniformIndex:@""];
         [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
         [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
-        [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
         glViewport(0, 0, frameSize.width, frameSize.height);
     });
 }
@@ -170,17 +168,6 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 0.0};
         [self informTargetsAboutNewFrameAtTime:frameTime];
         self.preventRendering = NO;
     });
-}
-
--(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha {
-    GPUVector4 lineColor = {red, green, blue, alpha};
-    [self setVec4:lineColor forUniform:_colorUniform program:filterProgram];
-}
-
--(void)setLineWidth:(float)width {
-    _lineWidth = width;
-    [GPUImageContext setActiveShaderProgram:filterProgram];
-    glLineWidth(_lineWidth);
 }
 
 @end

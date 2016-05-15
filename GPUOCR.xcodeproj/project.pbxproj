@@ -10,6 +10,7 @@
 		0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */; };
 		0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */; };
 		0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CE31CE6D57F00964D2E /* MenuCell.m */; };
+		0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C618BD61CE842FE00E0CD2B /* Settings.m */; };
 		0CED202D1CE28181001F79E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED202C1CE28181001F79E9 /* main.m */; };
 		0CED20361CE28181001F79E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20341CE28181001F79E9 /* Main.storyboard */; };
 		0CED20381CE28181001F79E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20371CE28181001F79E9 /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 		0CED20971CE296A0001F79E9 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20961CE296A0001F79E9 /* tessdata */; };
 		0CED209E1CE29CB3001F79E9 /* eng.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209C1CE29CB3001F79E9 /* eng.traineddata */; };
 		0CED209F1CE29CB3001F79E9 /* osd.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209D1CE29CB3001F79E9 /* osd.traineddata */; };
+		E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */; };
 		E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */; };
 		E2DAB430C7FA92A03CF54188 /* CHOCRDetectionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABBB3B17B6565857DA262 /* CHOCRDetectionOutput.m */; };
 /* End PBXBuildFile section */
@@ -71,6 +73,8 @@
 		0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
 		0C5B1CE21CE6D57F00964D2E /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
 		0C5B1CE31CE6D57F00964D2E /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
+		0C618BD51CE842FE00E0CD2B /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		0C618BD61CE842FE00E0CD2B /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		0CED20281CE28181001F79E9 /* GPUOCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUOCR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CED202C1CE28181001F79E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0CED20351CE28181001F79E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 		0CED20961CE296A0001F79E9 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tessdata; path = ../tessdata; sourceTree = "<group>"; };
 		0CED209C1CE29CB3001F79E9 /* eng.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = eng.traineddata; path = ../tessdata/eng.traineddata; sourceTree = "<group>"; };
 		0CED209D1CE29CB3001F79E9 /* osd.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = osd.traineddata; path = ../tessdata/osd.traineddata; sourceTree = "<group>"; };
+		E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		E2DABBB3B17B6565857DA262 /* CHOCRDetectionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRDetectionOutput.m; sourceTree = "<group>"; };
 		E2DABD8B0D7D95A005A1F0DE /* CHOCRDetectionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRDetectionOutput.h; sourceTree = "<group>"; };
 		E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHResultGroup.m; sourceTree = "<group>"; };
@@ -155,6 +161,15 @@
 				0C5B1CE31CE6D57F00964D2E /* MenuCell.m */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		0C618BD11CE842C700E0CD2B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0C618BD51CE842FE00E0CD2B /* Settings.h */,
+				0C618BD61CE842FE00E0CD2B /* Settings.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		0CED201F1CE28181001F79E9 = {
@@ -224,6 +239,7 @@
 				0CED20571CE283BC001F79E9 /* Tesseract */,
 				0C5B1CD01CE6C3AA00964D2E /* Processor */,
 				0C5B1CE11CE6D54B00964D2E /* View */,
+				0C618BD11CE842C700E0CD2B /* Model */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -237,6 +253,8 @@
 				0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */,
 				0C5B1CDE1CE6CF0F00964D2E /* MenuViewController.h */,
 				0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */,
+				E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */,
+				E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -417,6 +435,7 @@
 			files = (
 				0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */,
 				0CED20861CE28673001F79E9 /* CHResult.m in Sources */,
+				0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */,
 				0CED20781CE2866A001F79E9 /* CHOCRDrawResultFilter.m in Sources */,
 				0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */,
 				0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */,
@@ -428,6 +447,7 @@
 				0CED20771CE2866A001F79E9 /* CHOCRRecognitionOutput.m in Sources */,
 				E2DAB430C7FA92A03CF54188 /* CHOCRDetectionOutput.m in Sources */,
 				E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */,
+				E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
