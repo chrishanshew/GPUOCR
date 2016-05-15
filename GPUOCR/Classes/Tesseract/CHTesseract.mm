@@ -39,6 +39,7 @@ namespace tesseract {
         [self configureTesseractEnvironment];
         _tesseract = new tesseract::TessBaseAPI;
         _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO);
+        _tesseract->InitForAnalysePage();
     }
     return self;
 }
@@ -164,7 +165,6 @@ namespace tesseract {
 }
 
 - (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
-    _tesseract->InitForAnalysePage();
     tesseract::PageIterator *iterator = _tesseract->AnalyseLayout();
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
 
@@ -196,21 +196,10 @@ namespace tesseract {
 
             result.index = index++;
             [results addObject:result];
-        } while (iterator->Next((tesseract::PageIteratorLevel)level));
+        } while (iterator->Next(iteratorLevel));
 
         CHResultGroup *resultGroup = [[CHResultGroup alloc] init];
         resultGroup.results = results;
-
-        _tesseract->GetTextDirection(&offset, &slope);
-        resultGroup.offset = offset;
-        resultGroup.slope = slope;
-
-        Pix *inputImage = _tesseract->GetInputImage();
-        if (inputImage) {
-            resultGroup.imageSize = CGSizeMake(inputImage->w, inputImage->h);
-            resultGroup.bytesPerPixel = inputImage->d;
-            delete inputImage;
-        }
 
         delete iterator;
         

@@ -13,6 +13,7 @@
 
 @interface CHOCRDrawResultFilter () {
     GLint lineWidthUniform, lineColorUniform;
+    GLfloat _widthUniform, _heightUniform;
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
     GLuint _projectionUniform;
@@ -23,13 +24,15 @@
 
 NSString *const kCHOCRDrawRectVertexShader = SHADER_STRING
 (
+        uniform float width;
+        uniform float height;
         attribute vec4 position;
 
         void main()
         {
             gl_Position =
-                    vec4(position.x * 2.0 / 720.0 - 1.0,
-                    position.y * 2.0 / 1280.0 - 1.0,
+                    vec4(position.x * 2.0 / width - 1.0,
+                    position.y * 2.0 / height - 1.0,
                     position.z,
                     1.0);
         }
@@ -47,7 +50,7 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 
 @implementation CHOCRDrawResultFilter
 
-- (id)init {
+- (id)init{
     
     self = [super initWithVertexShaderFromString:kCHOCRDrawRectVertexShader fragmentShaderFromString:kCHOCRDrawRectFragmentShader];
     if (self) {
@@ -55,6 +58,17 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
         _results = [NSArray array];
     }
     return self;
+}
+
+-(void)forceProcessingAtSize:(CGSize)frameSize {
+    [super forceProcessingAtSize:frameSize];
+    runSynchronouslyOnVideoProcessingQueue(^{
+        _widthUniform = [filterProgram uniformIndex:@"width"];
+        _heightUniform = [filterProgram uniformIndex:@"height"];
+        [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
+        [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
+        glViewport(0, 0, frameSize.width, frameSize.height);
+    });
 }
 
 - (void)setResults:(NSArray *)results {
@@ -91,8 +105,6 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
         
         outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:[self sizeOfFBO] textureOptions:self.outputTextureOptions onlyTexture:NO];
         [outputFramebuffer activateFramebuffer];
-
-        CGSize filterFrameSize = self.outputFrameSize;
 
         CGRect rect;
         CGPoint leftStart, leftEnd, topEnd, rightEnd;
@@ -143,8 +155,6 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        glViewport(0, 0, filterFrameSize.width, filterFrameSize.height);
 
         glBlendEquation(GL_FUNC_ADD);
         glBlendFunc(GL_ONE, GL_ONE);

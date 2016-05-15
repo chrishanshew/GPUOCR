@@ -17,6 +17,8 @@
 #define kDefaultAdaptiveThresholderBlurRadius 1.0
 
 @interface ViewController () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate, CHOCRDetectionOutputDelegate> {
+    CGSize _processingSize;
+
     // Inputs
     GPUImageVideoCamera *_videoCamera;
     GPUImageStillCamera *_stillCamera;
@@ -54,31 +56,27 @@
             OCR Filters
          */
 
-        CGSize processingSize = CGSizeMake(720, 1280);
+        _processingSize = CGSizeMake(720, 1280);
 
         // Thresholder
         GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
         adaptiveThresholdFilter.blurRadiusInPixels = kDefaultAdaptiveThresholderBlurRadius;
-        [adaptiveThresholdFilter forceProcessingAtSizeRespectingAspectRatio:processingSize];
+        [adaptiveThresholdFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
 
         // Recognition Output
-        _recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
+        _recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
         
         // Analysis Output
-        _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:processingSize resultsInBGRAFormat:YES withDelegate:self];
+        _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
 
         // DetectionOutput
-        _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:processingSize resultsInBGRAFormat:YES withDelegate:self];
+        _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
 
         [adaptiveThresholdFilter addTarget:_analysisOutput];
         
         _ocrFilterGroup = [[GPUImageFilterGroup alloc] init];
         [_ocrFilterGroup setInitialFilters:@[adaptiveThresholdFilter, _recognitionOutput]];
         [_videoCamera addTarget:adaptiveThresholdFilter];
-        
-        
-        GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-        [blendFilter forceProcessingAtSize:CGSizeMake(720, 1280)];
     }
     return self;
 }
@@ -92,14 +90,14 @@
         [_videoCamera setCaptureSessionPreset:AVCaptureSessionPreset1280x720];
 
         GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-        [blendFilter forceProcessingAtSize:CGSizeMake(720, 1280)];
+        [blendFilter forceProcessingAtSize:_processingSize];
         GPUImageGammaFilter *gammaFilter = [[GPUImageGammaFilter alloc] init];
         [_videoCamera addTarget:gammaFilter];
         [gammaFilter addTarget:blendFilter];
         [blendFilter addTarget:(GPUImageView *)self.view];
 
         _drawRect = [[CHOCRDrawResultFilter alloc] init];
-        [_drawRect forceProcessingAtSize:CGSizeMake(720, 1280)];
+        [_drawRect forceProcessingAtSize:_processingSize];
         [_drawRect addTarget:blendFilter];
 
         [gammaFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {

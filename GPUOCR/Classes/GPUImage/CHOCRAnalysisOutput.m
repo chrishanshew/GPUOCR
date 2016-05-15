@@ -71,7 +71,7 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract analyzeLayoutAtLevel: CHTesseractAnalysisLevelTextLine];
+                    CHResultGroup *result = [weakTesseract analyzeLayoutAtLevel: CHTesseractAnalysisLevelWord];
                     [weakTesseract clear];
                     [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
                 }]];
