@@ -10,7 +10,6 @@
 		0C4E20EC1CE90B3D00149633 /* CHDrawResultFilterGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20EB1CE90B3D00149633 /* CHDrawResultFilterGroup.m */; };
 		0C4E20F21CE9111100149633 /* CHTesseractOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20F11CE9111100149633 /* CHTesseractOutput.m */; };
 		0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */; };
-		0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */; };
 		0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CE31CE6D57F00964D2E /* MenuCell.m */; };
 		0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C618BD61CE842FE00E0CD2B /* Settings.m */; };
 		0CED202D1CE28181001F79E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED202C1CE28181001F79E9 /* main.m */; };
@@ -75,8 +74,6 @@
 		0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHImageProcessor.m; sourceTree = "<group>"; };
 		0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
 		0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
-		0C5B1CDE1CE6CF0F00964D2E /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
-		0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
 		0C5B1CE21CE6D57F00964D2E /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
 		0C5B1CE31CE6D57F00964D2E /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		0C618BD51CE842FE00E0CD2B /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -257,8 +254,6 @@
 				0CED20551CE283BC001F79E9 /* ViewController.m */,
 				0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */,
 				0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */,
-				0C5B1CDE1CE6CF0F00964D2E /* MenuViewController.h */,
-				0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */,
 				E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */,
 				E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */,
 			);
@@ -448,7 +443,6 @@
 				0CED20861CE28673001F79E9 /* CHResult.m in Sources */,
 				0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */,
 				0CED20781CE2866A001F79E9 /* CHOCRDrawResultFilter.m in Sources */,
-				0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */,
 				0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */,
 				0CED20581CE283BC001F79E9 /* AppDelegate.m in Sources */,
 				0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */,
