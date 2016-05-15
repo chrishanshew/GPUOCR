@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C4E20EC1CE90B3D00149633 /* CHDrawResultFilterGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20EB1CE90B3D00149633 /* CHDrawResultFilterGroup.m */; };
+		0C4E20F21CE9111100149633 /* CHTesseractOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20F11CE9111100149633 /* CHTesseractOutput.m */; };
 		0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */; };
 		0C5B1CE01CE6CF0F00964D2E /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CDF1CE6CF0F00964D2E /* MenuViewController.m */; };
 		0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CE31CE6D57F00964D2E /* MenuCell.m */; };
@@ -65,6 +67,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C4E20EA1CE90B3D00149633 /* CHDrawResultFilterGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHDrawResultFilterGroup.h; sourceTree = "<group>"; };
+		0C4E20EB1CE90B3D00149633 /* CHDrawResultFilterGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHDrawResultFilterGroup.m; sourceTree = "<group>"; };
+		0C4E20F01CE9111100149633 /* CHTesseractOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseractOutput.h; sourceTree = "<group>"; };
+		0C4E20F11CE9111100149633 /* CHTesseractOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTesseractOutput.m; sourceTree = "<group>"; };
 		0C5B1CD11CE6C3F200964D2E /* CHImageProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHImageProcessor.h; sourceTree = "<group>"; };
 		0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHImageProcessor.m; sourceTree = "<group>"; };
 		0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
@@ -270,6 +276,10 @@
 				0CED20741CE28669001F79E9 /* CHOCRDrawResultFilter.m */,
 				E2DABD8B0D7D95A005A1F0DE /* CHOCRDetectionOutput.h */,
 				E2DABBB3B17B6565857DA262 /* CHOCRDetectionOutput.m */,
+				0C4E20EA1CE90B3D00149633 /* CHDrawResultFilterGroup.h */,
+				0C4E20EB1CE90B3D00149633 /* CHDrawResultFilterGroup.m */,
+				0C4E20F01CE9111100149633 /* CHTesseractOutput.h */,
+				0C4E20F11CE9111100149633 /* CHTesseractOutput.m */,
 			);
 			path = GPUImage;
 			sourceTree = "<group>";
@@ -281,8 +291,8 @@
 				0CED207B1CE28673001F79E9 /* CHTesseract.mm */,
 				0CED207E1CE28673001F79E9 /* CHResult.h */,
 				0CED20801CE28673001F79E9 /* CHResult.m */,
-				E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */,
 				E2DABFE53936C0DC5C5619A1 /* CHResultGroup.h */,
+				E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */,
 			);
 			path = Tesseract;
 			sourceTree = "<group>";
@@ -434,6 +444,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */,
+				0C4E20F21CE9111100149633 /* CHTesseractOutput.m in Sources */,
 				0CED20861CE28673001F79E9 /* CHResult.m in Sources */,
 				0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */,
 				0CED20781CE2866A001F79E9 /* CHOCRDrawResultFilter.m in Sources */,
@@ -448,6 +459,7 @@
 				E2DAB430C7FA92A03CF54188 /* CHOCRDetectionOutput.m in Sources */,
 				E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */,
 				E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */,
+				0C4E20EC1CE90B3D00149633 /* CHDrawResultFilterGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,6 +11,13 @@
 
 @class CHResultGroup;
 
+typedef NS_ENUM(NSUInteger, CHTesseractMode) {
+    CHTesseractModeAnalysis = 0,
+    CHTesseractModeAnalysisWithOSD,
+    CHTesseractModeAnalysisWithRecognition
+};
+
+
 typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
     CHTesseractAnalysisLevelBlock = 0,
     CHTesseractAnalysisLevelParagraph,

@@ -8,35 +8,30 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "ViewController.h"
+#import "Settings.h"
 #import "GPUImage.h"
-#import "CHOCRRecognitionOutput.h"
-#import "CHOCRAnalysisOutput.h"
-#import "CHOCRDetectionOutput.h"
-#import "CHOCRDrawResultFilter.h"
+#import "CHTesseractOutput.h"
+#import "CHDrawResultFilterGroup.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4.0
 
-@interface ViewController () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate, CHOCRDetectionOutputDelegate> {
+@interface ViewController () <CHTesseractOutputDelegate> {
     CGSize _processingSize;
-    CHTesseractAnalysisLevel _level;
 
     // Inputs
     GPUImageVideoCamera *_videoCamera;
 
-    // OCR Output
-    CHOCRRecognitionOutput *_recognitionOutput;
-    CHOCRAnalysisOutput *_analysisOutput;
-    CHOCRDetectionOutput *_detectionOutput;
+
     
     // Filter Groups
-    GPUImageFilterGroup *_uiFilterGroup;
-    GPUImageFilterGroup *_ocrFilterGroup;
-
-    CHOCRDrawResultFilter *_drawRect;
+    CHDrawResultFilterGroup *drawResultFilter;
+    CHTesseractOutput *tesseractOutput;
 }
 
 @property(nonnull, strong) IBOutlet UIButton *settingsButton;
 -(IBAction)showSettings:(id)sender;
+
+-(void)updateSettings;
 
 @end
 
@@ -45,69 +40,32 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        _processingSize = CGSizeMake(288, 352);
-        _level = CHTesseractAnalysisLevelTextLine;
-
-        /*
-            Inputs
-         */
+        Settings *settings = [Settings currentSettings];
+        
         _videoCamera = [[GPUImageVideoCamera alloc] init];
-        [_videoCamera setCaptureSessionPreset:AVCaptureSessionPreset352x288];
-
+        [_videoCamera setCaptureSessionPreset:settings.captureSessionPreset];
         _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
-        _uiFilterGroup = [[GPUImageFilterGroup alloc] init];
-
-        /*
-            OCR Filters
-         */
-
-        // Thresholder
-        GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
-        adaptiveThresholdFilter.blurRadiusInPixels = kDefaultAdaptiveThresholderBlurRadius;
-        [adaptiveThresholdFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
-
-        // Recognition Output
-        _recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
-        _recognitionOutput.level = _level;
-
-        // Analysis Output
-        _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
-        _analysisOutput.level = _level;
-
-        // DetectionOutput
-        _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
-        _detectionOutput.level = _level;
-
-        [adaptiveThresholdFilter addTarget:_analysisOutput];
+        _processingSize = [Settings sizeForCaptureSessionPreset:_videoCamera.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
         
-        _ocrFilterGroup = [[GPUImageFilterGroup alloc] init];
-        [_ocrFilterGroup setInitialFilters:@[adaptiveThresholdFilter, _analysisOutput]];
-        [_videoCamera addTarget:adaptiveThresholdFilter];
+        drawResultFilter = [[CHDrawResultFilterGroup alloc] initWithProcessingSize:_processingSize];
+
+        // OCR Filters
+        tesseractOutput = [[CHTesseractOutput alloc] initWithProcessingSize:_processingSize];
+        tesseractOutput.delegate = self;
+        [_videoCamera addTarget:tesseractOutput];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-        [blendFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
-        GPUImageGammaFilter *gammaFilter = [[GPUImageGammaFilter alloc] init];
-        [gammaFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
-        [_videoCamera addTarget:gammaFilter];
-        [gammaFilter addTarget:blendFilter];
-        [blendFilter addTarget:(GPUImageView *)self.view];
-
-        _drawRect = [[CHOCRDrawResultFilter alloc] init];
-        [_drawRect forceProcessingAtSize:_processingSize];
-        [_drawRect addTarget:blendFilter];
-
-        [gammaFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
-            [_drawRect renderResultsWithFrameTime:time];
-        }];
+        [_videoCamera addTarget:drawResultFilter];
+        GPUImageView *cameraView = (GPUImageView *)self.view;
+        cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
+        [drawResultFilter addTarget:cameraView atTextureLocation:0];
+        [self updateSettings];
     } else {
         // Rear Camera not available, present alert
     }
@@ -115,11 +73,13 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings) name:GPUOCRSettingsUpdatedNotification object:nil];
     [_videoCamera startCameraCapture];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_videoCamera stopCameraCapture];
 }
 
@@ -128,39 +88,53 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - IBActions
+#pragma mark - IB Actions
 
 -(IBAction)showSettings:(id)sender {
     [self performSegueWithIdentifier:@"ShowSettingsController" sender:self];
 }
 
-#pragma mark - <CHOCRRecognitionOutputDelegate>
+#pragma mark - Notifications
 
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
-    [_drawRect setResults:result.results];
-}
-
-- (void)willBeginRecognitionWithOutput:(CHOCRRecognitionOutput *)output {
+-(void)updateSettings {
+    BOOL running = [_videoCamera isRunning];
+    Settings *settings = [Settings currentSettings];
     
-}
-
-#pragma mark - <CHOCRAnaylsisOutputDelegate>
-
-- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
-    [_drawRect setResults:result.results];
-}
-
-- (void)willBeginAnalysisWithOutput:(CHOCRAnalysisOutput *)output {
+    // Detection Level
+    tesseractOutput.level = settings.level;
+    tesseractOutput.mode = settings.mode;
     
+    // Line Width and Color
+    [drawResultFilter setLineWidth:settings.lineWidth];
+    CGFloat red, green, blue, alpha;
+    [settings.lineColor getRed:&red green:&green blue:&blue alpha:&alpha];
+    [drawResultFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
+    
+    // Capture Preset
+    if (![_videoCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
+        if (running) [_videoCamera stopCameraCapture];
+        _videoCamera.captureSessionPreset = settings.captureSessionPreset;
+        if (running) [_videoCamera startCameraCapture];
+    }
+    
+    // Size
+    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:_videoCamera.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
+    if (!CGSizeEqualToSize(_processingSize, newProcessingSize)) {
+        if (running) [_videoCamera stopCameraCapture];
+        _processingSize = newProcessingSize;
+        [tesseractOutput forceProcessingAtSize:_processingSize];
+        [drawResultFilter forceProcessingAtSize:_processingSize];
+        if (running) [_videoCamera startCameraCapture];
+    }
 }
 
-#pragma mark - <CHOCRDetectionOutputDelegate>
+#pragma mark - <CHTesseractOutputDelegate>
 
-- (void)output:(CHOCRDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
-    [_drawRect setResults:result.results];
+- (void)output:(CHTesseractOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
+    [drawResultFilter setResults:result.results];
 }
 
-- (void)willBeginDetectionWithOutput:(CHOCRDetectionOutput *)output {
+- (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output {
 
 }
 

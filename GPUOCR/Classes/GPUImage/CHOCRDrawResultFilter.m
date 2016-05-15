@@ -38,7 +38,7 @@ NSString *const kCHOCRDrawRectVertexShader = SHADER_STRING
 
 NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 (
-        uniform vec4 lineColor;
+        uniform lowp vec4 lineColor;
  
  void main()
  {
@@ -46,7 +46,7 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
  }
 );
 
-GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 0.0};
+GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
 @implementation CHOCRDrawResultFilter
 
@@ -62,15 +62,13 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 0.0};
 
 -(void)forceProcessingAtSize:(CGSize)frameSize {
     [super forceProcessingAtSize:frameSize];
-    runSynchronouslyOnVideoProcessingQueue(^{
-        _widthUniform = [filterProgram uniformIndex:@"width"];
-        _heightUniform = [filterProgram uniformIndex:@"height"];
-        _colorUniform =[filterProgram uniformIndex:@""];
-        [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
-        [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
-        [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
-        glViewport(0, 0, frameSize.width, frameSize.height);
-    });
+    _widthUniform = [filterProgram uniformIndex:@"width"];
+    _heightUniform = [filterProgram uniformIndex:@"height"];
+    _colorUniform =[filterProgram uniformIndex:@"lineColor"];
+    [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
+    [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
+    [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
+    glViewport(0, 0, frameSize.width, frameSize.height);
 }
 
 - (void)setResults:(NSArray *)results {
@@ -178,9 +176,11 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 0.0};
 }
 
 -(void)setLineWidth:(float)width {
-    _lineWidth = width;
-    [GPUImageContext setActiveShaderProgram:filterProgram];
-    glLineWidth(_lineWidth);
+    runSynchronouslyOnVideoProcessingQueue(^{
+        _lineWidth = width;
+        [GPUImageContext setActiveShaderProgram:filterProgram];
+        glLineWidth(_lineWidth);
+    });
 }
 
 @end

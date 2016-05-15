@@ -11,7 +11,7 @@
 
 @protocol SettingsViewControllerDelegate <NSObject>
 
--(void)settingsController:(SettingsViewController *)controller didUpdateSettings:(Settings *)settings;
+-(void)settingsController:(SettingsViewController *)controller willDismissWithUpdatedSettings:(Settings *)settings;
 
 @end
 
@@ -21,6 +21,7 @@
 
 @property (nonatomic, strong) IBOutlet UIButton *dismissButton;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *selectModeControl;
+@property (nonatomic, strong) IBOutlet UISegmentedControl *selectLevelControl;
 @property (nonatomic, strong) IBOutlet UISegmentedControl *selectDimensionControl;
 @property (nonatomic, strong) IBOutlet UIView *linePreview;
 @property (nonatomic, strong) IBOutlet UIImageView *lineColorImageView;
@@ -32,6 +33,7 @@
 
 -(IBAction)onDismissTouched:(id)sender;
 -(IBAction)onSelectModeValueChanged:(id)sender;
+-(IBAction)onSelectLevelValueChanged:(id)sender;
 -(IBAction)onSelectDimensionValueChange:(id)sender;
 -(IBAction)onLineColorValueChanged:(id)sender;
 -(IBAction)onLineAlphaValueChange:(id)sender;

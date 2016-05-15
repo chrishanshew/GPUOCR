@@ -8,6 +8,7 @@
 
 @interface CHResultGroup : NSObject
 
+@property(nonatomic)CHTesseractMode mode;
 @property(nonatomic)CHTesseractAnalysisLevel level;
 
 // Text Direction

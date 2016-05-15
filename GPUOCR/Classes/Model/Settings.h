@@ -7,17 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
+#import "CHTesseract.h"
 
-typedef NS_ENUM(NSUInteger, LivePreviewMode) {
-    LivePreviewModeAnalysis = 0,
-    LivePreviewModeOSD,
-    LivePreviewModeRecognition
-};
+FOUNDATION_EXPORT NSString * const GPUOCRSettingsUpdatedNotification;
 
 @interface Settings : NSObject
 
-@property(nonatomic) LivePreviewMode mode;
+@property(nonatomic) CHTesseractMode mode;
+@property(nonatomic) CHTesseractAnalysisLevel level;
 @property(nonatomic, strong) NSString *captureSessionPreset;
 @property(nonatomic) float lineWidth;
 @property(nonatomic, strong) UIColor *lineColor;
@@ -26,5 +25,6 @@ typedef NS_ENUM(NSUInteger, LivePreviewMode) {
 -(void)saveAsUserDefaults;
 +(instancetype)currentSettings;
 +(instancetype)defaultSettings;
++(CGSize)sizeForCaptureSessionPreset:(NSString *)preset andOrientation:(UIInterfaceOrientation)orientation;
 
 @end

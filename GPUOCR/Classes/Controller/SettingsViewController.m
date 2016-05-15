@@ -39,35 +39,24 @@ static NSInteger const hexColor[] = {0x000000, 0xfe0000, 0xff7900, 0xffb900, 0xf
     [super viewWillAppear:animated];
     
     _lineWidthSlider.value = _settings.lineWidth;
-    
-    CGFloat alpha;
-    [_settings.lineColor getWhite:NULL alpha:&alpha];
-    
-    _lineAlphaSlider.value = alpha;
-    
-    switch (_settings.mode) {
-        case LivePreviewModeAnalysis:
-        {
-            _selectModeControl.selectedSegmentIndex = 0;
-        }
-        case LivePreviewModeOSD:
-        {
-            _selectModeControl.selectedSegmentIndex = 1;
-        }
-        case LivePreviewModeRecognition:
-        {
-            _selectModeControl.selectedSegmentIndex = 2;
-        }
-    }
-    
     _selectDimensionControl.selectedSegmentIndex = [_captureSessionPresets indexOfObject:_settings.captureSessionPreset];
     
     [self update];
 }
 
 -(void)update {
+    _lineWidthSlider.value = _settings.lineWidth;
+    
+    CGFloat alpha;
+    [_settings.lineColor getWhite:NULL alpha:&alpha];
+    _lineAlphaSlider.value = alpha;
+    
     _linePreview.layer.borderColor = [_settings.lineColor CGColor];
     _linePreview.layer.borderWidth = _settings.lineWidth;
+    
+    _selectModeControl.selectedSegmentIndex = _settings.mode;
+    _selectLevelControl.selectedSegmentIndex = _settings.level;
+    _selectDimensionControl.selectedSegmentIndex = [_captureSessionPresets indexOfObject:_settings.captureSessionPreset];
     
     for (int i = 0; i < 13; i++) {
         if (hexColor[i] == _settings.hexColor) {
@@ -92,6 +81,11 @@ static NSInteger const hexColor[] = {0x000000, 0xfe0000, 0xff7900, 0xffb900, 0xf
 
 -(IBAction)onSelectModeValueChanged:(id)sender {
     _settings.mode = _selectModeControl.selectedSegmentIndex;
+    [_settings saveAsUserDefaults];
+}
+
+-(IBAction)onSelectLevelValueChanged:(id)sender {
+    _settings.level = _selectLevelControl.selectedSegmentIndex;
     [_settings saveAsUserDefaults];
 }
 
