@@ -14,15 +14,15 @@
 #import "CHOCRDetectionOutput.h"
 #import "CHOCRDrawResultFilter.h"
 
-#define kDefaultAdaptiveThresholderBlurRadius 1.0
+#define kDefaultAdaptiveThresholderBlurRadius 4.0
 
 @interface ViewController () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate, CHOCRDetectionOutputDelegate> {
     CGSize _processingSize;
+    CHTesseractAnalysisLevel _level;
 
     // Inputs
     GPUImageVideoCamera *_videoCamera;
-    GPUImageStillCamera *_stillCamera;
-    
+
     // OCR Output
     CHOCRRecognitionOutput *_recognitionOutput;
     CHOCRAnalysisOutput *_analysisOutput;
@@ -42,21 +42,22 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        _processingSize = CGSizeMake(288, 352);
+        _level = CHTesseractAnalysisLevelTextLine;
+
         /*
             Inputs
          */
         _videoCamera = [[GPUImageVideoCamera alloc] init];
+        [_videoCamera setCaptureSessionPreset:AVCaptureSessionPreset352x288];
+
         _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
-        _stillCamera = [[GPUImageStillCamera alloc] init];
-        _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-        
         _uiFilterGroup = [[GPUImageFilterGroup alloc] init];
+
         /*
             OCR Filters
          */
-
-        _processingSize = CGSizeMake(720, 1280);
 
         // Thresholder
         GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
@@ -65,17 +66,20 @@
 
         // Recognition Output
         _recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
-        
+        _recognitionOutput.level = _level;
+
         // Analysis Output
         _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
+        _analysisOutput.level = _level;
 
         // DetectionOutput
         _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
+        _detectionOutput.level = _level;
 
-        [adaptiveThresholdFilter addTarget:_analysisOutput];
+        [adaptiveThresholdFilter addTarget:_detectionOutput];
         
         _ocrFilterGroup = [[GPUImageFilterGroup alloc] init];
-        [_ocrFilterGroup setInitialFilters:@[adaptiveThresholdFilter, _recognitionOutput]];
+        [_ocrFilterGroup setInitialFilters:@[adaptiveThresholdFilter, _analysisOutput]];
         [_videoCamera addTarget:adaptiveThresholdFilter];
     }
     return self;
@@ -86,12 +90,10 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        
-        [_videoCamera setCaptureSessionPreset:AVCaptureSessionPreset1280x720];
-
         GPUImageAlphaBlendFilter *blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-        [blendFilter forceProcessingAtSize:_processingSize];
+        [blendFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
         GPUImageGammaFilter *gammaFilter = [[GPUImageGammaFilter alloc] init];
+        [gammaFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
         [_videoCamera addTarget:gammaFilter];
         [gammaFilter addTarget:blendFilter];
         [blendFilter addTarget:(GPUImageView *)self.view];
@@ -124,15 +126,6 @@
 }
 
 #pragma mark - IBActions
-
-- (IBAction)capture:(id)sender {
-    if (_videoCamera.isRunning) {
-        [_videoCamera pauseCameraCapture];
-    } else {
-        [_videoCamera resumeCameraCapture];
-    }
-    
-}
 
 #pragma mark - <CHOCRRecognitionOutputDelegate>
 

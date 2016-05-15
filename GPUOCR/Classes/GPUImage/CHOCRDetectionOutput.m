@@ -57,7 +57,7 @@
 
             // TODO: Optimizable?
             // Read last byte (alpha) for RBGA pixels
-            for (int i = 4; i < ((4 * width) * height) + 4; i+=4) {
+            for (int i = 0; i < ((4 * width) * height); i+=4) {
                 [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
 
@@ -66,7 +66,7 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract detectionAtLevel: CHTesseractAnalysisLevelTextLine];
+                    CHResultGroup *result = [weakTesseract detectionAtLevel: _level];
                     [weakSelf output:self didFinishDetectionWithResult:result];
                     [weakTesseract clear];
                 }]];

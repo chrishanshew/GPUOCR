@@ -10,9 +10,5 @@
 
 @interface ViewController : UIViewController
 
-@property(nonatomic, strong) IBOutlet UIButton *captureButton;
-
-- (IBAction)capture:(id)sender;
-
 @end
 

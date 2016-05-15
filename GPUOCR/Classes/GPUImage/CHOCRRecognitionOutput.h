@@ -25,6 +25,7 @@
 
 @property(nonatomic, weak)id<CHOCRRecogntionOutputDelegate> delegate;
 @property(nonatomic, strong, readonly)NSString* language;
+@property(nonatomic)CHTesseractAnalysisLevel level;
 
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language;
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language withDelegate:(id<CHOCRRecogntionOutputDelegate>)delegate;

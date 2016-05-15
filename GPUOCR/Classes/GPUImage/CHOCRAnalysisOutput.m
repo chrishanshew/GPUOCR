@@ -51,11 +51,10 @@
             [weakSelf willBeginAnalysisWithOutput:weakSelf];
             [weakSelf lockFramebufferForReading];
             
-            
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
             int height = weakSelf.maximumOutputSize.height;
             int width = weakSelf.maximumOutputSize.width;
-            
+
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
             
             // TODO: Optimizable?
@@ -71,9 +70,9 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract analyzeLayoutAtLevel: CHTesseractAnalysisLevelWord];
-                    [weakTesseract clear];
+                    CHResultGroup *result = [weakTesseract analyzeLayoutAtLevel: _level];
                     [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
+                    [weakTesseract clear];
                 }]];
             }
         }

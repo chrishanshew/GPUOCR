@@ -25,7 +25,6 @@
         <!--Menu View Controller-->
         <scene sceneID="ERi-We-2M0">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9f7-iB-WRN" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <collectionViewController id="00b-qH-hox" customClass="MenuViewController" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="ndY-as-dH4">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
@@ -85,6 +84,7 @@
                         <segue destination="fa0-SA-Cdd" kind="show" identifier="ShowImageViewController" id="zzI-rg-kpn"/>
                     </connections>
                 </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9f7-iB-WRN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-709" y="-515"/>
         </scene>
@@ -121,9 +121,6 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8wX-f0-bbd">
                                 <rect key="frame" x="273" y="550" width="55" height="30"/>
                                 <state key="normal" title="Capture"/>
-                                <connections>
-                                    <action selector="capture:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g6P-f8-FkC"/>
-                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -133,7 +130,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="captureButton" destination="8wX-f0-bbd" id="ERR-5m-qPt"/>
                         <outlet property="view" destination="8bC-Xf-vdC" id="UDF-8C-kl7"/>
                     </connections>
                 </viewController>

@@ -24,7 +24,7 @@
 @interface CHOCRAnalysisOutput : GPUImageRawDataOutput <CHOCRAnalysisOutputDelegate>
 
 @property(nonatomic, weak)id<CHOCRAnalysisOutputDelegate> delegate;
-@property(nonatomic, readonly)CHTesseractAnalysisLevel level;
+@property(nonatomic)CHTesseractAnalysisLevel level;
 
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat;
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat withDelegate:(id<CHOCRAnalysisOutputDelegate>)delegate;

@@ -9,12 +9,9 @@
 #import "CHTesseract.h"
 #import "CHResultGroup.h"
 #import "CHResult.h"
-#import "environ.h"
 #import "apitypes.h"
 #import "baseapi.h"
 #import "osdetect.h"
-#import "pix.h"
-
 
 namespace tesseract {
     class TessBaseAPI;
@@ -26,6 +23,13 @@ namespace tesseract {
 }
 
 - (void)configureTesseractEnvironment;
+
+- (void)getBoundingBox:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forResult:(CHResult *)result;
+- (void)getBaseline:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forResult:(CHResult *)result;
+- (void)getOrientation:(tesseract::ResultIterator *)iterator forResult:(CHResult *)result;
+- (void)getText:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forResult:(CHResult *)result;
+- (void)getTextDirection:(CHResultGroup *)group;
+- (void)getOrientation;
 
 @end
 
@@ -49,7 +53,7 @@ namespace tesseract {
     if (self) {
         [self configureTesseractEnvironment];
         _tesseract = new tesseract::TessBaseAPI;
-        _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO_OSD);
+//        _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO_OSD);
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSString *tessdataPath = [bundle resourcePath];
         _tesseract->Init([[tessdataPath stringByAppendingString:@"/"]cStringUsingEncoding:NSUTF8StringEncoding], [@"osd" cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -109,49 +113,89 @@ namespace tesseract {
         NSMutableArray *results = [NSMutableArray array];
         CHResult *result;
         int index = 0;
-        // Text Direction
-        int offset; float slope;
-        // Box Dimensions
-        int left, top, right, bottom;
-        // Base line
-        int xStart, yStart, xEnd, yEnd;
+
         do {
+            result = [[CHResult alloc] init];
+            [self getBoundingBox:iterator atLevel:iteratorLevel forResult:result];
+            [self getBaseline:iterator atLevel:iteratorLevel forResult:result];
+            [self getText:iterator atLevel:iteratorLevel forResult:result];
 
-            // Get the dimensions of the detected box
-            iterator->BoundingBox(iteratorLevel, &left, &top, &right, &bottom);
-            result.left = left;
-            result.top = top;
-            result.right = right;
-            result.bottom = bottom;
-
-            // Baseline
-            iterator->Baseline(iteratorLevel, &xStart, &yStart, &xEnd, &yEnd);
-            result.start = CGPointMake(xStart, yStart);
-            result.end = CGPointMake(xEnd, yEnd);
-
-            // Text
-            char * text = iterator->GetUTF8Text(iteratorLevel);
-            if (text) {
-                result.text = [NSString stringWithUTF8String:text];
-                result.confidence = iterator->Confidence(iteratorLevel);
-                NSLog(@"%@", result.text);
-            }
             result.index = index++;
             [results addObject:result];
 
-        } while (iterator->Next((tesseract::PageIteratorLevel)level));
+        } while (iterator->Next(iteratorLevel));
 
         CHResultGroup *resultGroup = [[CHResultGroup alloc] init];
         resultGroup.results = results;
 
-        _tesseract->GetTextDirection(&offset, &slope);
-        resultGroup.offset = offset;
-        resultGroup.slope = slope;
+        [self getTextDirection:resultGroup];
 
-        Pix *inputImage = _tesseract->GetInputImage();
-        resultGroup.imageSize = CGSizeMake(inputImage->w, inputImage->h);
-        resultGroup.bytesPerPixel = inputImage->d;
-        delete inputImage;
+        delete iterator;
+
+        return resultGroup;
+    }
+    return nil;
+}
+
+- (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
+    _tesseract->AnalyseLayout();
+    tesseract::ResultIterator* iterator = _tesseract->GetIterator();
+    tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
+
+    if (iterator) {
+        NSMutableArray *results = [NSMutableArray array];
+        CHResult *result;
+
+        int index = 0;
+        do {
+            result = [[CHResult alloc] init];
+
+            [self getBoundingBox:iterator atLevel:iteratorLevel forResult:result];
+            [self getBaseline:iterator atLevel:iteratorLevel forResult:result];
+
+            result.index = index++;
+            [results addObject:result];
+        } while (iterator->Next(iteratorLevel));
+
+        CHResultGroup *resultGroup = [[CHResultGroup alloc] init];
+        resultGroup.results = results;
+
+        [self getTextDirection:resultGroup];
+
+        delete iterator;
+        
+        return resultGroup;
+    }
+    
+    return nil;
+}
+
+- (CHResultGroup *)detectionAtLevel:(CHTesseractAnalysisLevel)level {
+    _tesseract->AnalyseLayout();
+    tesseract::ResultIterator *iterator = _tesseract->GetIterator();
+    tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
+
+    if (iterator) {
+        NSMutableArray *results = [NSMutableArray array];
+        CHResult *result;
+
+        int index = 0;
+
+        do {
+            result = [[CHResult alloc] init];
+
+            [self getBoundingBox:iterator atLevel:iteratorLevel forResult:result];
+            [self getBaseline:iterator atLevel:iteratorLevel forResult:result];
+            [self getOrientation:iterator forResult:result];
+
+            result.index = index++;
+            [results addObject:result];
+        } while (iterator->Next(iteratorLevel));
+
+        CHResultGroup *resultGroup = [[CHResultGroup alloc] init];
+        resultGroup.results = results;
+
+        [self getTextDirection:resultGroup];
 
         delete iterator;
 
@@ -164,125 +208,58 @@ namespace tesseract {
     return [NSString stringWithUTF8String:_tesseract->GetHOCRText(0)];
 }
 
-- (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
-    tesseract::PageIterator *iterator = _tesseract->AnalyseLayout();
-    tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
-
-    if (iterator) {
-        NSMutableArray *results = [NSMutableArray array];
-        CHResult *result;
-
-        int index = 0;
-        // Text Direction
-        int offset; float slope;
-        // Box Dimensions
-        int left, top, right, bottom;
-        // Base line
-        int xStart, yStart, xEnd, yEnd;
-        do {
-            result = [[CHResult alloc] init];
-            
-            // Get the dimensions of the detected box
-            iterator->BoundingBox(iteratorLevel, &left, &top, &right, &bottom);
-            result.left = left;
-            result.top = top;
-            result.right = right;
-            result.bottom = bottom;
-
-            // Baseline
-            iterator->Baseline(iteratorLevel, &xStart, &yStart, &xEnd, &yEnd);
-            result.start = CGPointMake(xStart, yStart);
-            result.end = CGPointMake(xEnd, yEnd);
-
-            result.index = index++;
-            [results addObject:result];
-        } while (iterator->Next(iteratorLevel));
-
-        CHResultGroup *resultGroup = [[CHResultGroup alloc] init];
-        resultGroup.results = results;
-
-        delete iterator;
-        
-        return resultGroup;
-    }
-    
-    return nil;
+- (void)getBoundingBox:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forResult:(CHResult *)result {
+    int left, top, right, bottom;
+    iterator->BoundingBox(level, &left, &top, &right, &bottom);
+    result.left = left;
+    result.top = top;
+    result.right = right;
+    result.bottom = bottom;
+//    NSLog(@"%@", CGRectCreateDictionaryRepresentation(result.getRect));
 }
 
-- (CHResultGroup *)detectionAtLevel:(CHTesseractAnalysisLevel)level {
-    _tesseract->Recognize(0);
+- (void)getBaseline:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forResult:(CHResult *)result {
+    int xStart, yStart, xEnd, yEnd;
+    iterator->Baseline(level, &xStart, &yStart, &xEnd, &yEnd);
+    result.start = CGPointMake(xStart, yStart);
+    result.end = CGPointMake(xEnd, yEnd);
+}
+
+- (void)getOrientation:(tesseract::ResultIterator *)iterator forResult:(CHResult *)result {
+    tesseract::Orientation orientation;
+    tesseract::WritingDirection writingDirection;
+    tesseract::TextlineOrder textlineOrder;
+    float deskew;
+    iterator->Orientation(&orientation, &writingDirection, &textlineOrder, &deskew);
+    //NSLog(@"Orientation: %i\nWriting Direction: %i\nTextline Order: %i\nDeskew: %f", orientation, writingDirection, textlineOrder, deskew);
+}
+
+- (void)getText:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forResult:(CHResult *)result {
+    char * text = iterator->GetUTF8Text(level);
+    if (text) {
+        result.text = [NSString stringWithUTF8String:text];
+        result.confidence = iterator->Confidence(level);
+        NSLog(@"%@", result.text);
+    }
+}
+
+- (void)getTextDirection:(CHResultGroup *)group {
+    // Text Direction
+    int offset; float slope;
+    _tesseract->GetTextDirection(&offset, &slope);
+    group.offset = offset;
+    group.slope = slope;
+//    NSLog(@"Offset: %i, Slope: %f", offset, slope);
+}
+
+- (void)getOrientation {
     OSResults osResults;
     if (_tesseract->DetectOS(&osResults)) {
-        osResults.print_scores();
         NSLog(@"Orientations:");
         for (int i = 0; i <= 3; i++) {
             NSLog(@"%f", osResults.orientations[i]);
         }
     }
-
-    tesseract::PageIterator *iterator = _tesseract->AnalyseLayout();
-    tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
-
-    if (iterator) {
-        NSMutableArray *results = [NSMutableArray array];
-        CHResult *result;
-
-        int index = 0;
-        // Text Direction
-        int offset; float slope;
-        // Box Dimensions
-        int left, top, right, bottom;
-        // Base line
-        int xStart, yStart, xEnd, yEnd;
-        // Orientation
-        tesseract::Orientation orientation;
-        tesseract::WritingDirection writingDirection;
-        tesseract::TextlineOrder textlineOrder;
-        float deskew;
-
-        do {
-            result = [[CHResult alloc] init];
-
-            // Get the dimensions of the detected box
-            iterator->BoundingBox(iteratorLevel, &left, &top, &right, &bottom);
-            result.left = left;
-            result.top = top;
-            result.right = right;
-            result.bottom = bottom;
-
-            // Baseline
-            iterator->Baseline(iteratorLevel, &xStart, &yStart, &xEnd, &yEnd);
-            result.start = CGPointMake(xStart, yStart);
-            result.end = CGPointMake(xEnd, yEnd);
-
-            // Orientation
-            iterator->Orientation(&orientation, &writingDirection, &textlineOrder, &deskew);
-            NSLog(@"Orientation: %i\nWriting Direction: %i\nTextline Order: %i\nDeskew: %f", orientation, writingDirection, textlineOrder, deskew);
-
-            result.index = index++;
-            [results addObject:result];
-        } while (iterator->Next(iteratorLevel));
-
-        CHResultGroup *resultGroup = [[CHResultGroup alloc] init];
-        resultGroup.results = results;
-
-        _tesseract->GetTextDirection(&offset, &slope);
-        resultGroup.offset = offset;
-        resultGroup.slope = slope;
-
-        Pix *inputImage = _tesseract->GetInputImage();
-        if (inputImage) {
-            resultGroup.imageSize = CGSizeMake(inputImage->w, inputImage->h);
-            resultGroup.bytesPerPixel = inputImage->d;
-            delete inputImage;
-        }
-        
-
-        delete iterator;
-
-        return resultGroup;
-    }
-    return nil;
 }
 
 - (void)setVariableNamed:(NSString *)named withValue:(NSString *)value {

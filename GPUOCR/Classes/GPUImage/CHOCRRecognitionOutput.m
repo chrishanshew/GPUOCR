@@ -56,7 +56,6 @@
             [weakSelf willBeginRecognitionWithOutput:weakSelf];
             [weakSelf lockFramebufferForReading];
             
-
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
             int height = weakSelf.maximumOutputSize.height;
             int width = weakSelf.maximumOutputSize.width;
@@ -64,7 +63,7 @@
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
 
             // Read last byte (alpha) for RBGA pixels
-            for (int i = 4; i < ((4 * width) * height) + 4; i+=4) {
+            for (int i = 0; i < ((4 * width) * height); i+=4) {
                 [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
             
@@ -73,9 +72,9 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract recognizeAtLevel: CHTesseractAnalysisLevelBlock];
-                    [weakTesseract clear];
+                    CHResultGroup *result = [weakTesseract recognizeAtLevel: _level];
                     [weakSelf output:weakSelf didFinishRecognitionWithResult:result];
+                    [weakTesseract clear];
                 }]];
             }
         }
