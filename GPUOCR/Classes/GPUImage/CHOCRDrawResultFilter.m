@@ -29,7 +29,7 @@ NSString *const kCHOCRDrawRectVertexShader = SHADER_STRING
         {
             gl_Position =
                     vec4(position.x * 2.0 / 720.0 - 1.0,
-                    position.y * -2.0 / 1280.0 + 1.0,
+                    position.y * 2.0 / 1280.0 - 1.0,
                     position.z,
                     1.0);
         }

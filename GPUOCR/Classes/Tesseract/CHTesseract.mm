@@ -38,7 +38,7 @@ namespace tesseract {
     if (self) {
         [self configureTesseractEnvironment];
         _tesseract = new tesseract::TessBaseAPI;
-        _tesseract->InitForAnalysePage();
+        _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO);
     }
     return self;
 }
@@ -164,6 +164,7 @@ namespace tesseract {
 }
 
 - (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
+    _tesseract->InitForAnalysePage();
     tesseract::PageIterator *iterator = _tesseract->AnalyseLayout();
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
 

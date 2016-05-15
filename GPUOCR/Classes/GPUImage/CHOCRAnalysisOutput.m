@@ -60,7 +60,9 @@
             
             // TODO: Optimizable?
             // Read last byte (alpha) for RBGA pixels
-            for (int i = 4; i < ((4 * width) * height) + 4; i+=4) {
+            
+            // starting at 0 may only apply to adaptive thresholder
+            for (int i = 0; i < ((4 * width) * height); i+=4) {
                 [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
             

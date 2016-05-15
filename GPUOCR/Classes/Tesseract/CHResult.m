@@ -11,7 +11,7 @@
 @implementation CHResult
 
 - (CGRect) getRect {
-    return CGRectMake(_left, _top, (_right + _left), (_bottom - _top));
+    return CGRectMake(_left, _top, (_right - _left), (_bottom - _top));
 }
 
 //- (double) getSlope {

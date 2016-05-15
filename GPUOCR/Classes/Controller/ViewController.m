@@ -53,19 +53,22 @@
         /*
             OCR Filters
          */
-        
+
+        CGSize processingSize = CGSizeMake(720, 1280);
+
         // Thresholder
         GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
         adaptiveThresholdFilter.blurRadiusInPixels = kDefaultAdaptiveThresholderBlurRadius;
-        
+        [adaptiveThresholdFilter forceProcessingAtSizeRespectingAspectRatio:processingSize];
+
         // Recognition Output
-        _recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:CGSizeMake(720, 1280) resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
+        _recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
         
         // Analysis Output
-        _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:CGSizeMake(720, 1280) resultsInBGRAFormat:YES withDelegate:self];
+        _analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:processingSize resultsInBGRAFormat:YES withDelegate:self];
 
         // DetectionOutput
-        _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:CGSizeMake(720, 1280) resultsInBGRAFormat:YES withDelegate:self];
+        _detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:processingSize resultsInBGRAFormat:YES withDelegate:self];
 
         [adaptiveThresholdFilter addTarget:_analysisOutput];
         
