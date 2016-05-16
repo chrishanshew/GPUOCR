@@ -6,8 +6,8 @@
 //  Copyright © 2016 Chris Hanshew. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "LivePreviewViewController.h"
 
-@interface ImageViewController : ViewController
+@interface ImageViewController : LivePreviewViewController
 
 @end

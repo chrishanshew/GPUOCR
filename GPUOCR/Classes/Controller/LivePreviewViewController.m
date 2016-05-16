@@ -1,5 +1,5 @@
 //
-//  ViewController.m
+//  LivePreviewViewController.m
 //  GPUOCR
 //
 //  Created by Chris Hanshew on 5/10/16.
@@ -7,7 +7,7 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
-#import "ViewController.h"
+#import "LivePreviewViewController.h"
 #import "Settings.h"
 #import "GPUImage.h"
 #import "CHTesseractOutput.h"
@@ -15,7 +15,7 @@
 
 #define kDefaultAdaptiveThresholderBlurRadius 4.0
 
-@interface ViewController () <CHTesseractOutputDelegate> {
+@interface LivePreviewViewController () <CHTesseractOutputDelegate> {
     CGSize _processingSize;
 
     // Inputs
@@ -35,7 +35,7 @@
 
 @end
 
-@implementation ViewController
+@implementation LivePreviewViewController
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];

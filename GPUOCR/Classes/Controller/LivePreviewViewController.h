@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  LivePreviewViewController.h
 //  GPUOCR
 //
 //  Created by Chris Hanshew on 5/10/16.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface LivePreviewViewController : UIViewController
 
 @end
 

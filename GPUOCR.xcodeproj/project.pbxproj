@@ -18,7 +18,7 @@
 		0CED203B1CE28181001F79E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20391CE28181001F79E9 /* LaunchScreen.storyboard */; };
 		0CED20461CE28182001F79E9 /* GPUOCRTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20451CE28182001F79E9 /* GPUOCRTests.m */; };
 		0CED20581CE283BC001F79E9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20521CE283BC001F79E9 /* AppDelegate.m */; };
-		0CED20591CE283BC001F79E9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20551CE283BC001F79E9 /* ViewController.m */; };
+		0CED20591CE283BC001F79E9 /* LivePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20551CE283BC001F79E9 /* LivePreviewViewController.m */; };
 		0CED20661CE28464001F79E9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20651CE28464001F79E9 /* CoreMedia.framework */; };
 		0CED20681CE2846B001F79E9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20671CE2846B001F79E9 /* CoreVideo.framework */; };
 		0CED206A1CE28471001F79E9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20691CE28471001F79E9 /* OpenGLES.framework */; };
@@ -89,8 +89,8 @@
 		0CED20471CE28182001F79E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0CED20511CE283BC001F79E9 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0CED20521CE283BC001F79E9 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0CED20541CE283BC001F79E9 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		0CED20551CE283BC001F79E9 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		0CED20541CE283BC001F79E9 /* LivePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LivePreviewViewController.h; sourceTree = "<group>"; };
+		0CED20551CE283BC001F79E9 /* LivePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LivePreviewViewController.m; sourceTree = "<group>"; };
 		0CED205B1CE28415001F79E9 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GPUImage.xcodeproj; path = GPUImage/framework/GPUImage.xcodeproj; sourceTree = "<group>"; };
 		0CED20651CE28464001F79E9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		0CED20671CE2846B001F79E9 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -250,8 +250,8 @@
 		0CED20531CE283BC001F79E9 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				0CED20541CE283BC001F79E9 /* ViewController.h */,
-				0CED20551CE283BC001F79E9 /* ViewController.m */,
+				0CED20541CE283BC001F79E9 /* LivePreviewViewController.h */,
+				0CED20551CE283BC001F79E9 /* LivePreviewViewController.m */,
 				0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */,
 				0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */,
 				E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */,
@@ -448,7 +448,7 @@
 				0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */,
 				0CED202D1CE28181001F79E9 /* main.m in Sources */,
 				0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */,
-				0CED20591CE283BC001F79E9 /* ViewController.m in Sources */,
+				0CED20591CE283BC001F79E9 /* LivePreviewViewController.m in Sources */,
 				0CED20771CE2866A001F79E9 /* CHOCRRecognitionOutput.m in Sources */,
 				E2DAB430C7FA92A03CF54188 /* CHOCRDetectionOutput.m in Sources */,
 				E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */,
