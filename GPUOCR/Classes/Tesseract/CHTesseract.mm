@@ -53,7 +53,7 @@ namespace tesseract {
     if (self) {
         [self configureTesseractEnvironment];
         _tesseract = new tesseract::TessBaseAPI;
-//        _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO_OSD);
+        _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO_OSD);
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSString *tessdataPath = [bundle resourcePath];
         _tesseract->Init([[tessdataPath stringByAppendingString:@"/"]cStringUsingEncoding:NSUTF8StringEncoding], [@"osd" cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -239,12 +239,11 @@ namespace tesseract {
     if (text) {
         result.text = [NSString stringWithUTF8String:text];
         result.confidence = iterator->Confidence(level);
-        NSLog(@"%@", result.text);
+//        NSLog(@"%@", result.text);
     }
 }
 
 - (void)getTextDirection:(CHResultGroup *)group {
-    // Text Direction
     int offset; float slope;
     _tesseract->GetTextDirection(&offset, &slope);
     group.offset = offset;
