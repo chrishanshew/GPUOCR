@@ -7,19 +7,19 @@
 #import "GPUImage.h"
 #import "CHTesseract.h"
 
-@class CHOCRDetectionOutput;
+@class CHDetectionOutput;
 
 @protocol CHOCRDetectionOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHOCRDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result;
+- (void)output:(CHDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result;
 
 @optional
-- (void)willBeginDetectionWithOutput:(CHOCRDetectionOutput *)output;
+- (void)willBeginDetectionWithOutput:(CHDetectionOutput *)output;
 
 @end
 
-@interface CHOCRDetectionOutput : GPUImageRawDataOutput <CHOCRDetectionOutputDelegate>
+@interface CHDetectionOutput : GPUImageRawDataOutput <CHOCRDetectionOutputDelegate>
 
 @property(nonatomic, weak)id<CHOCRDetectionOutputDelegate> delegate;
 @property(nonatomic)CHTesseractAnalysisLevel level;

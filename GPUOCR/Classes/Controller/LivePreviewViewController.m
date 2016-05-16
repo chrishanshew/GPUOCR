@@ -11,7 +11,7 @@
 #import "Settings.h"
 #import "GPUImage.h"
 #import "CHTesseractOutput.h"
-#import "CHDrawResultFilterGroup.h"
+#import "CHResultFilter.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4.0
 
@@ -24,7 +24,7 @@
 
     
     // Filter Groups
-    CHDrawResultFilterGroup *drawResultFilter;
+    CHResultFilter *resultsFilter;
     CHTesseractOutput *tesseractOutput;
 }
 
@@ -48,7 +48,7 @@
 
         _processingSize = [Settings sizeForCaptureSessionPreset:_videoCamera.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
         
-        drawResultFilter = [[CHDrawResultFilterGroup alloc] initWithProcessingSize:_processingSize];
+        resultsFilter = [[CHResultFilter alloc] initWithProcessingSize:_processingSize];
 
         // OCR Filters
         tesseractOutput = [[CHTesseractOutput alloc] initWithProcessingSize:_processingSize];
@@ -61,10 +61,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        [_videoCamera addTarget:drawResultFilter];
+        [_videoCamera addTarget:resultsFilter];
         GPUImageView *cameraView = (GPUImageView *)self.view;
         cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
-        [drawResultFilter addTarget:cameraView atTextureLocation:0];
+        [resultsFilter addTarget:cameraView atTextureLocation:0];
         [self updateSettings];
     } else {
         // Rear Camera not available, present alert
@@ -105,10 +105,10 @@
     tesseractOutput.mode = settings.mode;
     
     // Line Width and Color
-    [drawResultFilter setLineWidth:settings.lineWidth];
+    [resultsFilter setLineWidth:settings.lineWidth];
     CGFloat red, green, blue, alpha;
     [settings.lineColor getRed:&red green:&green blue:&blue alpha:&alpha];
-    [drawResultFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
+    [resultsFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
     
     // Capture Preset
     if (![_videoCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
@@ -123,7 +123,7 @@
         if (running) [_videoCamera stopCameraCapture];
         _processingSize = newProcessingSize;
         [tesseractOutput forceProcessingAtSize:_processingSize];
-        [drawResultFilter forceProcessingAtSize:_processingSize];
+        [resultsFilter forceProcessingAtSize:_processingSize];
         if (running) [_videoCamera startCameraCapture];
     }
 }
@@ -131,7 +131,7 @@
 #pragma mark - <CHTesseractOutputDelegate>
 
 - (void)output:(CHTesseractOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
-    [drawResultFilter setResults:result.results];
+    [resultsFilter setResults:result.results];
 }
 
 - (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output {

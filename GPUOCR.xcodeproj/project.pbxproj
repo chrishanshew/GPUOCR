@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0C4E20EC1CE90B3D00149633 /* CHDrawResultFilterGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20EB1CE90B3D00149633 /* CHDrawResultFilterGroup.m */; };
+		0C4E20EC1CE90B3D00149633 /* CHResultFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20EB1CE90B3D00149633 /* CHResultFilter.m */; };
 		0C4E20F21CE9111100149633 /* CHTesseractOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20F11CE9111100149633 /* CHTesseractOutput.m */; };
-		0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */; };
 		0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CE31CE6D57F00964D2E /* MenuCell.m */; };
 		0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C618BD61CE842FE00E0CD2B /* Settings.m */; };
 		0CED202D1CE28181001F79E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED202C1CE28181001F79E9 /* main.m */; };
@@ -25,9 +24,9 @@
 		0CED206C1CE2847B001F79E9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED206B1CE2847B001F79E9 /* AVFoundation.framework */; };
 		0CED206E1CE28489001F79E9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED206D1CE28489001F79E9 /* QuartzCore.framework */; };
 		0CED206F1CE284E0001F79E9 /* libGPUImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20621CE28416001F79E9 /* libGPUImage.a */; };
-		0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20701CE28669001F79E9 /* CHOCRAnalysisOutput.m */; };
-		0CED20771CE2866A001F79E9 /* CHOCRRecognitionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20711CE28669001F79E9 /* CHOCRRecognitionOutput.m */; };
-		0CED20781CE2866A001F79E9 /* CHOCRDrawResultFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20741CE28669001F79E9 /* CHOCRDrawResultFilter.m */; };
+		0CED20761CE2866A001F79E9 /* CHAnalysisOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20701CE28669001F79E9 /* CHAnalysisOutput.m */; };
+		0CED20771CE2866A001F79E9 /* CHRecognitionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20711CE28669001F79E9 /* CHRecognitionOutput.m */; };
+		0CED20781CE2866A001F79E9 /* CHResultGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20741CE28669001F79E9 /* CHResultGenerator.m */; };
 		0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0CED207B1CE28673001F79E9 /* CHTesseract.mm */; };
 		0CED20861CE28673001F79E9 /* CHResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED20801CE28673001F79E9 /* CHResult.m */; };
 		0CED20891CE28715001F79E9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CED20881CE28715001F79E9 /* CoreGraphics.framework */; };
@@ -38,7 +37,7 @@
 		0CED209F1CE29CB3001F79E9 /* osd.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209D1CE29CB3001F79E9 /* osd.traineddata */; };
 		E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */; };
 		E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */; };
-		E2DAB430C7FA92A03CF54188 /* CHOCRDetectionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABBB3B17B6565857DA262 /* CHOCRDetectionOutput.m */; };
+		E2DAB430C7FA92A03CF54188 /* CHDetectionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABBB3B17B6565857DA262 /* CHDetectionOutput.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,14 +65,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0C4E20EA1CE90B3D00149633 /* CHDrawResultFilterGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHDrawResultFilterGroup.h; sourceTree = "<group>"; };
-		0C4E20EB1CE90B3D00149633 /* CHDrawResultFilterGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHDrawResultFilterGroup.m; sourceTree = "<group>"; };
+		0C4E20EA1CE90B3D00149633 /* CHResultFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHResultFilter.h; sourceTree = "<group>"; };
+		0C4E20EB1CE90B3D00149633 /* CHResultFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHResultFilter.m; sourceTree = "<group>"; };
 		0C4E20F01CE9111100149633 /* CHTesseractOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseractOutput.h; sourceTree = "<group>"; };
 		0C4E20F11CE9111100149633 /* CHTesseractOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTesseractOutput.m; sourceTree = "<group>"; };
 		0C5B1CD11CE6C3F200964D2E /* CHImageProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHImageProcessor.h; sourceTree = "<group>"; };
 		0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHImageProcessor.m; sourceTree = "<group>"; };
-		0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
-		0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		0C5B1CE21CE6D57F00964D2E /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
 		0C5B1CE31CE6D57F00964D2E /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		0C618BD51CE842FE00E0CD2B /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -97,12 +94,12 @@
 		0CED20691CE28471001F79E9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		0CED206B1CE2847B001F79E9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0CED206D1CE28489001F79E9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		0CED20701CE28669001F79E9 /* CHOCRAnalysisOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRAnalysisOutput.m; sourceTree = "<group>"; };
-		0CED20711CE28669001F79E9 /* CHOCRRecognitionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRRecognitionOutput.m; sourceTree = "<group>"; };
-		0CED20721CE28669001F79E9 /* CHOCRRecognitionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRRecognitionOutput.h; sourceTree = "<group>"; };
-		0CED20731CE28669001F79E9 /* CHOCRAnalysisOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRAnalysisOutput.h; sourceTree = "<group>"; };
-		0CED20741CE28669001F79E9 /* CHOCRDrawResultFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRDrawResultFilter.m; sourceTree = "<group>"; };
-		0CED20751CE28669001F79E9 /* CHOCRDrawResultFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRDrawResultFilter.h; sourceTree = "<group>"; };
+		0CED20701CE28669001F79E9 /* CHAnalysisOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHAnalysisOutput.m; sourceTree = "<group>"; };
+		0CED20711CE28669001F79E9 /* CHRecognitionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRecognitionOutput.m; sourceTree = "<group>"; };
+		0CED20721CE28669001F79E9 /* CHRecognitionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRecognitionOutput.h; sourceTree = "<group>"; };
+		0CED20731CE28669001F79E9 /* CHAnalysisOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHAnalysisOutput.h; sourceTree = "<group>"; };
+		0CED20741CE28669001F79E9 /* CHResultGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHResultGenerator.m; sourceTree = "<group>"; };
+		0CED20751CE28669001F79E9 /* CHResultGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHResultGenerator.h; sourceTree = "<group>"; };
 		0CED207A1CE28673001F79E9 /* CHTesseract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseract.h; sourceTree = "<group>"; };
 		0CED207B1CE28673001F79E9 /* CHTesseract.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CHTesseract.mm; sourceTree = "<group>"; };
 		0CED207E1CE28673001F79E9 /* CHResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHResult.h; sourceTree = "<group>"; };
@@ -115,8 +112,8 @@
 		0CED209D1CE29CB3001F79E9 /* osd.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = osd.traineddata; path = ../tessdata/osd.traineddata; sourceTree = "<group>"; };
 		E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		E2DABBB3B17B6565857DA262 /* CHOCRDetectionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRDetectionOutput.m; sourceTree = "<group>"; };
-		E2DABD8B0D7D95A005A1F0DE /* CHOCRDetectionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRDetectionOutput.h; sourceTree = "<group>"; };
+		E2DABBB3B17B6565857DA262 /* CHDetectionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHDetectionOutput.m; sourceTree = "<group>"; };
+		E2DABD8B0D7D95A005A1F0DE /* CHDetectionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHDetectionOutput.h; sourceTree = "<group>"; };
 		E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHResultGroup.m; sourceTree = "<group>"; };
 		E2DABFE53936C0DC5C5619A1 /* CHResultGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHResultGroup.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -252,8 +249,6 @@
 			children = (
 				0CED20541CE283BC001F79E9 /* LivePreviewViewController.h */,
 				0CED20551CE283BC001F79E9 /* LivePreviewViewController.m */,
-				0C5B1CD51CE6CEA400964D2E /* ImageViewController.h */,
-				0C5B1CD61CE6CEA400964D2E /* ImageViewController.m */,
 				E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */,
 				E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */,
 			);
@@ -263,16 +258,16 @@
 		0CED20561CE283BC001F79E9 /* GPUImage */ = {
 			isa = PBXGroup;
 			children = (
-				0CED20731CE28669001F79E9 /* CHOCRAnalysisOutput.h */,
-				0CED20701CE28669001F79E9 /* CHOCRAnalysisOutput.m */,
-				0CED20721CE28669001F79E9 /* CHOCRRecognitionOutput.h */,
-				0CED20711CE28669001F79E9 /* CHOCRRecognitionOutput.m */,
-				0CED20751CE28669001F79E9 /* CHOCRDrawResultFilter.h */,
-				0CED20741CE28669001F79E9 /* CHOCRDrawResultFilter.m */,
-				E2DABD8B0D7D95A005A1F0DE /* CHOCRDetectionOutput.h */,
-				E2DABBB3B17B6565857DA262 /* CHOCRDetectionOutput.m */,
-				0C4E20EA1CE90B3D00149633 /* CHDrawResultFilterGroup.h */,
-				0C4E20EB1CE90B3D00149633 /* CHDrawResultFilterGroup.m */,
+				0CED20731CE28669001F79E9 /* CHAnalysisOutput.h */,
+				0CED20701CE28669001F79E9 /* CHAnalysisOutput.m */,
+				0CED20721CE28669001F79E9 /* CHRecognitionOutput.h */,
+				0CED20711CE28669001F79E9 /* CHRecognitionOutput.m */,
+				0CED20751CE28669001F79E9 /* CHResultGenerator.h */,
+				0CED20741CE28669001F79E9 /* CHResultGenerator.m */,
+				E2DABD8B0D7D95A005A1F0DE /* CHDetectionOutput.h */,
+				E2DABBB3B17B6565857DA262 /* CHDetectionOutput.m */,
+				0C4E20EA1CE90B3D00149633 /* CHResultFilter.h */,
+				0C4E20EB1CE90B3D00149633 /* CHResultFilter.m */,
 				0C4E20F01CE9111100149633 /* CHTesseractOutput.h */,
 				0C4E20F11CE9111100149633 /* CHTesseractOutput.m */,
 			);
@@ -438,22 +433,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CED20761CE2866A001F79E9 /* CHOCRAnalysisOutput.m in Sources */,
+				0CED20761CE2866A001F79E9 /* CHAnalysisOutput.m in Sources */,
 				0C4E20F21CE9111100149633 /* CHTesseractOutput.m in Sources */,
 				0CED20861CE28673001F79E9 /* CHResult.m in Sources */,
 				0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */,
-				0CED20781CE2866A001F79E9 /* CHOCRDrawResultFilter.m in Sources */,
-				0C5B1CD71CE6CEA400964D2E /* ImageViewController.m in Sources */,
+				0CED20781CE2866A001F79E9 /* CHResultGenerator.m in Sources */,
 				0CED20581CE283BC001F79E9 /* AppDelegate.m in Sources */,
 				0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */,
 				0CED202D1CE28181001F79E9 /* main.m in Sources */,
 				0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */,
 				0CED20591CE283BC001F79E9 /* LivePreviewViewController.m in Sources */,
-				0CED20771CE2866A001F79E9 /* CHOCRRecognitionOutput.m in Sources */,
-				E2DAB430C7FA92A03CF54188 /* CHOCRDetectionOutput.m in Sources */,
+				0CED20771CE2866A001F79E9 /* CHRecognitionOutput.m in Sources */,
+				E2DAB430C7FA92A03CF54188 /* CHDetectionOutput.m in Sources */,
 				E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */,
 				E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */,
-				0C4E20EC1CE90B3D00149633 /* CHDrawResultFilterGroup.m in Sources */,
+				0C4E20EC1CE90B3D00149633 /* CHResultFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

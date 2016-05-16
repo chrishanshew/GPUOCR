@@ -1,5 +1,5 @@
 //
-//  CHOCRRecognitionOutput.m
+//  CHRecognitionOutput.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 5/19/14.
@@ -8,9 +8,9 @@
 
 #define kDefaultBytesPerPixel 4
 
-#import "CHOCRRecognitionOutput.h"
+#import "CHRecognitionOutput.h"
 
-@interface CHOCRRecognitionOutput () {
+@interface CHRecognitionOutput () {
     CHTesseract *_tesseract;
     NSOperationQueue *_operationQueue;
 }
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation CHOCRRecognitionOutput
+@implementation CHRecognitionOutput
 
 #pragma mark - Init
 
@@ -49,7 +49,7 @@
 #pragma mark - New Frame Available Block
 
 -(void (^)())analyzeLayoutBlock {
-    __block CHOCRRecognitionOutput *weakSelf = self;
+    __block CHRecognitionOutput *weakSelf = self;
     __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
         if (weakSelf.enabled && _operationQueue.operationCount == 0) {
@@ -83,13 +83,13 @@
 
 #pragma mark - Delegate
 
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
+- (void)output:(CHRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
     if ([_delegate respondsToSelector:@selector(output:didFinishRecognitionWithResult:)]) {
         [_delegate output:output didFinishRecognitionWithResult:result];
     }
 }
 
-- (void)willBeginRecognitionWithOutput:(CHOCRRecognitionOutput *)output {
+- (void)willBeginRecognitionWithOutput:(CHRecognitionOutput *)output {
     if ([_delegate respondsToSelector:@selector(willBeginRecognitionWithOutput:)]) {
         [_delegate willBeginRecognitionWithOutput:output];
     }

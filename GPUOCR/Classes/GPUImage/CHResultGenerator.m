@@ -1,5 +1,5 @@
 //
-//  CHOCRDrawResultFilter.m
+//  CHResultGenerator.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 2/13/16.
@@ -8,10 +8,10 @@
 
 #import <OpenGLES/gltypes.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHOCRDrawResultFilter.h"
+#import "CHResultGenerator.h"
 #import "CHResult.h"
 
-@interface CHOCRDrawResultFilter () {
+@interface CHResultGenerator () {
     GLfloat _lineWidth;
     GLfloat _widthUniform, _heightUniform, _colorUniform;
     GLfloat *lineCoordinates;
@@ -48,7 +48,7 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 
 GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
-@implementation CHOCRDrawResultFilter
+@implementation CHResultGenerator
 
 - (id)init{
     

@@ -7,18 +7,18 @@
 //
 
 #import "CHTesseractOutput.h"
-#import "CHOCRAnalysisOutput.h"
-#import "CHOCRRecognitionOutput.h"
-#import "CHOCRDetectionOutput.h"
+#import "CHAnalysisOutput.h"
+#import "CHRecognitionOutput.h"
+#import "CHDetectionOutput.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4.0
 
 @interface CHTesseractOutput () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate, CHOCRDetectionOutputDelegate> {
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
-    CHOCRAnalysisOutput *analysisOutput;
-    CHOCRDetectionOutput *detectionOutput;
-    CHOCRRecognitionOutput *recognitionOutput;
+    CHAnalysisOutput *analysisOutput;
+    CHDetectionOutput *detectionOutput;
+    CHRecognitionOutput *recognitionOutput;
 }
 
 -(GPUImageRawDataOutput *)outputForMode:(CHTesseractMode)mode;
@@ -47,15 +47,15 @@
         self.terminalFilter = adaptiveThresholdFilter;
 
         // Recognition Output
-        recognitionOutput = [[CHOCRRecognitionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
+        recognitionOutput = [[CHRecognitionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
         recognitionOutput.level = _level;
         
         // Analysis Output
-        analysisOutput = [[CHOCRAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
+        analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
         analysisOutput.level = _level;
         
         // DetectionOutput
-        detectionOutput = [[CHOCRDetectionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
+        detectionOutput = [[CHDetectionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
         detectionOutput.level = _level;
         
         // Default
@@ -106,13 +106,13 @@
 
 #pragma mark - <CHOCRRecognitionOutputDelegate>
 
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
+- (void)output:(CHRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
     if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
         [_delegate output:self didFinishDetectionWithResult:result];
     }
 }
 
-- (void)willBeginRecognitionWithOutput:(CHOCRRecognitionOutput *)output {
+- (void)willBeginRecognitionWithOutput:(CHRecognitionOutput *)output {
     if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
         [_delegate willBeginDetectionWithOutput:self];
     }
@@ -120,13 +120,13 @@
 
 #pragma mark - <CHOCRAnaylsisOutputDelegate>
 
-- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
+- (void)output:(CHAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
     if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
         [_delegate output:self didFinishDetectionWithResult:result];
     }
 }
 
-- (void)willBeginAnalysisWithOutput:(CHOCRAnalysisOutput *)output {
+- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
     if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
         [_delegate willBeginDetectionWithOutput:self];
     }
@@ -134,13 +134,13 @@
 
 #pragma mark - <CHOCRDetectionOutputDelegate>
 
-- (void)output:(CHOCRDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
+- (void)output:(CHDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
     if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
         [_delegate output:self didFinishDetectionWithResult:result];
     }
 }
 
-- (void)willBeginDetectionWithOutput:(CHOCRDetectionOutput *)output {
+- (void)willBeginDetectionWithOutput:(CHDetectionOutput *)output {
     if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
         [_delegate willBeginDetectionWithOutput:self];
     }

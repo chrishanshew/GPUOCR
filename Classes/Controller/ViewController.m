@@ -9,10 +9,10 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ViewController.h"
 #import "GPUImage.h"
-#import "CHOCRRecognitionOutput.h"
-#import "CHOCRAnalysisOutput.h"
-#import "CHOCRDetectionOutput.h"
-#import "CHOCRDrawResultFilter.h"
+#import "CHRecognitionOutput.h"
+#import "CHAnalysisOutput.h"
+#import "CHDetectionOutput.h"
+#import "CHResultGenerator.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4.0
 

@@ -1,5 +1,5 @@
 //
-//  CHDrawResultFilterGroup.h
+//  CHResultFilter.h
 //  GPUOCR
 //
 //  Created by Chris Hanshew on 5/15/16.
@@ -8,7 +8,7 @@
 
 #import "GPUImage.h"
 
-@interface CHDrawResultFilterGroup : GPUImageFilterGroup
+@interface CHResultFilter : GPUImageFilterGroup
 
 -(instancetype)initWithProcessingSize:(CGSize)processingSize;
 

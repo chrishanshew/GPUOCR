@@ -1,5 +1,5 @@
 //
-//  CHOCRAnalysisOutput.h
+//  CHAnalysisOutput.h
 //  CHOCR
 //
 //  Created by Chris Hanshew on 5/19/14.
@@ -9,19 +9,19 @@
 #import "GPUImage.h"
 #import "CHTesseract.h"
 
-@class CHOCRAnalysisOutput;
+@class CHAnalysisOutput;
 
 @protocol CHOCRAnalysisOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHOCRAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result;
+- (void)output:(CHAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result;
 
 @optional
-- (void)willBeginAnalysisWithOutput:(CHOCRAnalysisOutput *)output;
+- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output;
 
 @end
 
-@interface CHOCRAnalysisOutput : GPUImageRawDataOutput <CHOCRAnalysisOutputDelegate>
+@interface CHAnalysisOutput : GPUImageRawDataOutput <CHOCRAnalysisOutputDelegate>
 
 @property(nonatomic, weak)id<CHOCRAnalysisOutputDelegate> delegate;
 @property(nonatomic)CHTesseractAnalysisLevel level;

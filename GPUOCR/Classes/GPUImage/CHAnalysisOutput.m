@@ -1,11 +1,14 @@
 //
-// Created by Chris Hanshew on 5/14/16.
-// Copyright (c) 2016 Chris Hanshew. All rights reserved.
+//  CHAnalysisOutput.m
+//  CHOCR
+//
+//  Created by Chris Hanshew on 5/19/14.
+//  Copyright (c) 2014 Chris Hanshew Software, LLC. All rights reserved.
 //
 
-#import "CHOCRDetectionOutput.h"
+#import "CHAnalysisOutput.h"
 
-@interface CHOCRDetectionOutput () {
+@interface CHAnalysisOutput () {
     CHTesseract *_tesseract;
     NSOperationQueue *_operationQueue;
 }
@@ -14,7 +17,7 @@
 
 @end
 
-@implementation CHOCRDetectionOutput
+@implementation CHAnalysisOutput
 
 #pragma mark - Init
 
@@ -26,11 +29,11 @@
     return self;
 }
 
-- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat withDelegate:(id<CHOCRDetectionOutputDelegate>)delegate {
+- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat withDelegate:(id<CHOCRAnalysisOutputDelegate>)delegate {
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
         _delegate = delegate;
-        _tesseract = [[CHTesseract alloc] initForOrientationDetection];
+        _tesseract = [[CHTesseract alloc] initForAnalysis];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 1;
         [self setNewFrameAvailableBlock: self.analyzeLayoutBlock];
@@ -38,17 +41,16 @@
     return self;
 }
 
-
 #pragma mark - New Frame Available Block
 
 -(void (^)())analyzeLayoutBlock {
-    __block CHOCRDetectionOutput *weakSelf = self;
+    __block CHAnalysisOutput *weakSelf = self;
     __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
         if (weakSelf.enabled && _operationQueue.operationCount == 0) {
+            [weakSelf willBeginAnalysisWithOutput:weakSelf];
             [weakSelf lockFramebufferForReading];
-
-
+            
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
             int height = weakSelf.maximumOutputSize.height;
             int width = weakSelf.maximumOutputSize.width;
@@ -57,17 +59,19 @@
             
             // TODO: Optimizable?
             // Read last byte (alpha) for RBGA pixels
+            
+            // starting at 0 may only apply to adaptive thresholder
             for (int i = 0; i < ((4 * width) * height); i+=4) {
                 [pixels appendBytes:(const void *)&outputBytes[i] length:1];
             }
             
             [weakSelf unlockFramebufferAfterReading];
-
+            
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract detectionAtLevel: _level];
-                    [weakSelf output:self didFinishDetectionWithResult:result];
+                    CHResultGroup *result = [weakTesseract analyzeLayoutAtLevel: _level];
+                    [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
                     [weakTesseract clear];
                 }]];
             }
@@ -77,15 +81,15 @@
 
 #pragma mark - Delegate
 
-- (void)willBeginDetectionWithOutput:(CHOCRDetectionOutput *)output {
-    if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
-        [_delegate willBeginDetectionWithOutput:output];
+- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
+    if ([_delegate respondsToSelector:@selector(willBeginAnalysisWithOutput:)]) {
+        [_delegate willBeginAnalysisWithOutput:output];
     }
 }
 
--(void)output:(CHOCRDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
-        [_delegate output:output didFinishDetectionWithResult:result];
+-(void)output:(CHAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
+    if ([_delegate respondsToSelector:@selector(output:didFinishAnalysisWithResult:)]) {
+        [_delegate output:output didFinishAnalysisWithResult:result];
     }
 }
 

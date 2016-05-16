@@ -1,5 +1,5 @@
 //
-//  CHOCRRecognitionOutput.h
+//  CHRecognitionOutput.h
 //  CHOCR
 //
 //  Created by Chris Hanshew on 5/19/14.
@@ -9,19 +9,19 @@
 #import "GPUImage.h"
 #import "CHResultGroup.h"
 
-@class CHOCRRecognitionOutput;
+@class CHRecognitionOutput;
 
 @protocol CHOCRRecogntionOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHOCRRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result;
+- (void)output:(CHRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result;
 
 @optional
-- (void)willBeginRecognitionWithOutput:(CHOCRRecognitionOutput *)output;
+- (void)willBeginRecognitionWithOutput:(CHRecognitionOutput *)output;
 
 @end
 
-@interface CHOCRRecognitionOutput : GPUImageRawDataOutput <CHOCRRecogntionOutputDelegate>
+@interface CHRecognitionOutput : GPUImageRawDataOutput <CHOCRRecogntionOutputDelegate>
 
 @property(nonatomic, weak)id<CHOCRRecogntionOutputDelegate> delegate;
 @property(nonatomic, strong, readonly)NSString* language;
