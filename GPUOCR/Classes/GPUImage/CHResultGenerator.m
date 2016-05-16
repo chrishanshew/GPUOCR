@@ -102,7 +102,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         self.preventRendering = YES;
 
         [GPUImageContext setActiveShaderProgram:filterProgram];
-        
+
         outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:[self sizeOfFBO] textureOptions:self.outputTextureOptions onlyTexture:NO];
         [outputFramebuffer activateFramebuffer];
 

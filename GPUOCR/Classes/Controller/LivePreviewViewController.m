@@ -21,11 +21,12 @@
     // Inputs
     GPUImageVideoCamera *_videoCamera;
 
-
+    GPUImageLanczosResamplingFilter *_resamplingFilter;
     
     // Filter Groups
     CHResultFilter *resultsFilter;
     CHTesseractOutput *tesseractOutput;
+
 }
 
 @property(nonnull, strong) IBOutlet UIButton *settingsButton;
@@ -43,17 +44,22 @@
         Settings *settings = [Settings currentSettings];
         
         _videoCamera = [[GPUImageVideoCamera alloc] init];
-        [_videoCamera setCaptureSessionPreset:settings.captureSessionPreset];
+        [_videoCamera setCaptureSessionPreset:AVCaptureSessionPreset3840x2160];
         _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
-        _processingSize = [Settings sizeForCaptureSessionPreset:_videoCamera.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
+        _processingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
         
-        resultsFilter = [[CHResultFilter alloc] initWithProcessingSize:_processingSize];
+        _resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
+        [_videoCamera addTarget:_resamplingFilter];
 
         // OCR Filters
         tesseractOutput = [[CHTesseractOutput alloc] initWithProcessingSize:_processingSize];
         tesseractOutput.delegate = self;
-        [_videoCamera addTarget:tesseractOutput];
+        [_resamplingFilter addTarget:tesseractOutput];
+
+        resultsFilter = [[CHResultFilter alloc] initWithProcessingSize:_processingSize];
+        [_resamplingFilter addTarget:resultsFilter];
+        [_resamplingFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
     }
     return self;
 }
@@ -61,7 +67,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        [_videoCamera addTarget:resultsFilter];
         GPUImageView *cameraView = (GPUImageView *)self.view;
         cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
         [resultsFilter addTarget:cameraView atTextureLocation:0];
@@ -111,20 +116,29 @@
     [resultsFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
     
     // Capture Preset
-    if (![_videoCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
-        if (running) [_videoCamera stopCameraCapture];
-        _videoCamera.captureSessionPreset = settings.captureSessionPreset;
-        if (running) [_videoCamera startCameraCapture];
-    }
+//    if (![_videoCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
+//        if (running) [_videoCamera stopCameraCapture];
+//        _videoCamera.captureSessionPreset = settings.captureSessionPreset;
+//        if (running) [_videoCamera startCameraCapture];
+//    }
     
     // Size
-    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:_videoCamera.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
+    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
     if (!CGSizeEqualToSize(_processingSize, newProcessingSize)) {
-        if (running) [_videoCamera stopCameraCapture];
-        _processingSize = newProcessingSize;
-        [tesseractOutput forceProcessingAtSize:_processingSize];
-        [resultsFilter forceProcessingAtSize:_processingSize];
-        if (running) [_videoCamera startCameraCapture];
+        [_resamplingFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
+//        if (running) [_videoCamera stopCameraCapture];
+//        _processingSize = newProcessingSize;
+//        [_videoCamera removeTarget:tesseractOutput];
+//        tesseractOutput = [[CHTesseractOutput alloc] init];
+//        tesseractOutput.delegate = self;
+//        [tesseractOutput forceProcessingAtSize:_processingSize];
+//        [_videoCamera addTarget:tesseractOutput];
+//
+//        [_videoCamera removeTarget:resultsFilter];
+//        [resultsFilter = [CHResultFilter alloc] initWithProcessingSize:_processingSize];
+//        [resultsFilter forceProcessingAtSize:_processingSize];
+//        [_videoCamera]
+//        if (running) [_videoCamera startCameraCapture];
     }
 }
 
