@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C4E20EC1CE90B3D00149633 /* CHRegionFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20EB1CE90B3D00149633 /* CHRegionFilter.m */; };
-		0C4E20F21CE9111100149633 /* CHTesseractOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20F11CE9111100149633 /* CHTesseractOutput.m */; };
+		0C4E20F21CE9111100149633 /* CHAnalysisGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20F11CE9111100149633 /* CHAnalysisGroup.m */; };
 		0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CE31CE6D57F00964D2E /* MenuCell.m */; };
 		0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C618BD61CE842FE00E0CD2B /* Settings.m */; };
 		0CED202D1CE28181001F79E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED202C1CE28181001F79E9 /* main.m */; };
@@ -66,8 +66,8 @@
 /* Begin PBXFileReference section */
 		0C4E20EA1CE90B3D00149633 /* CHRegionFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRegionFilter.h; sourceTree = "<group>"; };
 		0C4E20EB1CE90B3D00149633 /* CHRegionFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRegionFilter.m; sourceTree = "<group>"; };
-		0C4E20F01CE9111100149633 /* CHTesseractOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseractOutput.h; sourceTree = "<group>"; };
-		0C4E20F11CE9111100149633 /* CHTesseractOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTesseractOutput.m; sourceTree = "<group>"; };
+		0C4E20F01CE9111100149633 /* CHAnalysisGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHAnalysisGroup.h; sourceTree = "<group>"; };
+		0C4E20F11CE9111100149633 /* CHAnalysisGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHAnalysisGroup.m; sourceTree = "<group>"; };
 		0C5B1CD11CE6C3F200964D2E /* CHImageProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHImageProcessor.h; sourceTree = "<group>"; };
 		0C5B1CD21CE6C3F200964D2E /* CHImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHImageProcessor.m; sourceTree = "<group>"; };
 		0C5B1CE21CE6D57F00964D2E /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
@@ -261,8 +261,8 @@
 				0CED20741CE28669001F79E9 /* CHRegionGenerator.m */,
 				0C4E20EA1CE90B3D00149633 /* CHRegionFilter.h */,
 				0C4E20EB1CE90B3D00149633 /* CHRegionFilter.m */,
-				0C4E20F01CE9111100149633 /* CHTesseractOutput.h */,
-				0C4E20F11CE9111100149633 /* CHTesseractOutput.m */,
+				0C4E20F01CE9111100149633 /* CHAnalysisGroup.h */,
+				0C4E20F11CE9111100149633 /* CHAnalysisGroup.m */,
 				E2DAB6943C6E50C7104C71A4 /* CHRecognitionOutput.h */,
 				E2DABDA27E759694FDF2EF15 /* CHRecognitionOutput.m */,
 			);
@@ -429,7 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CED20761CE2866A001F79E9 /* CHAnalysisOutput.m in Sources */,
-				0C4E20F21CE9111100149633 /* CHTesseractOutput.m in Sources */,
+				0C4E20F21CE9111100149633 /* CHAnalysisGroup.m in Sources */,
 				0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */,
 				0CED20781CE2866A001F79E9 /* CHRegionGenerator.m in Sources */,
 				0CED20581CE283BC001F79E9 /* AppDelegate.m in Sources */,

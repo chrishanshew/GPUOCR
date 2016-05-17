@@ -7,11 +7,11 @@
 //
 
 #import "GPUImage.h"
-#import "CHTesseract.h"
+#import "CHRegion.h"
 
 @class CHAnalysisOutput;
 
-@protocol CHOCRAnalysisOutputDelegate <NSObject>
+@protocol CHAnalysisOutputDelegate <NSObject>
 
 @required
 - (void)output:(CHAnalysisOutput*)output completedAnalysisWithRegions:(NSArray *)regions;
@@ -21,9 +21,9 @@
 
 @end
 
-@interface CHAnalysisOutput : GPUImageRawDataOutput <CHOCRAnalysisOutputDelegate>
+@interface CHAnalysisOutput : GPUImageRawDataOutput <CHAnalysisOutputDelegate>
 
-@property(nonatomic, weak)id<CHOCRAnalysisOutputDelegate> delegate;
+@property(nonatomic, weak)id<CHAnalysisOutputDelegate> delegate;
 @property(nonatomic)CHTesseractAnalysisLevel level;
 
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat;

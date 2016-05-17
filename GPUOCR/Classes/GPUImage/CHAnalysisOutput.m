@@ -7,6 +7,7 @@
 //
 
 #import "CHAnalysisOutput.h"
+#import "CHTesseract.h"
 
 #define kAnalysisOutputMaxConcurrentOperations 1
 

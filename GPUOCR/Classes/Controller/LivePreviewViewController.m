@@ -10,12 +10,12 @@
 #import "LivePreviewViewController.h"
 #import "Settings.h"
 #import "GPUImage.h"
-#import "CHTesseractOutput.h"
+#import "CHAnalysisGroup.h"
 #import "CHRegionFilter.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface LivePreviewViewController () <CHTesseractOutputDelegate> {
+@interface LivePreviewViewController () <CHAnalysisOutputDelegate> {
     CGSize _processingSize;
 
     // Inputs
@@ -23,7 +23,7 @@
 
     // Filter Groups
     CHRegionFilter *regionFilter;
-    CHTesseractOutput *tesseractOutput;
+    CHAnalysisGroup *tesseractOutput;
 
     // Long Press - Real time recognition
 
@@ -56,7 +56,7 @@
         [regionFilter forceProcessingAtSize:_processingSize];
 
         // OCR Filters
-        tesseractOutput = [[CHTesseractOutput alloc] initWithProcessingSize:_processingSize];
+        tesseractOutput = [[CHAnalysisGroup alloc] initWithProcessingSize:_processingSize];
         tesseractOutput.delegate = self;
         [_stillCamera addTarget:tesseractOutput];
     }
@@ -106,7 +106,6 @@
     
     // Detection Level
     tesseractOutput.level = settings.level;
-    tesseractOutput.mode = settings.mode;
     
     // Line Width and Color
     [regionFilter setLineWidth:settings.lineWidth];
@@ -134,11 +133,11 @@
 
 #pragma mark - <CHTesseractOutputDelegate>
 
-- (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
+- (void)output:(CHAnalysisGroup *)output completedAnalysisWithRegions:(NSArray *)regions; {
     [regionFilter setRegions:regions];
 }
 
-- (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output {
+- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
 
 }
 

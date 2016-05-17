@@ -1,28 +1,26 @@
 //
-//  CHTesseractOutput.m
+//  CHAnalysisGroup.m
 //  GPUOCR
 //
 //  Created by Chris Hanshew on 5/15/16.
 //  Copyright © 2016 Chris Hanshew. All rights reserved.
 //
 
-#import "CHTesseractOutput.h"
+#import "CHAnalysisGroup.h"
 #import "CHAnalysisOutput.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface CHTesseractOutput () <CHOCRAnalysisOutputDelegate> {
+@interface CHAnalysisGroup () <CHAnalysisOutputDelegate> {
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHAnalysisOutput *analysisOutput;
     GPUImageLanczosResamplingFilter *resamplingFilter;
 }
 
--(GPUImageRawDataOutput *)outputForMode:(CHTesseractMode)mode;
-
 @end
 
-@implementation CHTesseractOutput
+@implementation CHAnalysisGroup
 
 // TODO: REMOVE SIZE PARAMETER - USE FORCEPROCESSING
 
@@ -38,33 +36,19 @@
         analysisOutput.delegate = self;
         analysisOutput.level = _level;
 
-        // Default
-        _mode = CHTesseractModeAnalysis;
-
         resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
-        [self addFilter:resamplingFilter];
 
         adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
         adaptiveThresholdFilter.blurRadiusInPixels = kDefaultAdaptiveThresholderBlurRadius;
-        [self addFilter:adaptiveThresholdFilter];
 
         self.initialFilters = @[resamplingFilter];
         [resamplingFilter addTarget:adaptiveThresholdFilter];
-        [adaptiveThresholdFilter addTarget:[self outputForMode:_mode]];
+        [adaptiveThresholdFilter addTarget:analysisOutput];
         self.terminalFilter = adaptiveThresholdFilter;
-
 
         [self forceProcessingAtSizeRespectingAspectRatio:size];
     }
     return self;
-}
-
--(void)setMode:(CHTesseractMode)mode {
-    adaptiveThresholdFilter.enabled = NO;
-    [adaptiveThresholdFilter removeTarget:[self outputForMode:_mode]];
-    _mode = mode;
-    [adaptiveThresholdFilter addTarget:[self outputForMode:_mode]];
-    adaptiveThresholdFilter.enabled = YES;
 }
 
 -(void)setLevel:(CHTesseractAnalysisLevel)level {
@@ -77,36 +61,13 @@
     adaptiveThresholdFilter.blurRadiusInPixels = _blurRadius;
 }
 
--(GPUImageRawDataOutput *)outputForMode:(CHTesseractMode)mode {
-    switch (mode) {
-        case CHTesseractModeAnalysis:
-        {
-            return analysisOutput;
-        }
-        case CHTesseractModeAnalysisWithOSD:
-        {
-            return analysisOutput;
-        }
-        case CHTesseractModeAnalysisWithRecognition:
-        {
-            return analysisOutput;
-        }
-    }
-}
-
 - (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
     
 }
 
-- (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
+- (void)output:(CHAnalysisOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
     if ([_delegate respondsToSelector:@selector(output:completedAnalysisWithRegions:)]) {
         [_delegate output:output completedAnalysisWithRegions:regions];
-    }
-}
-
-- (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output {
-    if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
-        [_delegate willBeginDetectionWithOutput:output];
     }
 }
 
