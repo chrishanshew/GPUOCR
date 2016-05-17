@@ -7,7 +7,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "SettingsViewController.h"
 
-
 @interface SettingsViewController () {
     Settings *_settings;
     NSArray *_captureSessionPresets;

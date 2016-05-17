@@ -8,6 +8,8 @@
 
 #import "CHAnalysisOutput.h"
 
+#define kAnalysisOutputMaxConcurrentOperations 1
+
 @interface CHAnalysisOutput () {
     CHTesseract *_tesseract;
     NSOperationQueue *_operationQueue;
@@ -26,7 +28,7 @@
     if (self) {
         _tesseract = [[CHTesseract alloc] initForAnalysis];
         _operationQueue = [[NSOperationQueue alloc] init];
-        _operationQueue.maxConcurrentOperationCount = 1;
+        _operationQueue.maxConcurrentOperationCount = kAnalysisOutputMaxConcurrentOperations;
         [self setNewFrameAvailableBlock: self.analyzeLayoutBlock];
     }
     return self;

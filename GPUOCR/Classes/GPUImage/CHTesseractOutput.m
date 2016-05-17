@@ -8,7 +8,6 @@
 
 #import "CHTesseractOutput.h"
 #import "CHAnalysisOutput.h"
-#import "CHRecognitionOutput.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
