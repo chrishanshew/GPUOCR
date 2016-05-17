@@ -1,5 +1,5 @@
 //
-//  CHResultGenerator.h
+//  CHRegionGenerator.h
 //  CHOCR
 //
 //  Created by Chris Hanshew on 2/13/16.
@@ -8,12 +8,12 @@
 
 #import "GPUImage.h"
 
-@interface CHResultGenerator : GPUImageFilter
+@interface CHRegionGenerator : GPUImageFilter
 
 @property(nonatomic, strong, readonly) NSArray *results;
 
--(void)setResults:(NSArray *)results;
--(void)renderResultsWithFrameTime:(CMTime)frameTime;
+-(void)setRegions:(NSArray *)results;
+-(void)renderRegionsWithFrameTime:(CMTime)frameTime;
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
 -(void)setLineWidth:(float)width;
 

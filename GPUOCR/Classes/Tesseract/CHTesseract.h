@@ -8,17 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import "CHText.h"
 
-@class CHResultGroup;
-@class CHLayout;
-@class CHText;
+@class CHRegion;
 
 typedef NS_ENUM(NSUInteger, CHTesseractMode) {
     CHTesseractModeAnalysis = 0,
     CHTesseractModeAnalysisWithOSD,
     CHTesseractModeAnalysisWithRecognition
 };
-
 
 typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
     CHTesseractAnalysisLevelBlock = 0,
@@ -40,8 +38,8 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 - (void)setImageWithData:(NSData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 - (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 
-- (CHText *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
-- (CHLayout *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHText *)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level;
+- (NSArray *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
 
 - (NSString *)hOCRText;
 

@@ -1,24 +1,24 @@
 //
-//  CHResultFilter.m
+//  CHRegionFilter.m
 //  GPUOCR
 //
 //  Created by Chris Hanshew on 5/15/16.
 //  Copyright © 2016 Chris Hanshew. All rights reserved.
 //
 
-#import "CHResultFilter.h"
-#import "CHResultGenerator.h"
+#import "CHRegionFilter.h"
+#import "CHRegionGenerator.h"
 
-@interface CHResultFilter () {
+@interface CHRegionFilter () {
     GPUImageAlphaBlendFilter *blendFilter;
     GPUImageGammaFilter *gammaFilter;
-    CHResultGenerator* resultGenerator;
+    CHRegionGenerator* regionGenerator;
     GPUImageLanczosResamplingFilter *resamplingFilter;
 }
 
 @end
 
-@implementation CHResultFilter
+@implementation CHRegionFilter
 
 // TODO: REMOVE SIZE PARAMETER - USE FORCEPROCESSING
 -(instancetype)init {
@@ -31,33 +31,33 @@
         gammaFilter = [[GPUImageGammaFilter alloc] init];
         [self addFilter:gammaFilter];
 
-        resultGenerator = [[CHResultGenerator alloc] init];
-        [self addFilter:resultGenerator];
+        regionGenerator = [[CHRegionGenerator alloc] init];
+        [self addFilter:regionGenerator];
 
         self.initialFilters = @[resamplingFilter];
         [resamplingFilter addTarget:gammaFilter];
         [gammaFilter addTarget:blendFilter];
-        [resultGenerator addTarget:blendFilter];
+        [regionGenerator addTarget:blendFilter];
         self.terminalFilter = blendFilter;
 
-        __block CHResultGenerator *weakResultsGenerator = resultGenerator;
+        __block CHRegionGenerator *weakResultsGenerator = regionGenerator;
         [gammaFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
-            [weakResultsGenerator renderResultsWithFrameTime:time];
+            [weakResultsGenerator renderRegionsWithFrameTime:time];
         }];
     }
     return self;
 }
 
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha {
-    [resultGenerator setLineColorWithRed:red green:green blue:blue alpha:alpha];
+    [regionGenerator setLineColorWithRed:red green:green blue:blue alpha:alpha];
 }
 
 -(void)setLineWidth:(float)width {
-    [resultGenerator setLineWidth:width];
+    [regionGenerator setLineWidth:width];
 }
 
--(void)setResults:(NSArray *)results {
-    [resultGenerator setResults:results];
+-(void)setRegions:(NSArray *)results {
+    [regionGenerator setRegions:results];
 }
 
 @end

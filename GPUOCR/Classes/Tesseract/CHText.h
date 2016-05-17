@@ -4,7 +4,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CHRegion.h"
+
+@class CHRegion;
 
 @interface CHText : NSObject
 

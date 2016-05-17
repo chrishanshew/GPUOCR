@@ -53,7 +53,7 @@
     __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
         if (weakSelf.enabled && _operationQueue.operationCount == 0) {
-            [weakSelf willBeginRecognitionWithOutput:weakSelf];
+            [weakSelf output:weakSelf willRecognizeRegion:_region];
             [weakSelf lockFramebufferForReading];
             
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
@@ -72,8 +72,8 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract recognizeAtLevel: _level];
-                    [weakSelf output:weakSelf didFinishRecognitionWithResult:result];
+                    CHText *text = [weakTesseract recognizeAtLevel: _level];
+                    [weakSelf output:weakSelf completedRecognitionWithText:text];
                     [weakTesseract clear];
                 }]];
             }
@@ -83,15 +83,15 @@
 
 #pragma mark - Delegate
 
-- (void)output:(CHRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishRecognitionWithResult:)]) {
-        [_delegate output:output didFinishRecognitionWithResult:result];
+- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text {
+    if ([_delegate respondsToSelector:@selector(output:completedRecognitionWithText:)]) {
+        [_delegate output:output completedRecognitionWithText:text];
     }
 }
 
-- (void)willBeginRecognitionWithOutput:(CHRecognitionOutput *)output {
-    if ([_delegate respondsToSelector:@selector(willBeginRecognitionWithOutput:)]) {
-        [_delegate willBeginRecognitionWithOutput:output];
+- (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {
+    if ([_delegate respondsToSelector:@selector(output:willRecognizeRegion:)]) {
+        [_delegate output:output willRecognizeRegion:region];
     }
 }
 

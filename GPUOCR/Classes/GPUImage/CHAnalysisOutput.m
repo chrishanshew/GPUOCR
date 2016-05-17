@@ -61,8 +61,8 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHLayout *layout = [weakTesseract analyzeLayoutAtLevel: _level];
-                    [weakSelf output:weakSelf didFinishAnalysisWithLayout:layout];
+                    NSArray *regions = [weakTesseract analyzeLayoutAtLevel: _level];
+                    [weakSelf output:weakSelf completedAnalysisWithRegions:regions];
                     [weakTesseract clear];
                 }]];
             }
@@ -78,9 +78,9 @@
     }
 }
 
--(void)output:(CHAnalysisOutput*)output didFinishAnalysisWithLayout:(CHLayout *)layout {
-    if ([_delegate respondsToSelector:@selector(output:didFinishAnalysisWithLayout:)]) {
-        [_delegate output:output didFinishAnalysisWithLayout:layout];
+-(void)output:(CHAnalysisOutput*)output completedAnalysisWithRegions:(NSArray *)regions {
+    if ([_delegate respondsToSelector:@selector(output:completedAnalysisWithRegions:)]) {
+        [_delegate output:output completedAnalysisWithRegions:regions];
     }
 }
 

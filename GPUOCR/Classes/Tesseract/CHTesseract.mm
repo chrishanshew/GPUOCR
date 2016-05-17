@@ -7,7 +7,6 @@
 //
 
 #import "CHTesseract.h"
-#import "CHResultGroup.h"
 #import "CHRegion.h"
 #import "apitypes.h"
 #import "baseapi.h"
@@ -26,9 +25,6 @@ namespace tesseract {
 
 - (void)getBoundingBox:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forRegion:(CHRegion *)region;
 - (void)getBaseline:(tesseract::ResultIterator *)iterator atLevel:(tesseract::PageIteratorLevel)level forRegion:(CHRegion *)region;
-- (void)getOrientation:(tesseract::ResultIterator *)iterator forRegion:(CHRegion *)region;
-- (void)getTextDirection:(CHResultGroup *)group;
-- (void)getOrientation;
 
 @end
 
@@ -107,46 +103,54 @@ namespace tesseract {
         do {
             NSString *text = [NSString stringWithUTF8String: iterator->GetUTF8Text(iteratorLevel)];
             if (text && text.length > 0) {
-                text.text = text;
-                text.confidence = iterator->Confidence(iteratorLevel);
+                result = [[CHText alloc] init];
+                result.text = text;
+                result.confidence = iterator->Confidence(iteratorLevel);
             }
         } while (iterator->Next(iteratorLevel));
 
         delete iterator;
 
-        return text;
+        return result;
     }
     return nil;
 }
 
-- (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
+- (NSArray *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
     _tesseract->AnalyseLayout();
     tesseract::ResultIterator* iterator = _tesseract->GetIterator();
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
 
     if (iterator) {
-        NSMutableArray *results = [NSMutableArray array];
+
+        NSDate *date = [NSDate date];
+        NSUInteger timestamp = date.timeIntervalSince1970;
+
+        int offset; float slope;
+        _tesseract->GetTextDirection(&offset, &slope);
+
+        NSMutableArray *regions = [NSMutableArray array];
         CHRegion *region;
 
         int index = 0;
         do {
-            region = [[CHResult alloc] init];
+            region = [[CHRegion alloc] init];
+            region.analysisTimestamp = timestamp;
+            region.level = level;
+            region.offset = offset;
+            region.slope = slope;
 
-            [self getBoundingBox:iterator atLevel:iteratorLevel forResult:region];
-            [self getBaseline:iterator atLevel:iteratorLevel forResult:region];
+            [self getBoundingBox:iterator atLevel:iteratorLevel forRegion:region];
+            [self getBaseline:iterator atLevel:iteratorLevel forRegion:region];
 
             region.index = index++;
-            [results addObject:region];
+            [regions addObject:region];
+
         } while (iterator->Next(iteratorLevel));
-
-        CHResultGroup *resultGroup = [[CHResultGroup alloc] init];
-        resultGroup.results = results;
-
-        [self getTextDirection:resultGroup];
 
         delete iterator;
         
-        return resultGroup;
+        return regions;
     }
     
     return nil;
@@ -207,22 +211,23 @@ namespace tesseract {
     region.end = CGPointMake(xEnd, yEnd);
 }
 
-- (void)getOrientation:(tesseract::ResultIterator *)iterator forRegion:(CHRegion *)region {
-    tesseract::Orientation orientation;
-    tesseract::WritingDirection writingDirection;
-    tesseract::TextlineOrder textlineOrder;
-    float deskew;
-    iterator->Orientation(&orientation, &writingDirection, &textlineOrder, &deskew);
-    //NSLog(@"Orientation: %i\nWriting Direction: %i\nTextline Order: %i\nDeskew: %f", orientation, writingDirection, textlineOrder, deskew);
-}
-
-- (void)getTextDirection:(CHResultGroup *)group {
-    int offset; float slope;
-    _tesseract->GetTextDirection(&offset, &slope);
-    group.offset = offset;
-    group.slope = slope;
-//    NSLog(@"Offset: %i, Slope: %f", offset, slope);
-}
+//
+//- (void)getOrientation:(tesseract::ResultIterator *)iterator forRegion:(CHRegion *)region {
+//    tesseract::Orientation orientation;
+//    tesseract::WritingDirection writingDirection;
+//    tesseract::TextlineOrder textlineOrder;
+//    float deskew;
+//    iterator->Orientation(&orientation, &writingDirection, &textlineOrder, &deskew);
+//    //NSLog(@"Orientation: %i\nWriting Direction: %i\nTextline Order: %i\nDeskew: %f", orientation, writingDirection, textlineOrder, deskew);
+//}
+//
+//- (void)getTextDirection:(CHResultGroup *)group {
+//    int offset; float slope;
+//    _tesseract->GetTextDirection(&offset, &slope);
+//    group.offset = offset;
+//    group.slope = slope;
+////    NSLog(@"Offset: %i, Slope: %f", offset, slope);
+//}
 
 - (void)getOrientation {
     OSResults osResults;

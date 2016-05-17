@@ -5,8 +5,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-
-@class CHTesseract;
+#import "CHTesseract.h"
 
 @interface CHRegion : NSObject
 
@@ -15,7 +14,7 @@
 // Position Index
 @property(nonatomic) NSUInteger index; // Detection index relative to other results in group
 
-@property(nonatomic)CHTesseractAnalysisLevel level;
+@property(nonatomic) CHTesseractAnalysisLevel level;
 
 // Raw Coordinates
 @property(nonatomic) NSInteger left;

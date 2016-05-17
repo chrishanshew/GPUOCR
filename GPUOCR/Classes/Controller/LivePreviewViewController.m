@@ -11,7 +11,7 @@
 #import "Settings.h"
 #import "GPUImage.h"
 #import "CHTesseractOutput.h"
-#import "CHResultFilter.h"
+#import "CHRegionFilter.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
@@ -22,7 +22,7 @@
     GPUImageStillCamera *_stillCamera;
 
     // Filter Groups
-    CHResultFilter *resultsFilter;
+    CHRegionFilter *resultsFilter;
     CHTesseractOutput *tesseractOutput;
 
     // Long Press - Real time recognition
@@ -46,13 +46,13 @@
 
 
         // TODO: CAMERA ALWAYS AT MAX
-        _stillCamera = [[GPUImageVideoCamera alloc] init];
+        _stillCamera = [[GPUImageStillCamera alloc] init];
         [_stillCamera setCaptureSessionPreset:AVCaptureSessionPresetPhoto];
         _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
         _processingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
         
-        resultsFilter = [[CHResultFilter alloc] init];
+        resultsFilter = [[CHRegionFilter alloc] init];
         [resultsFilter forceProcessingAtSize:_processingSize];
 
         // OCR Filters
@@ -134,8 +134,8 @@
 
 #pragma mark - <CHTesseractOutputDelegate>
 
-- (void)output:(CHTesseractOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
-    [resultsFilter setResults:result.results];
+- (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
+
 }
 
 - (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output {

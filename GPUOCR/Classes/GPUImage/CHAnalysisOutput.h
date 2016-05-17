@@ -14,7 +14,7 @@
 @protocol CHOCRAnalysisOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHAnalysisOutput*)output didFinishAnalysisWithLayout:(CHLayout *)layout;
+- (void)output:(CHAnalysisOutput*)output completedAnalysisWithRegions:(NSArray *)regions;
 
 @optional
 - (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output;
