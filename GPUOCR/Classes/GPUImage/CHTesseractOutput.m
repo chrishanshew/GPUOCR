@@ -16,7 +16,6 @@
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHAnalysisOutput *analysisOutput;
-    CHRecognitionOutput *recognitionOutput;
     GPUImageLanczosResamplingFilter *resamplingFilter;
 }
 
@@ -28,17 +27,12 @@
 
 // TODO: REMOVE SIZE PARAMETER - USE FORCEPROCESSING
 
-
 -(instancetype)initWithProcessingSize:(CGSize)size {
     self = [super init];
     if (self) {
         
         _processingSize = size;
         _level = CHTesseractAnalysisLevelBlock;
-
-        // Recognition Output
-        recognitionOutput = [[CHRecognitionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
-        recognitionOutput.level = _level;
 
         // Analysis Output
         analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES];
@@ -76,7 +70,6 @@
 -(void)setLevel:(CHTesseractAnalysisLevel)level {
     _level = level;
     analysisOutput.level = _level;
-    recognitionOutput.level = _level;
 }
 
 -(void)setBlurRadius:(float)blurRadius {
@@ -96,7 +89,7 @@
         }
         case CHTesseractModeAnalysisWithRecognition:
         {
-            return recognitionOutput;
+            return analysisOutput;
         }
     }
 }

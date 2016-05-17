@@ -15,7 +15,7 @@
 @protocol CHOCRRecogntionOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)result;
+- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text;
 
 @optional
 - (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region;
