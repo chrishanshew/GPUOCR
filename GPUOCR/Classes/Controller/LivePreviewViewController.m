@@ -22,7 +22,7 @@
     GPUImageStillCamera *_stillCamera;
 
     // Filter Groups
-    CHRegionFilter *resultsFilter;
+    CHRegionFilter *regionFilter;
     CHTesseractOutput *tesseractOutput;
 
     // Long Press - Real time recognition
@@ -52,8 +52,8 @@
 
         _processingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
         
-        resultsFilter = [[CHRegionFilter alloc] init];
-        [resultsFilter forceProcessingAtSize:_processingSize];
+        regionFilter = [[CHRegionFilter alloc] init];
+        [regionFilter forceProcessingAtSize:_processingSize];
 
         // OCR Filters
         tesseractOutput = [[CHTesseractOutput alloc] initWithProcessingSize:_processingSize];
@@ -66,9 +66,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        [_stillCamera addTarget:resultsFilter];
+        [_stillCamera addTarget:regionFilter];
         GPUImageView *cameraView = (GPUImageView *)self.view;
-        [resultsFilter addTarget:cameraView atTextureLocation:0];
+        [regionFilter addTarget:cameraView atTextureLocation:0];
         [self updateSettings];
     } else {
         // Rear Camera not available, present alert
@@ -109,10 +109,10 @@
     tesseractOutput.mode = settings.mode;
     
     // Line Width and Color
-    [resultsFilter setLineWidth:settings.lineWidth];
+    [regionFilter setLineWidth:settings.lineWidth];
     CGFloat red, green, blue, alpha;
     [settings.lineColor getRed:&red green:&green blue:&blue alpha:&alpha];
-    [resultsFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
+    [regionFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
     
     // Capture Preset
     if (![_stillCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
@@ -127,7 +127,7 @@
         if (running) [_stillCamera stopCameraCapture];
         _processingSize = newProcessingSize;
         [tesseractOutput forceProcessingAtSize:_processingSize];
-        [resultsFilter forceProcessingAtSize:_processingSize];
+        [regionFilter forceProcessingAtSize:_processingSize];
         if (running) [_stillCamera startCameraCapture];
     }
 }
@@ -135,7 +135,7 @@
 #pragma mark - <CHTesseractOutputDelegate>
 
 - (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
-
+    [regionFilter setRegions:regions];
 }
 
 - (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output {

@@ -12,7 +12,7 @@
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface CHTesseractOutput () <CHTesseractOutputDelegate> {
+@interface CHTesseractOutput () <CHOCRAnalysisOutputDelegate> {
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHAnalysisOutput *analysisOutput;
@@ -36,6 +36,7 @@
 
         // Analysis Output
         analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES];
+        analysisOutput.delegate = self;
         analysisOutput.level = _level;
 
         // Default
@@ -92,6 +93,10 @@
             return analysisOutput;
         }
     }
+}
+
+- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
+    
 }
 
 - (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
