@@ -101,20 +101,6 @@
     }
 }
 
-// TODO: CONSOLIDATE DELEGATES TO SINGLE PROTOCOL
-
-#pragma mark - <CHOCRRecognitionOutputDelegate>
-
-- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)result {
-    if ([_delegate respondsToSelector:@selector(output:completed)]) {
-        
-    }
-}
-
-- (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {
-    
-}
-
 - (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
     if ([_delegate respondsToSelector:@selector(output:completedAnalysisWithRegions:)]) {
         [_delegate output:output completedAnalysisWithRegions:regions];

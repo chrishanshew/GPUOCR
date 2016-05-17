@@ -10,7 +10,6 @@
 #import "CHTesseract.h"
 
 @class CHRecognitionOutput;
-@class CHText;
 @class CHRegion;
 
 @protocol CHOCRRecogntionOutputDelegate <NSObject>

@@ -72,7 +72,7 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHText *text = [weakTesseract recognizeAtLevel: _level];
+                    CHText *text = [weakTesseract recognizeTextAtLevel:_level];
                     [weakSelf output:weakSelf completedRecognitionWithText:text];
                     [weakTesseract clear];
                 }]];

@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHText.h"
+#import "CHRegion.h"
 
-@class CHRegion;
+@class CHText;
 
 typedef NS_ENUM(NSUInteger, CHTesseractMode) {
     CHTesseractModeAnalysis = 0,

@@ -7,7 +7,7 @@
 //
 
 #import "CHTesseract.h"
-#import "CHRegion.h"
+
 #import "apitypes.h"
 #import "baseapi.h"
 #import "osdetect.h"
