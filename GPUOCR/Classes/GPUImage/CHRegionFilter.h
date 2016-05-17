@@ -1,5 +1,5 @@
 //
-//  CHResultFilter.h
+//  CHRegionFilter.h
 //  GPUOCR
 //
 //  Created by Chris Hanshew on 5/15/16.
@@ -8,12 +8,10 @@
 
 #import "GPUImage.h"
 
-@interface CHResultFilter : GPUImageFilterGroup
-
--(instancetype)initWithProcessingSize:(CGSize)processingSize;
+@interface CHRegionFilter : GPUImageFilterGroup
 
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
 -(void)setLineWidth:(float)width;
--(void)setResults:(NSArray *)results;
+-(void)setRegions:(NSArray *)results;
 
 @end

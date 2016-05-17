@@ -14,7 +14,7 @@
 @protocol CHOCRAnalysisOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result;
+- (void)output:(CHAnalysisOutput*)output completedAnalysisWithRegions:(NSArray *)regions;
 
 @optional
 - (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output;
@@ -27,6 +27,5 @@
 @property(nonatomic)CHTesseractAnalysisLevel level;
 
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat;
-- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat withDelegate:(id<CHOCRAnalysisOutputDelegate>)delegate;
 
 @end

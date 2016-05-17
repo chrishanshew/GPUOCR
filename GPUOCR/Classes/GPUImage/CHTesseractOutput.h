@@ -8,16 +8,13 @@
 
 #import "GPUImage.h"
 #import "CHTesseract.h"
-#import "CHResultGroup.h"
 
 @class CHTesseractOutput;
 
 @protocol CHTesseractOutputDelegate <NSObject>
 
-@required
-- (void)output:(CHTesseractOutput *)output didFinishDetectionWithResult:(CHResultGroup *)result;
-
 @optional
+- (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions;
 - (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output;
 
 @end

@@ -9,16 +9,14 @@
 #import "CHTesseractOutput.h"
 #import "CHAnalysisOutput.h"
 #import "CHRecognitionOutput.h"
-#import "CHDetectionOutput.h"
 
-#define kDefaultAdaptiveThresholderBlurRadius 4.0
+#define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface CHTesseractOutput () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate, CHOCRDetectionOutputDelegate> {
+@interface CHTesseractOutput () <CHOCRAnalysisOutputDelegate> {
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHAnalysisOutput *analysisOutput;
-    CHDetectionOutput *detectionOutput;
-    CHRecognitionOutput *recognitionOutput;
+    GPUImageLanczosResamplingFilter *resamplingFilter;
 }
 
 -(GPUImageRawDataOutput *)outputForMode:(CHTesseractMode)mode;
@@ -29,38 +27,35 @@
 
 // TODO: REMOVE SIZE PARAMETER - USE FORCEPROCESSING
 
-
 -(instancetype)initWithProcessingSize:(CGSize)size {
     self = [super init];
     if (self) {
         
         _processingSize = size;
         _level = CHTesseractAnalysisLevelBlock;
-        
-        // Thresholder
-        _blurRadius = kDefaultAdaptiveThresholderBlurRadius;
-        adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
-        adaptiveThresholdFilter.blurRadiusInPixels = _blurRadius;
-        [adaptiveThresholdFilter forceProcessingAtSizeRespectingAspectRatio:_processingSize];
-        [self addFilter:adaptiveThresholdFilter];
-        self.initialFilters = @[adaptiveThresholdFilter];
-        self.terminalFilter = adaptiveThresholdFilter;
 
-        // Recognition Output
-        recognitionOutput = [[CHRecognitionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES forLanguage:@"eng" withDelegate:self];
-        recognitionOutput.level = _level;
-        
         // Analysis Output
-        analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
+        analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES];
+        analysisOutput.delegate = self;
         analysisOutput.level = _level;
-        
-        // DetectionOutput
-        detectionOutput = [[CHDetectionOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
-        detectionOutput.level = _level;
-        
+
         // Default
         _mode = CHTesseractModeAnalysis;
+
+        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
+        [self addFilter:resamplingFilter];
+
+        adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
+        adaptiveThresholdFilter.blurRadiusInPixels = kDefaultAdaptiveThresholderBlurRadius;
+        [self addFilter:adaptiveThresholdFilter];
+
+        self.initialFilters = @[resamplingFilter];
+        [resamplingFilter addTarget:adaptiveThresholdFilter];
         [adaptiveThresholdFilter addTarget:[self outputForMode:_mode]];
+        self.terminalFilter = adaptiveThresholdFilter;
+
+
+        [self forceProcessingAtSizeRespectingAspectRatio:size];
     }
     return self;
 }
@@ -76,8 +71,6 @@
 -(void)setLevel:(CHTesseractAnalysisLevel)level {
     _level = level;
     analysisOutput.level = _level;
-    recognitionOutput.level = _level;
-    detectionOutput.level = _level;
 }
 
 -(void)setBlurRadius:(float)blurRadius {
@@ -93,56 +86,28 @@
         }
         case CHTesseractModeAnalysisWithOSD:
         {
-            return detectionOutput;
+            return analysisOutput;
         }
         case CHTesseractModeAnalysisWithRecognition:
         {
-            return recognitionOutput;
+            return analysisOutput;
         }
-    }
-}
-
-// TODO: CONSOLIDATE DELEGATES TO SINGLE PROTOCOL
-
-#pragma mark - <CHOCRRecognitionOutputDelegate>
-
-- (void)output:(CHRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
-        [_delegate output:self didFinishDetectionWithResult:result];
-    }
-}
-
-- (void)willBeginRecognitionWithOutput:(CHRecognitionOutput *)output {
-    if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
-        [_delegate willBeginDetectionWithOutput:self];
-    }
-}
-
-#pragma mark - <CHOCRAnaylsisOutputDelegate>
-
-- (void)output:(CHAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
-        [_delegate output:self didFinishDetectionWithResult:result];
     }
 }
 
 - (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
-    if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
-        [_delegate willBeginDetectionWithOutput:self];
+    
+}
+
+- (void)output:(CHTesseractOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
+    if ([_delegate respondsToSelector:@selector(output:completedAnalysisWithRegions:)]) {
+        [_delegate output:output completedAnalysisWithRegions:regions];
     }
 }
 
-#pragma mark - <CHOCRDetectionOutputDelegate>
-
-- (void)output:(CHDetectionOutput*)output didFinishDetectionWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
-        [_delegate output:self didFinishDetectionWithResult:result];
-    }
-}
-
-- (void)willBeginDetectionWithOutput:(CHDetectionOutput *)output {
+- (void)willBeginDetectionWithOutput:(CHTesseractOutput *)output {
     if ([_delegate respondsToSelector:@selector(willBeginDetectionWithOutput:)]) {
-        [_delegate willBeginDetectionWithOutput:self];
+        [_delegate willBeginDetectionWithOutput:output];
     }
 }
 

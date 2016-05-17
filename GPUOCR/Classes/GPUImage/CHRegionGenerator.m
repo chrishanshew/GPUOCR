@@ -1,5 +1,5 @@
 //
-//  CHResultGenerator.m
+//  CHRegionGenerator.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 2/13/16.
@@ -8,10 +8,10 @@
 
 #import <OpenGLES/gltypes.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHResultGenerator.h"
-#import "CHResult.h"
+#import "CHRegionGenerator.h"
+#import "CHRegion.h"
 
-@interface CHResultGenerator () {
+@interface CHRegionGenerator () {
     GLfloat _lineWidth;
     GLfloat _widthUniform, _heightUniform, _colorUniform;
     GLfloat *lineCoordinates;
@@ -48,7 +48,7 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 
 GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
-@implementation CHResultGenerator
+@implementation CHRegionGenerator
 
 - (id)init{
     
@@ -56,22 +56,33 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
     if (self) {
         _resultsAccessQueue = dispatch_queue_create("com.chrishanshew.gpuocr.resultsaccessqueue", DISPATCH_QUEUE_CONCURRENT);
         _results = [NSArray array];
+
+        runSynchronouslyOnVideoProcessingQueue(^{
+            _widthUniform = [filterProgram uniformIndex:@"width"];
+            _heightUniform = [filterProgram uniformIndex:@"height"];
+            _colorUniform =[filterProgram uniformIndex:@"lineColor"];
+        });
     }
     return self;
 }
 
 -(void)forceProcessingAtSize:(CGSize)frameSize {
     [super forceProcessingAtSize:frameSize];
-    _widthUniform = [filterProgram uniformIndex:@"width"];
-    _heightUniform = [filterProgram uniformIndex:@"height"];
-    _colorUniform =[filterProgram uniformIndex:@"lineColor"];
     [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
     [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
     [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
     glViewport(0, 0, frameSize.width, frameSize.height);
 }
 
-- (void)setResults:(NSArray *)results {
+-(void)forceProcessingAtSizeRespectingAspectRatio:(CGSize)frameSize {
+    [super forceProcessingAtSizeRespectingAspectRatio:frameSize];
+    [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
+    [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
+    [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
+    glViewport(0, 0, frameSize.width, frameSize.height);
+}
+
+- (void)setRegions:(NSArray *)results {
     dispatch_barrier_async(_resultsAccessQueue, ^{
         NSUInteger length = results.count <= 512 ? results.count : 511;
         _results = [NSArray arrayWithArray:[results subarrayWithRange: NSMakeRange(0, length)]];
@@ -87,7 +98,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 }
 
 
--(void)renderResultsWithFrameTime:(CMTime)frameTime {
+-(void)renderRegionsWithFrameTime:(CMTime)frameTime {
     if (self.preventRendering)
     {
         return;
@@ -111,9 +122,9 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
         NSUInteger currentVertexIndex = 0;
 
-        for (CHResult *result in _results) {
+        for (CHRegion *region in _results) {
 
-            rect = result.rect;
+            rect = region.rect;
 
             leftStart = CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
             leftEnd = CGPointMake(rect.origin.x, rect.origin.y);
