@@ -12,7 +12,7 @@
 #import "CHRecognitionOutput.h"
 #import "CHAnalysisOutput.h"
 #import "CHDetectionOutput.h"
-#import "CHResultGenerator.h"
+#import "CHRegionGenerator.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4.0
 
