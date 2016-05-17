@@ -7,17 +7,17 @@
 //
 
 #import "GPUImage.h"
-#import "CHResultGroup.h"
+#import "CHTesseract.h"
 
 @class CHRecognitionOutput;
+@class CHText;
+@class CHRegion;
+
 
 @protocol CHOCRRecogntionOutputDelegate <NSObject>
 
 @required
-- (void)output:(CHRecognitionOutput *)output didFinishRecognitionWithResult:(CHResultGroup *)result;
-
-@optional
-- (void)willBeginRecognitionWithOutput:(CHRecognitionOutput *)output;
+- (void)output:(CHRecognitionOutput *)output didFinishWithText:(CHText *)result forRegion:(CHRegion *)region;
 
 @end
 

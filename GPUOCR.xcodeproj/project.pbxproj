@@ -38,6 +38,8 @@
 		E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */; };
 		E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */; };
 		E2DAB430C7FA92A03CF54188 /* CHDetectionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABBB3B17B6565857DA262 /* CHDetectionOutput.m */; };
+		E2DAB8B398FEB2F6A7528495 /* CHText.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB6082A897EC90D4ADE5D /* CHText.m */; };
+		E2DABAF8244CDB4835DB56A8 /* CHRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB275F66558E13A4DE840 /* CHRegion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +113,10 @@
 		0CED209C1CE29CB3001F79E9 /* eng.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = eng.traineddata; path = ../tessdata/eng.traineddata; sourceTree = "<group>"; };
 		0CED209D1CE29CB3001F79E9 /* osd.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = osd.traineddata; path = ../tessdata/osd.traineddata; sourceTree = "<group>"; };
 		E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		E2DAB275F66558E13A4DE840 /* CHRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRegion.m; sourceTree = "<group>"; };
+		E2DAB5CCF2DF32179F68190F /* CHRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRegion.h; sourceTree = "<group>"; };
+		E2DAB6082A897EC90D4ADE5D /* CHText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHText.m; sourceTree = "<group>"; };
+		E2DAB80B850EE91D41FCA97C /* CHText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHText.h; sourceTree = "<group>"; };
 		E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		E2DABBB3B17B6565857DA262 /* CHDetectionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHDetectionOutput.m; sourceTree = "<group>"; };
 		E2DABD8B0D7D95A005A1F0DE /* CHDetectionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHDetectionOutput.h; sourceTree = "<group>"; };
@@ -283,6 +289,10 @@
 				0CED20801CE28673001F79E9 /* CHResult.m */,
 				E2DABFE53936C0DC5C5619A1 /* CHResultGroup.h */,
 				E2DABF4C8CB09A5129D84ADB /* CHResultGroup.m */,
+				E2DAB275F66558E13A4DE840 /* CHRegion.m */,
+				E2DAB5CCF2DF32179F68190F /* CHRegion.h */,
+				E2DAB6082A897EC90D4ADE5D /* CHText.m */,
+				E2DAB80B850EE91D41FCA97C /* CHText.h */,
 			);
 			path = Tesseract;
 			sourceTree = "<group>";
@@ -448,6 +458,8 @@
 				E2DAB40F209D4AFADA6CB110 /* CHResultGroup.m in Sources */,
 				E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */,
 				0C4E20EC1CE90B3D00149633 /* CHResultFilter.m in Sources */,
+				E2DABAF8244CDB4835DB56A8 /* CHRegion.m in Sources */,
+				E2DAB8B398FEB2F6A7528495 /* CHText.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

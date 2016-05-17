@@ -24,6 +24,10 @@
     // Filter Groups
     CHResultFilter *resultsFilter;
     CHTesseractOutput *tesseractOutput;
+
+    // Long Press - Real time recognition
+
+    // Tap - Photo Recognition
 }
 
 @property(nonnull, strong) IBOutlet UIButton *settingsButton;
@@ -64,7 +68,6 @@
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
         [_stillCamera addTarget:resultsFilter];
         GPUImageView *cameraView = (GPUImageView *)self.view;
-//        cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
         [resultsFilter addTarget:cameraView atTextureLocation:0];
         [self updateSettings];
     } else {

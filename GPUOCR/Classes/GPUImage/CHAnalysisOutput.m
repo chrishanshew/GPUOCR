@@ -22,17 +22,8 @@
 #pragma mark - Init
 
 -(instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat {
-    self = [self initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat withDelegate: nil];
-    if (self) {
-        
-    }
-    return self;
-}
-
-- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat withDelegate:(id<CHOCRAnalysisOutputDelegate>)delegate {
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
-        _delegate = delegate;
         _tesseract = [[CHTesseract alloc] initForAnalysis];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = 1;
@@ -70,8 +61,8 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHResultGroup *result = [weakTesseract analyzeLayoutAtLevel: _level];
-                    [weakSelf output:weakSelf didFinishAnalysisWithResult:result];
+                    CHLayout *layout = [weakTesseract analyzeLayoutAtLevel: _level];
+                    [weakSelf output:weakSelf didFinishAnalysisWithLayout:layout];
                     [weakTesseract clear];
                 }]];
             }
@@ -87,9 +78,9 @@
     }
 }
 
--(void)output:(CHAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishAnalysisWithResult:)]) {
-        [_delegate output:output didFinishAnalysisWithResult:result];
+-(void)output:(CHAnalysisOutput*)output didFinishAnalysisWithLayout:(CHLayout *)layout {
+    if ([_delegate respondsToSelector:@selector(output:didFinishAnalysisWithLayout:)]) {
+        [_delegate output:output didFinishAnalysisWithLayout:layout];
     }
 }
 

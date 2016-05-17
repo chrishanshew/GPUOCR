@@ -10,6 +10,8 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 @class CHResultGroup;
+@class CHLayout;
+@class CHText;
 
 typedef NS_ENUM(NSUInteger, CHTesseractMode) {
     CHTesseractModeAnalysis = 0,
@@ -38,17 +40,14 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 - (void)setImageWithData:(NSData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 - (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 
-- (void)recognize;
-- (NSString *)recognizeText;
-- (CHResultGroup *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
-- (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
-- (CHResultGroup *)detectionAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHText *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHLayout *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
 
 - (NSString *)hOCRText;
-- (void)setVariableNamed:(NSString *)named withValue:(NSString *)value;
 
 - (void)clear;
 
+- (void)setVariableNamed:(NSString *)named withValue:(NSString *)value;
 - (NSString *)tesseractVersion;
 
 @end

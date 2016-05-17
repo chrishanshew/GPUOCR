@@ -43,7 +43,7 @@
         recognitionOutput.level = _level;
 
         // Analysis Output
-        analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES withDelegate:self];
+        analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES];
         analysisOutput.level = _level;
 
         // DetectionOutput
@@ -126,9 +126,9 @@
 
 #pragma mark - <CHOCRAnaylsisOutputDelegate>
 
-- (void)output:(CHAnalysisOutput*)output didFinishAnalysisWithResult:(CHResultGroup *)result {
-    if ([_delegate respondsToSelector:@selector(output:didFinishDetectionWithResult:)]) {
-        [_delegate output:self didFinishDetectionWithResult:result];
+-(void)output:(CHAnalysisOutput*)output didFinishAnalysisWithLayout:(CHLayout *)layout {
+    if ([_delegate respondsToSelector:@selector(output:didFinishAnalysisWithLayout:)]) {
+        [_delegate output:output didFinishAnalysisWithLayout:layout];
     }
 }
 
