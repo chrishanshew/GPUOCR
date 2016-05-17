@@ -16,23 +16,27 @@
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface LivePreviewViewController () <CHAnalysisOutputDelegate, CHRecognitionOutputDelegate> {
+@interface LivePreviewViewController () <CHAnalysisOutputDelegate, CHRecognitionOutputDelegate, UIGestureRecognizerDelegate> {
     CGSize _processingSize;
 
     // Inputs
     GPUImageStillCamera *_stillCamera;
 
+    GPUImageLanczosResamplingFilter *resamplingFilter;
+
     // Filter Groups
     CHRegionFilter *regionFilter;
-    CHAnalysisGroup *tesseractOutput;
-
-    // Long Press - Real time recognition
+    CHAnalysisGroup *analysisGroup;
+    CHRecognitionGroup *recognitionGroup;
 
     // Tap - Photo Recognition
 }
 
-@property(nonnull, strong) IBOutlet UIButton *settingsButton;
+@property(nonatomic, strong) IBOutlet UILongPressGestureRecognizer *longPressGesture;
+@property(nonatomic, strong) IBOutlet UIButton *settingsButton;
+
 -(IBAction)showSettings:(id)sender;
+-(IBAction)onLongPressGestureReceived:(UILongPressGestureRecognizer *)sender;
 
 -(void)updateSettings;
 
@@ -45,21 +49,33 @@
     if (self) {
         Settings *settings = [Settings currentSettings];
 
-
         // TODO: CAMERA ALWAYS AT MAX
         _stillCamera = [[GPUImageStillCamera alloc] init];
         [_stillCamera setCaptureSessionPreset:AVCaptureSessionPresetPhoto];
         _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
         _processingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
-        
+
         regionFilter = [[CHRegionFilter alloc] init];
         [regionFilter forceProcessingAtSize:_processingSize];
 
         // OCR Filters
-        tesseractOutput = [[CHAnalysisGroup alloc] initWithProcessingSize:_processingSize];
-        tesseractOutput.delegate = self;
-        [_stillCamera addTarget:tesseractOutput];
+        analysisGroup = [[CHAnalysisGroup alloc] initWithProcessingSize:_processingSize];
+        analysisGroup.delegate = self;
+
+        recognitionGroup = [[CHRecognitionGroup alloc] initWithProcessingSize:_processingSize];
+        recognitionGroup.delegate = self;
+
+        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
+        [resamplingFilter forceProcessingAtSize:_processingSize];
+        [_stillCamera addTarget:resamplingFilter];
+        [resamplingFilter addTarget:regionFilter atTextureLocation:0];
+        [resamplingFilter addTarget:analysisGroup atTextureLocation:1];
+        [resamplingFilter addTarget:recognitionGroup atTextureLocation:2];
+        [resamplingFilter forceProcessingAtSize:_processingSize];
+
+        // Gesture Recognizers
+        _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPressGestureReceived:)];
     }
     return self;
 }
@@ -67,9 +83,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        [_stillCamera addTarget:regionFilter];
         GPUImageView *cameraView = (GPUImageView *)self.view;
-        [regionFilter addTarget:cameraView atTextureLocation:0];
+        [regionFilter addTarget:cameraView];
         [self updateSettings];
     } else {
         // Rear Camera not available, present alert
@@ -99,6 +114,14 @@
     [self performSegueWithIdentifier:@"ShowSettingsController" sender:self];
 }
 
+- (IBAction)onLongPressGestureReceived:(UILongPressGestureRecognizer *)sender {
+    if ([sender isEqual:_longPressGesture]) {
+        if (sender.state == UIGestureRecognizerStateBegan) {
+
+        }
+    }
+}
+
 #pragma mark - Notifications
 
 -(void)updateSettings {
@@ -106,7 +129,7 @@
     Settings *settings = [Settings currentSettings];
     
     // Detection Level
-    tesseractOutput.level = settings.level;
+    analysisGroup.level = settings.level;
 
     // Line Width and Color
     [regionFilter setLineWidth:settings.lineWidth];
@@ -115,27 +138,30 @@
     [regionFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
     
     // Capture Preset
-    if (![_stillCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
-        if (running) [_stillCamera stopCameraCapture];
-        _stillCamera.captureSessionPreset = settings.captureSessionPreset;
-        if (running) [_stillCamera startCameraCapture];
-    }
+//    if (![_stillCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
+//        if (running) [_stillCamera stopCameraCapture];
+//        _stillCamera.captureSessionPreset = settings.captureSessionPreset;
+//        if (running) [_stillCamera startCameraCapture];
+//    }
     
     // Size
-    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
-    if (!CGSizeEqualToSize(_processingSize, newProcessingSize)) {
-        if (running) [_stillCamera stopCameraCapture];
-        _processingSize = newProcessingSize;
-        [tesseractOutput forceProcessingAtSize:_processingSize];
-        [regionFilter forceProcessingAtSize:_processingSize];
-        if (running) [_stillCamera startCameraCapture];
-    }
+//    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
+//    if (!CGSizeEqualToSize(_processingSize, newProcessingSize)) {
+//        if (running) [_stillCamera stopCameraCapture];
+//        _processingSize = newProcessingSize;
+//        [analysisGroup forceProcessingAtSize:_processingSize];
+//        [regionFilter forceProcessingAtSize:_processingSize];
+//        if (running) [_stillCamera startCameraCapture];
+//    }
 }
 
 #pragma mark - <CHAnalysisOutputDelegate>
 
 - (void)output:(CHAnalysisGroup *)output completedAnalysisWithRegions:(NSArray *)regions; {
     [regionFilter setRegions:regions];
+    if (regions.count >0 ) {
+        [recognitionGroup setRegion:[regions objectAtIndex:0]];
+    }
 }
 
 - (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
@@ -145,7 +171,7 @@
 #pragma mark - <CHAnalysisOutputDelegate>
 
 - (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text {
-
+    NSLog(@"%@", text.text);
 }
 
 - (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {

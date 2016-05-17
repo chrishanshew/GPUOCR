@@ -10,9 +10,9 @@
 
 @interface CHRecognitionGroup : GPUImageFilterGroup
 
--(instancetype)initWithProcessingSize:(CGSize)size forRegion:(CHRegion *)region;
+-(instancetype)initWithProcessingSize:(CGSize)size;
 
 @property(nonatomic, weak)id<CHRecognitionOutputDelegate> delegate;
-@property(nonatomic, strong, readonly) CHRegion *region;
+@property(nonatomic, strong, setter=setRegion:) CHRegion *region;
 
 @end

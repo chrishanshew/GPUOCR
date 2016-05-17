@@ -31,13 +31,22 @@
                             <constraint firstAttribute="trailingMargin" secondItem="rph-NJ-ndx" secondAttribute="trailing" id="11L-5b-D6g"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rph-NJ-ndx" secondAttribute="bottom" constant="20" id="CHR-Vo-V2E"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="9fI-th-Kq0" appends="YES" id="bRa-qb-caE"/>
+                        </connections>
                     </view>
                     <connections>
+                        <outlet property="longPressGesture" destination="9fI-th-Kq0" id="ohJ-DT-q71"/>
                         <outlet property="view" destination="8bC-Xf-vdC" id="UDF-8C-kl7"/>
                         <segue destination="NBq-BK-4hE" kind="presentation" identifier="ShowSettingsController" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="a9M-JS-t7L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="1" id="9fI-th-Kq0">
+                    <connections>
+                        <action selector="onLongPressGestureReceived:" destination="BYZ-38-t0r" id="so8-Xl-iR4"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="17" y="-515"/>
         </scene>

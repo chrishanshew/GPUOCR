@@ -36,13 +36,10 @@
         analysisOutput.delegate = self;
         analysisOutput.level = _level;
 
-        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
-
         adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
         adaptiveThresholdFilter.blurRadiusInPixels = kDefaultAdaptiveThresholderBlurRadius;
 
-        self.initialFilters = @[resamplingFilter];
-        [resamplingFilter addTarget:adaptiveThresholdFilter];
+        self.initialFilters = @[adaptiveThresholdFilter];
         [adaptiveThresholdFilter addTarget:analysisOutput];
         self.terminalFilter = adaptiveThresholdFilter;
 

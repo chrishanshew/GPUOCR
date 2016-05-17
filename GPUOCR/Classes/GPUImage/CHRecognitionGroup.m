@@ -7,6 +7,9 @@
 
 @interface CHRecognitionGroup () <CHRecognitionOutputDelegate>
 {
+    GPUImageCropFilter *cropFilter;
+    GPUImageLanczosResamplingFilter *resamplingFilter;
+    GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHRecognitionOutput *recognitionOutput;
 }
 
@@ -14,39 +17,40 @@
 
 @implementation CHRecognitionGroup
 
--(instancetype)initWithProcessingSize:(CGSize)size forRegion:(CHRegion *)region {
+-(instancetype)initWithProcessingSize:(CGSize)size {
     self = [super init];
     if (self) {
-        _region = region;
-
-        CGRect regionRect = [_region getRect];
 
         // Crop
-        GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:regionRect];
-        [self addFilter:cropFilter];
+        cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
 
         // Scale
-        GPUImageLanczosResamplingFilter *resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
-        [self addFilter:resamplingFilter];
-        resamplingFilter.enabled = NO;
+//        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
+//        resamplingFilter.enabled = NO;
 
         // Threshold
-        GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
+        adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
         adaptiveThresholdFilter.blurRadiusInPixels = 4;
-        [self addFilter:adaptiveThresholdFilter];
 
         // OCR
-         recognitionOutput = [[CHRecognitionOutput alloc] initWithImageSize:size forRegion:_region resultsInBGRAFormat:YES forLanguage:@"eng"];
+        recognitionOutput = [[CHRecognitionOutput alloc] initWithImageSize:size resultsInBGRAFormat:YES forLanguage:@"eng"];
         recognitionOutput.delegate = self;
 
         self.initialFilters = @[cropFilter];
-        [cropFilter addTarget:resamplingFilter];
-        [resamplingFilter addTarget:adaptiveThresholdFilter];
+        [cropFilter addTarget:adaptiveThresholdFilter];
         [adaptiveThresholdFilter addTarget:recognitionOutput];
-        self.terminalFilter = resamplingFilter;
+        self.terminalFilter = adaptiveThresholdFilter;
     }
 
     return self;
+}
+
+-(void)setRegion:(CHRegion *)region {
+    _region = region;
+    // Update Crop
+//    [cropFilter setCropRegion:[_region getRect]];
+    
+    // Update resampling scale
 }
 
 // TODO: Override Force Processing

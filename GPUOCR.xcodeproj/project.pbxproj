@@ -268,8 +268,8 @@
 				0C4E20F11CE9111100149633 /* CHAnalysisGroup.m */,
 				E2DAB6943C6E50C7104C71A4 /* CHRecognitionOutput.h */,
 				E2DABDA27E759694FDF2EF15 /* CHRecognitionOutput.m */,
-				E2DAB8B9664BB6D7A44CD837 /* CHRecognitionGroup.m */,
 				E2DABA2E274EB9CAA0FFD941 /* CHRecognitionGroup.h */,
+				E2DAB8B9664BB6D7A44CD837 /* CHRecognitionGroup.m */,
 			);
 			path = GPUImage;
 			sourceTree = "<group>";

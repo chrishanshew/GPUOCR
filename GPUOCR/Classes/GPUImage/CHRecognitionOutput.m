@@ -17,7 +17,7 @@
     NSOperationQueue *_operationQueue;
 }
 
--(void (^)())analyzeLayoutBlock;
+-(void (^)())recognizeTextBlock;
 
 @end
 
@@ -25,25 +25,25 @@
 
 #pragma mark - Init
 
-- (instancetype)initWithImageSize:(CGSize)newImageSize forRegion:(CHRegion *)region resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language {
+- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language {
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
-        _region = region;
+        _language = language;
         _tesseract = [[CHTesseract alloc]initForRecognitionWithLanguage:language];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = kRecognitionOutputMaxConcurrentOperations;
-        [self setNewFrameAvailableBlock:[self analyzeLayoutBlock]];
+        [self setNewFrameAvailableBlock:[self recognizeTextBlock]];
     }
     return self;
 }
 
 #pragma mark - New Frame Available Block
 
--(void (^)())analyzeLayoutBlock {
+-(void (^)())recognizeTextBlock {
     __block CHRecognitionOutput *weakSelf = self;
     __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
-        if (weakSelf.enabled && _operationQueue.operationCount == 0) {
+        if (weakSelf.enabled && _operationQueue.operationCount == 0 && _region) {
             [weakSelf output:weakSelf willRecognizeRegion:_region];
             [weakSelf lockFramebufferForReading];
             
@@ -71,6 +71,12 @@
             }
         }
     };
+}
+
+-(void)setRegion:(CHRegion *)region {
+    if (_operationQueue.operationCount == 0) {
+        _region = region;
+    }
 }
 
 #pragma mark - Delegate

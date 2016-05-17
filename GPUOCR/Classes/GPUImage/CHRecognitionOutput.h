@@ -26,8 +26,8 @@
 
 @property(nonatomic, weak)id<CHRecognitionOutputDelegate> delegate;
 @property(nonatomic, strong, readonly)NSString* language;
-@property (nonatomic, assign, readonly) CHRegion *region;
+@property(nonatomic, assign, setter=setRegion:) CHRegion *region;
 
-- (instancetype)initWithImageSize:(CGSize)newImageSize forRegion:(CHRegion *)region resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language;
+- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language;
 
 @end
