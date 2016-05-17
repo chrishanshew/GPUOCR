@@ -11,12 +11,6 @@
 #import "CHRegion.h"
 #import "CHText.h"
 
-typedef NS_ENUM(NSUInteger, CHTesseractMode) {
-    CHTesseractModeAnalysis = 0,
-    CHTesseractModeAnalysisWithOSD,
-    CHTesseractModeAnalysisWithRecognition
-};
-
 @interface CHTesseract : NSObject
 
 @property(nonatomic, strong, readonly)NSString *language;

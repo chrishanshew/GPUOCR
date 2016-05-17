@@ -106,7 +106,7 @@
     
     // Detection Level
     tesseractOutput.level = settings.level;
-    
+
     // Line Width and Color
     [regionFilter setLineWidth:settings.lineWidth];
     CGFloat red, green, blue, alpha;

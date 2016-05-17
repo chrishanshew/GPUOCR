@@ -15,7 +15,6 @@ FOUNDATION_EXPORT NSString * const GPUOCRSettingsUpdatedNotification;
 
 @interface Settings : NSObject
 
-@property(nonatomic) CHTesseractMode mode;
 @property(nonatomic) CHTesseractAnalysisLevel level;
 @property(nonatomic, strong) NSString *captureSessionPreset;
 @property(nonatomic) float lineWidth;
