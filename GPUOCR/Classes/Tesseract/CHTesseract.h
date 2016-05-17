@@ -9,21 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "CHRegion.h"
-
-@class CHText;
+#import "CHText.h"
 
 typedef NS_ENUM(NSUInteger, CHTesseractMode) {
     CHTesseractModeAnalysis = 0,
     CHTesseractModeAnalysisWithOSD,
     CHTesseractModeAnalysisWithRecognition
-};
-
-typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
-    CHTesseractAnalysisLevelBlock = 0,
-    CHTesseractAnalysisLevelParagraph,
-    CHTesseractAnalysisLevelTextLine,
-    CHTesseractAnalysisLevelWord,
-    CHTesseractAnalysisLevelSymbol
 };
 
 @interface CHTesseract : NSObject

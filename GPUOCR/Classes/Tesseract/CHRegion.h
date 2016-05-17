@@ -5,7 +5,14 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHTesseract.h"
+
+typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
+    CHTesseractAnalysisLevelBlock = 0,
+    CHTesseractAnalysisLevelParagraph,
+    CHTesseractAnalysisLevelTextLine,
+    CHTesseractAnalysisLevelWord,
+    CHTesseractAnalysisLevelSymbol
+};
 
 @interface CHRegion : NSObject
 

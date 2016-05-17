@@ -12,7 +12,7 @@
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface CHTesseractOutput () <CHOCRRecogntionOutputDelegate, CHOCRAnalysisOutputDelegate> {
+@interface CHTesseractOutput () <CHTesseractOutputDelegate> {
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHAnalysisOutput *analysisOutput;

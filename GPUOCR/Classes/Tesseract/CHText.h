@@ -4,7 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CHTesseract.h"
+#import "CHRegion.h"
 
 @interface CHText : NSObject
 
