@@ -44,7 +44,7 @@
     __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
         if (weakSelf.enabled && _operationQueue.operationCount == 0 && _region) {
-            [weakSelf output:weakSelf willRecognizeRegion:_region];
+            [weakSelf output:weakSelf willRecognizeRegion:weakSelf.region];
             [weakSelf lockFramebufferForReading];
             
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
@@ -63,8 +63,8 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHText *text = [weakTesseract recognizeTextAtLevel:_region.level];
-                    text.region = _region;
+                    CHText *text = [weakTesseract recognizeTextAtLevel:weakSelf.region.level];
+                    text.region = weakSelf.region;
                     [weakSelf output:weakSelf completedRecognitionWithText:text];
                     [weakTesseract clear];
                 }]];

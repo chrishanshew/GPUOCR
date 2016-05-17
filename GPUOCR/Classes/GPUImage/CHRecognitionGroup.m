@@ -47,6 +47,7 @@
 
 -(void)setRegion:(CHRegion *)region {
     _region = region;
+    recognitionOutput.region = region;
     // Update Crop
 //    [cropFilter setCropRegion:[_region getRect]];
     
