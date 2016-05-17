@@ -13,16 +13,14 @@
 #import "CHTesseractOutput.h"
 #import "CHResultFilter.h"
 
-#define kDefaultAdaptiveThresholderBlurRadius 4.0
+#define kDefaultAdaptiveThresholderBlurRadius 4
 
 @interface LivePreviewViewController () <CHTesseractOutputDelegate> {
     CGSize _processingSize;
 
     // Inputs
-    GPUImageVideoCamera *_videoCamera;
+    GPUImageStillCamera *_stillCamera;
 
-
-    
     // Filter Groups
     CHResultFilter *resultsFilter;
     CHTesseractOutput *tesseractOutput;
@@ -41,19 +39,22 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         Settings *settings = [Settings currentSettings];
-        
-        _videoCamera = [[GPUImageVideoCamera alloc] init];
-        [_videoCamera setCaptureSessionPreset:settings.captureSessionPreset];
-        _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
-        _processingSize = [Settings sizeForCaptureSessionPreset:_videoCamera.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
+
+        // TODO: CAMERA ALWAYS AT MAX
+        _stillCamera = [[GPUImageVideoCamera alloc] init];
+        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPresetPhoto];
+        _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+
+        _processingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
         
-        resultsFilter = [[CHResultFilter alloc] initWithProcessingSize:_processingSize];
+        resultsFilter = [[CHResultFilter alloc] init];
+        [resultsFilter forceProcessingAtSize:_processingSize];
 
         // OCR Filters
         tesseractOutput = [[CHTesseractOutput alloc] initWithProcessingSize:_processingSize];
         tesseractOutput.delegate = self;
-        [_videoCamera addTarget:tesseractOutput];
+        [_stillCamera addTarget:tesseractOutput];
     }
     return self;
 }
@@ -61,9 +62,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        [_videoCamera addTarget:resultsFilter];
+        [_stillCamera addTarget:resultsFilter];
         GPUImageView *cameraView = (GPUImageView *)self.view;
-        cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
+//        cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
         [resultsFilter addTarget:cameraView atTextureLocation:0];
         [self updateSettings];
     } else {
@@ -74,13 +75,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings) name:GPUOCRSettingsUpdatedNotification object:nil];
-    [_videoCamera startCameraCapture];
+    [_stillCamera startCameraCapture];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_videoCamera stopCameraCapture];
+    [_stillCamera stopCameraCapture];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -97,7 +98,7 @@
 #pragma mark - Notifications
 
 -(void)updateSettings {
-    BOOL running = [_videoCamera isRunning];
+    BOOL running = [_stillCamera isRunning];
     Settings *settings = [Settings currentSettings];
     
     // Detection Level
@@ -111,20 +112,20 @@
     [resultsFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
     
     // Capture Preset
-    if (![_videoCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
-        if (running) [_videoCamera stopCameraCapture];
-        _videoCamera.captureSessionPreset = settings.captureSessionPreset;
-        if (running) [_videoCamera startCameraCapture];
+    if (![_stillCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
+        if (running) [_stillCamera stopCameraCapture];
+        _stillCamera.captureSessionPreset = settings.captureSessionPreset;
+        if (running) [_stillCamera startCameraCapture];
     }
     
     // Size
-    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:_videoCamera.captureSessionPreset andOrientation:_videoCamera.outputImageOrientation];
+    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
     if (!CGSizeEqualToSize(_processingSize, newProcessingSize)) {
-        if (running) [_videoCamera stopCameraCapture];
+        if (running) [_stillCamera stopCameraCapture];
         _processingSize = newProcessingSize;
         [tesseractOutput forceProcessingAtSize:_processingSize];
         [resultsFilter forceProcessingAtSize:_processingSize];
-        if (running) [_videoCamera startCameraCapture];
+        if (running) [_stillCamera startCameraCapture];
     }
 }
 

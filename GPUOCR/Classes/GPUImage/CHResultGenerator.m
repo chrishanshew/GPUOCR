@@ -56,15 +56,26 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
     if (self) {
         _resultsAccessQueue = dispatch_queue_create("com.chrishanshew.gpuocr.resultsaccessqueue", DISPATCH_QUEUE_CONCURRENT);
         _results = [NSArray array];
+
+        runSynchronouslyOnVideoProcessingQueue(^{
+            _widthUniform = [filterProgram uniformIndex:@"width"];
+            _heightUniform = [filterProgram uniformIndex:@"height"];
+            _colorUniform =[filterProgram uniformIndex:@"lineColor"];
+        });
     }
     return self;
 }
 
 -(void)forceProcessingAtSize:(CGSize)frameSize {
     [super forceProcessingAtSize:frameSize];
-    _widthUniform = [filterProgram uniformIndex:@"width"];
-    _heightUniform = [filterProgram uniformIndex:@"height"];
-    _colorUniform =[filterProgram uniformIndex:@"lineColor"];
+    [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
+    [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
+    [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
+    glViewport(0, 0, frameSize.width, frameSize.height);
+}
+
+-(void)forceProcessingAtSizeRespectingAspectRatio:(CGSize)frameSize {
+    [super forceProcessingAtSizeRespectingAspectRatio:frameSize];
     [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
     [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
     [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];

@@ -10,8 +10,6 @@
 
 @interface CHResultFilter : GPUImageFilterGroup
 
--(instancetype)initWithProcessingSize:(CGSize)processingSize;
-
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
 -(void)setLineWidth:(float)width;
 -(void)setResults:(NSArray *)results;

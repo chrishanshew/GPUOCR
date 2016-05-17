@@ -13,6 +13,7 @@
     GPUImageAlphaBlendFilter *blendFilter;
     GPUImageGammaFilter *gammaFilter;
     CHResultGenerator* resultGenerator;
+    GPUImageLanczosResamplingFilter *resamplingFilter;
 }
 
 @end
@@ -20,21 +21,24 @@
 @implementation CHResultFilter
 
 // TODO: REMOVE SIZE PARAMETER - USE FORCEPROCESSING
--(instancetype)initWithProcessingSize:(CGSize)processingSize {
+-(instancetype)init {
     self = [super init];
     if (self) {
+        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
+        [self addFilter:resamplingFilter];
         blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
+        [self addFilter:blendFilter];
         gammaFilter = [[GPUImageGammaFilter alloc] init];
-        resultGenerator = [[CHResultGenerator alloc] init];
+        [self addFilter:gammaFilter];
 
+        resultGenerator = [[CHResultGenerator alloc] init];
+        [self addFilter:resultGenerator];
+
+        self.initialFilters = @[resamplingFilter];
+        [resamplingFilter addTarget:gammaFilter];
         [gammaFilter addTarget:blendFilter];
         [resultGenerator addTarget:blendFilter];
-
-        [self addFilter:gammaFilter];
-        [self addFilter:blendFilter];
-        self.initialFilters = @[gammaFilter, blendFilter];
         self.terminalFilter = blendFilter;
-        [self forceProcessingAtSize:processingSize];
 
         __block CHResultGenerator *weakResultsGenerator = resultGenerator;
         [gammaFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
@@ -42,16 +46,6 @@
         }];
     }
     return self;
-}
-
--(void)forceProcessingAtSize:(CGSize)frameSize {
-    [super forceProcessingAtSize:frameSize];
-    [resultGenerator forceProcessingAtSize:frameSize];
-}
-
--(void)forceProcessingAtSizeRespectingAspectRatio:(CGSize)frameSize {
-    [super forceProcessingAtSizeRespectingAspectRatio:frameSize];
-    [resultGenerator forceProcessingAtSizeRespectingAspectRatio:frameSize];
 }
 
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha {
