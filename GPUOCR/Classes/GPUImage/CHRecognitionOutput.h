@@ -7,12 +7,12 @@
 //
 
 #import "GPUImage.h"
-#import "CHTesseract.h"
+#import "CHRegion.h"
 
 @class CHRecognitionOutput;
-@class CHRegion;
+@class CHText;
 
-@protocol CHOCRRecogntionOutputDelegate <NSObject>
+@protocol CHRecognitionOutputDelegate <NSObject>
 
 @required
 - (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text;
@@ -22,14 +22,12 @@
 
 @end
 
-@interface CHRecognitionOutput : GPUImageRawDataOutput <CHOCRRecogntionOutputDelegate>
+@interface CHRecognitionOutput : GPUImageRawDataOutput <CHRecognitionOutputDelegate>
 
-@property(nonatomic, weak)id<CHOCRRecogntionOutputDelegate> delegate;
+@property(nonatomic, weak)id<CHRecognitionOutputDelegate> delegate;
 @property(nonatomic, strong, readonly)NSString* language;
+@property (nonatomic, assign, readonly) CHRegion *region;
 
-@property(nonatomic)CHTesseractAnalysisLevel level; // TODO: Will become unused
-@property (nonatomic, strong) CHRegion *region;
-
-- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language;
+- (instancetype)initWithImageSize:(CGSize)newImageSize forRegion:(CHRegion *)region resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language;
 
 @end

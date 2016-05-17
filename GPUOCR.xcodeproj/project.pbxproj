@@ -34,6 +34,7 @@
 		0CED209E1CE29CB3001F79E9 /* eng.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209C1CE29CB3001F79E9 /* eng.traineddata */; };
 		0CED209F1CE29CB3001F79E9 /* osd.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209D1CE29CB3001F79E9 /* osd.traineddata */; };
 		E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */; };
+		E2DAB43AFC30A0ECFCAF9711 /* CHRecognitionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB8B9664BB6D7A44CD837 /* CHRecognitionGroup.m */; };
 		E2DAB8B398FEB2F6A7528495 /* CHText.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB6082A897EC90D4ADE5D /* CHText.m */; };
 		E2DABAF8244CDB4835DB56A8 /* CHRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB275F66558E13A4DE840 /* CHRegion.m */; };
 		E2DABF1797652DBEBB5E08E7 /* CHRecognitionOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABDA27E759694FDF2EF15 /* CHRecognitionOutput.m */; };
@@ -111,6 +112,8 @@
 		E2DAB6082A897EC90D4ADE5D /* CHText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHText.m; sourceTree = "<group>"; };
 		E2DAB6943C6E50C7104C71A4 /* CHRecognitionOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRecognitionOutput.h; sourceTree = "<group>"; };
 		E2DAB80B850EE91D41FCA97C /* CHText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHText.h; sourceTree = "<group>"; };
+		E2DAB8B9664BB6D7A44CD837 /* CHRecognitionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRecognitionGroup.m; sourceTree = "<group>"; };
+		E2DABA2E274EB9CAA0FFD941 /* CHRecognitionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRecognitionGroup.h; sourceTree = "<group>"; };
 		E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		E2DABDA27E759694FDF2EF15 /* CHRecognitionOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRecognitionOutput.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -265,6 +268,8 @@
 				0C4E20F11CE9111100149633 /* CHAnalysisGroup.m */,
 				E2DAB6943C6E50C7104C71A4 /* CHRecognitionOutput.h */,
 				E2DABDA27E759694FDF2EF15 /* CHRecognitionOutput.m */,
+				E2DAB8B9664BB6D7A44CD837 /* CHRecognitionGroup.m */,
+				E2DABA2E274EB9CAA0FFD941 /* CHRecognitionGroup.h */,
 			);
 			path = GPUImage;
 			sourceTree = "<group>";
@@ -442,6 +447,7 @@
 				E2DABAF8244CDB4835DB56A8 /* CHRegion.m in Sources */,
 				E2DAB8B398FEB2F6A7528495 /* CHText.m in Sources */,
 				E2DABF1797652DBEBB5E08E7 /* CHRecognitionOutput.m in Sources */,
+				E2DAB43AFC30A0ECFCAF9711 /* CHRecognitionGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

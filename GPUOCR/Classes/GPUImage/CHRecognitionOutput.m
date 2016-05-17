@@ -10,6 +10,7 @@
 #define kRecognitionOutputMaxConcurrentOperations 1
 
 #import "CHRecognitionOutput.h"
+#import "CHTesseract.h"
 
 @interface CHRecognitionOutput () {
     CHTesseract *_tesseract;
@@ -24,9 +25,10 @@
 
 #pragma mark - Init
 
-- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language {
+- (instancetype)initWithImageSize:(CGSize)newImageSize forRegion:(CHRegion *)region resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language {
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
+        _region = region;
         _tesseract = [[CHTesseract alloc]initForRecognitionWithLanguage:language];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = kRecognitionOutputMaxConcurrentOperations;
@@ -61,7 +63,8 @@
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHText *text = [weakTesseract recognizeTextAtLevel:_level];
+                    CHText *text = [weakTesseract recognizeTextAtLevel:_region.level];
+                    text.region = _region;
                     [weakSelf output:weakSelf completedRecognitionWithText:text];
                     [weakTesseract clear];
                 }]];

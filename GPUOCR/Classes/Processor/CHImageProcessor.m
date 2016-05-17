@@ -14,7 +14,7 @@
 
 // NOT TARGETED
 
-@interface CHImageProcessor() <CHImageProcessorDelegate, CHOCRDetectionOutputDelegate, CHOCRRecogntionOutputDelegate> {
+@interface CHImageProcessor() <CHImageProcessorDelegate, CHOCRDetectionOutputDelegate, CHRecognitionOutputDelegate> {
     UIImage *_image;
     GPUImagePicture *_imageInput;
     GPUImageLanczosResamplingFilter *_resamplingFilter;

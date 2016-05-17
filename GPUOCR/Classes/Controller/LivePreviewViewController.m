@@ -11,11 +11,12 @@
 #import "Settings.h"
 #import "GPUImage.h"
 #import "CHAnalysisGroup.h"
+#import "CHRecognitionGroup.h"
 #import "CHRegionFilter.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface LivePreviewViewController () <CHAnalysisOutputDelegate> {
+@interface LivePreviewViewController () <CHAnalysisOutputDelegate, CHRecognitionOutputDelegate> {
     CGSize _processingSize;
 
     // Inputs
@@ -131,13 +132,23 @@
     }
 }
 
-#pragma mark - <CHTesseractOutputDelegate>
+#pragma mark - <CHAnalysisOutputDelegate>
 
 - (void)output:(CHAnalysisGroup *)output completedAnalysisWithRegions:(NSArray *)regions; {
     [regionFilter setRegions:regions];
 }
 
 - (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
+
+}
+
+#pragma mark - <CHAnalysisOutputDelegate>
+
+- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text {
+
+}
+
+- (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {
 
 }
 
