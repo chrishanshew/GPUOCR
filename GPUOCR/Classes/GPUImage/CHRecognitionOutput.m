@@ -7,6 +7,7 @@
 //
 
 #define kDefaultBytesPerPixel 4
+#define kRecognitionOutputMaxConcurrentOperations 1
 
 #import "CHRecognitionOutput.h"
 
@@ -28,19 +29,7 @@
     if (self) {
         _tesseract = [[CHTesseract alloc]initForRecognitionWithLanguage:language];
         _operationQueue = [[NSOperationQueue alloc] init];
-        _operationQueue.maxConcurrentOperationCount = 1;
-        [self setNewFrameAvailableBlock:[self analyzeLayoutBlock]];
-    }
-    return self;
-}
-
-- (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language withDelegate:(id<CHOCRRecogntionOutputDelegate>)delegate {
-    self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
-    if (self) {
-        _delegate = delegate;
-        _tesseract = [[CHTesseract alloc]initForRecognitionWithLanguage:language];
-        _operationQueue = [[NSOperationQueue alloc] init];
-        _operationQueue.maxConcurrentOperationCount = 1;
+        _operationQueue.maxConcurrentOperationCount = kRecognitionOutputMaxConcurrentOperations;
         [self setNewFrameAvailableBlock:[self analyzeLayoutBlock]];
     }
     return self;
