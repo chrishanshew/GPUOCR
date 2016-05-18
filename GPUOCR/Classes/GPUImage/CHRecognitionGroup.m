@@ -7,11 +7,15 @@
 
 @interface CHRecognitionGroup () <CHRecognitionOutputDelegate>
 {
+    CGSize _processingSize;
+    GLint _maxTextureSize;
     GPUImageCropFilter *cropFilter;
-    GPUImageLanczosResamplingFilter *resamplingFilter;
+    GPUImageTransformFilter *transformFilter;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHRecognitionOutput *recognitionOutput;
 }
+
+-(void)setCropRegion:(CGRect)region;
 
 @end
 
@@ -20,13 +24,13 @@
 -(instancetype)initWithProcessingSize:(CGSize)size {
     self = [super init];
     if (self) {
-
+        _processingSize = size;
+        _maxTextureSize = [GPUImageContext maximumTextureSizeForThisDevice] / 1;
         // Crop
         cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
 
         // Scale
-//        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
-//        resamplingFilter.enabled = NO;
+        transformFilter = [[GPUImageTransformFilter alloc] init];
 
         // Threshold
         adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
@@ -38,20 +42,64 @@
 
         self.initialFilters = @[cropFilter];
         [cropFilter addTarget:adaptiveThresholdFilter];
-        [adaptiveThresholdFilter addTarget:recognitionOutput];
-        self.terminalFilter = adaptiveThresholdFilter;
+        [adaptiveThresholdFilter addTarget:transformFilter];
+        [transformFilter addTarget:recognitionOutput];
+        self.terminalFilter = transformFilter;
     }
 
     return self;
 }
 
 -(void)setRegion:(CHRegion *)region {
-    _region = region;
-    recognitionOutput.region = region;
-    // Update Crop
-//    [cropFilter setCropRegion:[_region getRect]];
+    if (recognitionOutput.enabled) {
+        _region = region;
+        recognitionOutput.region = region;
+        CGRect regionRect = [region getRect];
+        [self setCropRegion:regionRect];
+    }
+}
+
+// TODO: CLEAN UP CALCULATIONS OR USE CORE GRAPHICS
+
+-(void)setCropRegion:(CGRect)region {
     
-    // Update resampling scale
+    // Padding
+    // TODO: Affine transforms?
+    
+    CGFloat padding = 20; //px
+    CGFloat originX = region.origin.x;
+    CGFloat originY = region.origin.y;
+    CGFloat width = region.size.width;
+    CGFloat height = region.size.height;
+    
+    if (originX - padding >= 0 && originY - padding >= 0 && (originX + width) + padding <= _processingSize.width && (originY + height) + padding <= _processingSize.height) {
+        originX -= padding;
+        originY -= padding;
+        width += (padding * 2);
+        height += (padding * 2);
+    }
+    
+    // Scaled Origin
+    CGFloat cropScaleOriginX = originX / _processingSize.width;
+    CGFloat cropScaleOriginY = originY / _processingSize.height;
+    
+    // Scaled Size
+    CGFloat cropScaleWidth = width / _processingSize.width;
+    CGFloat cropScaleHeight = height / _processingSize.height;
+    
+    CGRect scaledCropRect = CGRectMake(cropScaleOriginX, cropScaleOriginY, cropScaleWidth, cropScaleHeight);
+    [cropFilter setCropRegion:scaledCropRect];
+    
+    // Down stream size
+    CGRect maxTextureWithAspect = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(width, height), CGRectMake(0, 0, _maxTextureSize, _maxTextureSize));
+    CGSize resampleSize = CGSizeMake(maxTextureWithAspect.size.width, maxTextureWithAspect.size.height);
+    [recognitionOutput setImageSize:maxTextureWithAspect.size];
+
+    CGFloat transformScaleX = maxTextureWithAspect.size.width / (maxTextureWithAspect.size.width - width);
+    CGFloat transformScaleY = maxTextureWithAspect.size.height / (maxTextureWithAspect.size.height - height);
+
+    CATransform3D transform = CATransform3DMakeScale(transformScaleX, transformScaleY, 1);
+    [transformFilter setTransform3D:transform];
 }
 
 // TODO: Override Force Processing

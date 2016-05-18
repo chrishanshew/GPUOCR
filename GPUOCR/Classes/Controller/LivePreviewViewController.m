@@ -159,7 +159,7 @@
 
 - (void)output:(CHAnalysisGroup *)output completedAnalysisWithRegions:(NSArray *)regions; {
     [regionFilter setRegions:regions];
-    if (regions.count >0 ) {
+    if (regions.count > 0) {
         [recognitionGroup setRegion:[regions objectAtIndex:0]];
     }
 }

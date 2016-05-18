@@ -42,8 +42,6 @@
         self.initialFilters = @[adaptiveThresholdFilter];
         [adaptiveThresholdFilter addTarget:analysisOutput];
         self.terminalFilter = adaptiveThresholdFilter;
-
-        [self forceProcessingAtSizeRespectingAspectRatio:size];
     }
     return self;
 }

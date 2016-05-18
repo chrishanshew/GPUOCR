@@ -27,7 +27,6 @@
 -(instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat {
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
-        _tesseract = [[CHTesseract alloc] initForAnalysis];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = kAnalysisOutputMaxConcurrentOperations;
         [self setNewFrameAvailableBlock: self.analyzeLayoutBlock];
@@ -46,8 +45,8 @@
             [weakSelf lockFramebufferForReading];
             
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
-            int height = weakSelf.maximumOutputSize.height;
-            int width = weakSelf.maximumOutputSize.width;
+            int height = imageSize.height;
+            int width = imageSize.width;
 
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
             
