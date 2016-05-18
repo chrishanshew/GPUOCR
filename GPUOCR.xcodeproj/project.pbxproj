@@ -33,11 +33,13 @@
 		0CED20971CE296A0001F79E9 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20961CE296A0001F79E9 /* tessdata */; };
 		0CED209E1CE29CB3001F79E9 /* eng.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209C1CE29CB3001F79E9 /* eng.traineddata */; };
 		0CED209F1CE29CB3001F79E9 /* osd.traineddata in Resources */ = {isa = PBXBuildFile; fileRef = 0CED209D1CE29CB3001F79E9 /* osd.traineddata */; };
+		E2DAB16CAE38D9B940E8B947 /* CHTesseractTask.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB902868A7036F5A91ADC /* CHTesseractTask.m */; };
 		E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */; };
 		E2DAB43AFC30A0ECFCAF9711 /* CHOCRProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB8B9664BB6D7A44CD837 /* CHOCRProcessor.m */; };
 		E2DAB8169B3C021252FA0495 /* StillImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB8791FEB91C56EFC14B8 /* StillImageViewController.m */; };
 		E2DAB8B398FEB2F6A7528495 /* CHText.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB6082A897EC90D4ADE5D /* CHText.m */; };
 		E2DABAF8244CDB4835DB56A8 /* CHRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB275F66558E13A4DE840 /* CHRegion.m */; };
+		E2DABBCB559B23DFFCA87A78 /* CHTesseractService.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DAB9815BA5DA3A859120E7 /* CHTesseractService.m */; };
 		E2DABF1797652DBEBB5E08E7 /* CHOCROutput.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DABDA27E759694FDF2EF15 /* CHOCROutput.m */; };
 /* End PBXBuildFile section */
 
@@ -113,9 +115,13 @@
 		E2DAB80B850EE91D41FCA97C /* CHText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHText.h; sourceTree = "<group>"; };
 		E2DAB8791FEB91C56EFC14B8 /* StillImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillImageViewController.m; sourceTree = "<group>"; };
 		E2DAB8B9664BB6D7A44CD837 /* CHOCRProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRProcessor.m; sourceTree = "<group>"; };
+		E2DAB902868A7036F5A91ADC /* CHTesseractTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTesseractTask.m; sourceTree = "<group>"; };
+		E2DAB9815BA5DA3A859120E7 /* CHTesseractService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHTesseractService.m; sourceTree = "<group>"; };
+		E2DAB9B66909E4A896C6B091 /* CHTesseractTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseractTask.h; sourceTree = "<group>"; };
 		E2DABA221133CC2F420B3B9D /* StillImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillImageViewController.h; sourceTree = "<group>"; };
 		E2DABA2E274EB9CAA0FFD941 /* CHOCRProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRProcessor.h; sourceTree = "<group>"; };
 		E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		E2DABC4B19C3A065FC2B7521 /* CHTesseractService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHTesseractService.h; sourceTree = "<group>"; };
 		E2DABDA27E759694FDF2EF15 /* CHOCROutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCROutput.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -276,6 +282,10 @@
 				E2DAB5CCF2DF32179F68190F /* CHRegion.h */,
 				E2DAB6082A897EC90D4ADE5D /* CHText.m */,
 				E2DAB80B850EE91D41FCA97C /* CHText.h */,
+				E2DAB9815BA5DA3A859120E7 /* CHTesseractService.m */,
+				E2DABC4B19C3A065FC2B7521 /* CHTesseractService.h */,
+				E2DAB902868A7036F5A91ADC /* CHTesseractTask.m */,
+				E2DAB9B66909E4A896C6B091 /* CHTesseractTask.h */,
 			);
 			path = Tesseract;
 			sourceTree = "<group>";
@@ -442,6 +452,8 @@
 				E2DABF1797652DBEBB5E08E7 /* CHOCROutput.m in Sources */,
 				E2DAB43AFC30A0ECFCAF9711 /* CHOCRProcessor.m in Sources */,
 				E2DAB8169B3C021252FA0495 /* StillImageViewController.m in Sources */,
+				E2DABBCB559B23DFFCA87A78 /* CHTesseractService.m in Sources */,
+				E2DAB16CAE38D9B940E8B947 /* CHTesseractTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
