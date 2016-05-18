@@ -1,5 +1,5 @@
 //
-//  CHRecognitionOutput.m
+//  CHOCROutput.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 5/19/14.
@@ -9,10 +9,10 @@
 #define kDefaultBytesPerPixel 4
 #define kRecognitionOutputMaxConcurrentOperations 1
 
-#import "CHRecognitionOutput.h"
+#import "CHOCROutput.h"
 #import "CHTesseract.h"
 
-@interface CHRecognitionOutput () {
+@interface CHOCROutput () {
     CHTesseract *_tesseract;
     NSOperationQueue *_operationQueue;
 }
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation CHRecognitionOutput
+@implementation CHOCROutput
 
 #pragma mark - Init
 
@@ -40,12 +40,11 @@
 #pragma mark - New Frame Available Block
 
 -(void (^)())recognizeTextBlock {
-    __block CHRecognitionOutput *weakSelf = self;
-    __block CHTesseract *weakTesseract = _tesseract;
+    __block CHOCROutput *weakSelf = self;
     return ^(void) {
         if (weakSelf.enabled && _operationQueue.operationCount == 0 && _region) {
             weakSelf.enabled = NO;
-            [weakSelf output:weakSelf willRecognizeRegion:weakSelf.region];
+            [weakSelf output:weakSelf willBeginOCRForRegion:weakSelf.region];
             [weakSelf lockFramebufferForReading];
             
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
@@ -64,11 +63,11 @@
             
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
-                    [weakTesseract setImageWithData:pixels withSize:imageSize bytesPerPixel:1];
-                    CHText *text = [weakTesseract recognizeTextAtLevel:weakSelf.region.level];
-                    text.region = weakSelf.region;
-                    [weakSelf output:weakSelf completedRecognitionWithText:text];
-                    [weakTesseract clear];
+                    [_tesseract setImageWithData:pixels withSize:imageSize bytesPerPixel:1];
+                    CHText *text = [_tesseract recognizeTextAtLevel:_region.level];
+                    text.region = _region;
+                    [_delegate output:weakSelf completedOCRWithText:text];
+                    [_tesseract clear];
                 }]];
             }
             weakSelf.enabled = YES;
@@ -84,15 +83,15 @@
 
 #pragma mark - Delegate
 
-- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text {
-    if ([_delegate respondsToSelector:@selector(output:completedRecognitionWithText:)]) {
-        [_delegate output:output completedRecognitionWithText:text];
+- (void)output:(CHOCROutput *)output completedOCRWithText:(CHText *)text {
+    if ([_delegate respondsToSelector:@selector(output:completedOCRWithText:)]) {
+        [_delegate output:output completedOCRWithText:text];
     }
 }
 
-- (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {
-    if ([_delegate respondsToSelector:@selector(output:willRecognizeRegion:)]) {
-        [_delegate output:output willRecognizeRegion:region];
+- (void)output:(CHOCROutput *)output willBeginOCRForRegion:(CHRegion *)region {
+    if ([_delegate respondsToSelector:@selector(output:willBeginOCRForRegion:)]) {
+        [_delegate output:output willBeginOCRForRegion:region];
     }
 }
 

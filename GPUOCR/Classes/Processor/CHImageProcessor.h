@@ -8,34 +8,29 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
-
-#import "CHTesseract.h"
+#import "CHAnalysisRequest.h"
 
 @class CHImageProcessor;
 @class CHResult;
+@class CHAnalysisRequest;
+@class CHRecognizeRequest;
+@class CHRecognizeResponse;
+@class CHAnalysisResponse;
 
 @protocol CHImageProcessorDelegate <NSObject>
 @optional
--(void)processorWillBeginProcessing:(CHImageProcessor *)processor;
--(void)processor:(CHImageProcessor *)processor didProcessResultGroup:(CHResultGroup *)group;
--(void)processor:(CHImageProcessor *)processor didProcessResult:(CHResult *)result atLevel:(CHTesseractAnalysisLevel)level;
--(void)processor:(CHImageProcessor *)processor didUpdateProgress:(float)progress forLevel:(CHTesseractAnalysisLevel)level;
--(void)processorWillCancelProcessing:(CHImageProcessor *)processor;
--(void)processor:(CHImageProcessor *)processor didCompleteProcessing:(CHResultGroup *)group error:(NSError *)error;
+-(void)processor:(CHImageProcessor *)processor willExecuteAnalysisRequest:(CHAnalysisRequest *)request;
+-(void)processor:(CHImageProcessor *)processor didFinishAnalysisWithResponse:(CHAnalysisResponse *)response;
+
+-(void)processor:(CHImageProcessor *) processor willExecuteRecognizeRequest:(CHRecognizeRequest *)request;
+-(void)processor:(CHImageProcessor *) processor didFinishRecognitionWithResponse:(CHRecognizeResponse *)response;
 @end
 
 @interface CHImageProcessor : NSObject
 
 @property (nonatomic, weak)id<CHImageProcessorDelegate> delegate;
-@property (nonatomic, strong, readonly, getter=getReferenceImage)UIImage *referenceImage;
-@property (nonatomic, readonly)CHTesseractAnalysisLevel startLevel;
-@property (nonatomic, readonly)CHTesseractAnalysisLevel endLevel;
-@property (nonatomic, readonly)CHTesseractAnalysisLevel currentLevel;
-@property (nonatomic, readonly)float currentLevelProgress;
 
--(instancetype)initWithUIImage:(UIImage *)image;
-
--(void)processFromLevel:(CHTesseractAnalysisLevel)fromLevel toLevel:(CHTesseractAnalysisLevel)toLevel;
--(BOOL)cancel;
+-(void)executeAnalysisRequest:(CHAnalysisRequest *)request;
+-(void)executeRecognizeRequest:(CHRecognizeRequest *)request;
 
 @end

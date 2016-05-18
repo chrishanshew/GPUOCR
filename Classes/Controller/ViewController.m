@@ -9,8 +9,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import "ViewController.h"
 #import "GPUImage.h"
-#import "CHRecognitionOutput.h"
-#import "CHAnalysisOutput.h"
+#import "CHOCROutput.h"
+#import "CHLayoutOutput.h"
 #import "CHDetectionOutput.h"
 #import "CHRegionGenerator.h"
 

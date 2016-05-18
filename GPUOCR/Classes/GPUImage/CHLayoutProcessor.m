@@ -1,26 +1,26 @@
 //
-//  CHAnalysisGroup.m
+//  CHLayoutProcessor.m
 //  GPUOCR
 //
 //  Created by Chris Hanshew on 5/15/16.
 //  Copyright © 2016 Chris Hanshew. All rights reserved.
 //
 
-#import "CHAnalysisGroup.h"
-#import "CHAnalysisOutput.h"
+#import "CHLayoutProcessor.h"
+#import "CHLayoutOutput.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface CHAnalysisGroup () <CHAnalysisOutputDelegate> {
+@interface CHLayoutProcessor () <CHLayoutOutputDelegate> {
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
-    CHAnalysisOutput *analysisOutput;
+    CHLayoutOutput *analysisOutput;
     GPUImageLanczosResamplingFilter *resamplingFilter;
 }
 
 @end
 
-@implementation CHAnalysisGroup
+@implementation CHLayoutProcessor
 
 // TODO: REMOVE SIZE PARAMETER - USE FORCEPROCESSING
 
@@ -32,7 +32,7 @@
         _level = CHTesseractAnalysisLevelBlock;
 
         // Analysis Output
-        analysisOutput = [[CHAnalysisOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES];
+        analysisOutput = [[CHLayoutOutput alloc] initWithImageSize:_processingSize resultsInBGRAFormat:YES];
         analysisOutput.delegate = self;
         analysisOutput.level = _level;
 
@@ -56,13 +56,27 @@
     adaptiveThresholdFilter.blurRadiusInPixels = _blurRadius;
 }
 
-- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
-    
+#pragma mark - <CHLayoutOutputDelegate>
+
+- (void)willBeginAnalysisWithOutput:(CHLayoutOutput *)output {
+    [self willBeginLayoutAnalysis:self];
 }
 
-- (void)output:(CHAnalysisOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
-    if ([_delegate respondsToSelector:@selector(output:completedAnalysisWithRegions:)]) {
-        [_delegate output:output completedAnalysisWithRegions:regions];
+- (void)output:(CHLayoutOutput *)output completedAnalysisWithRegions:(NSArray *)regions; {
+    [self processor:self finishedLayoutAnalysisWithRegions:regions];
+}
+
+#pragma mark - <CHLayoutProcessorDelegate>
+
+- (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions {
+    if ([_delegate respondsToSelector:@selector(processor:finishedLayoutAnalysisWithRegions:)]) {
+        [_delegate processor:processor finishedLayoutAnalysisWithRegions:regions];
+    }
+}
+
+- (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor {
+    if ([_delegate respondsToSelector:@selector(willBeginLayoutAnaylsis:)]) {
+        [_delegate willBeginLayoutAnalysis:processor];
     }
 }
 

@@ -10,13 +10,13 @@
 #import "LivePreviewViewController.h"
 #import "Settings.h"
 #import "GPUImage.h"
-#import "CHAnalysisGroup.h"
-#import "CHRecognitionGroup.h"
+#import "CHLayoutProcessor.h"
+#import "CHOCRProcessor.h"
 #import "CHRegionFilter.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface LivePreviewViewController () <CHAnalysisOutputDelegate, CHRecognitionOutputDelegate, UIGestureRecognizerDelegate> {
+@interface LivePreviewViewController () <CHLayoutProcessorDelegate, CHOCRProcessorDelegate, UIGestureRecognizerDelegate> {
     CGSize _processingSize;
 
     // Inputs
@@ -26,8 +26,8 @@
 
     // Filter Groups
     CHRegionFilter *regionFilter;
-    CHAnalysisGroup *analysisGroup;
-    CHRecognitionGroup *recognitionGroup;
+    CHLayoutProcessor *analysisGroup;
+    CHOCRProcessor *recognitionGroup;
 
     // Tap - Photo Recognition
 }
@@ -60,10 +60,10 @@
         [regionFilter forceProcessingAtSize:_processingSize];
 
         // OCR Filters
-        analysisGroup = [[CHAnalysisGroup alloc] initWithProcessingSize:_processingSize];
+        analysisGroup = [[CHLayoutProcessor alloc] initWithProcessingSize:_processingSize];
         analysisGroup.delegate = self;
 
-        recognitionGroup = [[CHRecognitionGroup alloc] initWithProcessingSize:_processingSize];
+        recognitionGroup = [[CHOCRProcessor alloc] initWithProcessingSize:_processingSize];
         recognitionGroup.delegate = self;
 
         resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
@@ -155,26 +155,22 @@
 //    }
 }
 
-#pragma mark - <CHAnalysisOutputDelegate>
+#pragma mark - <CHLayoutProcessorDelegate>
 
-- (void)output:(CHAnalysisGroup *)output completedAnalysisWithRegions:(NSArray *)regions; {
-    [regionFilter setRegions:regions];
-    if (regions.count > 0) {
-        [recognitionGroup setRegion:[regions objectAtIndex:0]];
-    }
-}
-
-- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
+- (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions {
 
 }
 
-#pragma mark - <CHAnalysisOutputDelegate>
-
-- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text {
-    NSLog(@"%@", text.text);
+- (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor {
 }
 
-- (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {
+#pragma mark - <CHOCRProcessorDelegate>
+
+- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text {
+
+}
+
+- (void)processor:(CHOCRProcessor *)processor willBeginOCRForRegion:(CHRegion *)region {
 
 }
 

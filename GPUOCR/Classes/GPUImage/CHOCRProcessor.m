@@ -3,23 +3,23 @@
 // Copyright (c) 2016 Chris Hanshew. All rights reserved.
 //
 
-#import "CHRecognitionGroup.h"
+#import "CHOCRProcessor.h"
 
-@interface CHRecognitionGroup () <CHRecognitionOutputDelegate>
+@interface CHOCRProcessor () <CHOCRProcessorDelegate>
 {
     CGSize _processingSize;
     GLint _maxTextureSize;
     GPUImageCropFilter *cropFilter;
     GPUImageTransformFilter *transformFilter;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
-    CHRecognitionOutput *recognitionOutput;
+    CHOCROutput *recognitionOutput;
 }
 
 -(void)setCropRegion:(CGRect)region;
 
 @end
 
-@implementation CHRecognitionGroup
+@implementation CHOCRProcessor
 
 -(instancetype)initWithProcessingSize:(CGSize)size {
     self = [super init];
@@ -37,7 +37,7 @@
         adaptiveThresholdFilter.blurRadiusInPixels = 4;
 
         // OCR
-        recognitionOutput = [[CHRecognitionOutput alloc] initWithImageSize:size resultsInBGRAFormat:YES forLanguage:@"eng"];
+        recognitionOutput = [[CHOCROutput alloc] initWithImageSize:size resultsInBGRAFormat:YES forLanguage:@"eng"];
         recognitionOutput.delegate = self;
 
         self.initialFilters = @[cropFilter];
@@ -104,15 +104,27 @@
 
 // TODO: Override Force Processing
 
-- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text {
-    if ([_delegate respondsToSelector:@selector(output:completedRecognitionWithText:)]) {
-        [_delegate output:output completedRecognitionWithText:text];
+#pragma mark - <CHOCRProcessorDelegate>
+
+- (void)output:(CHOCROutput *)output completedRecognitionWithText:(CHText *)text {
+    [self processor:self completedOCRWithText:text];
+}
+
+- (void)output:(CHOCROutput *)output willRecognizeRegion:(CHRegion *)region {
+   [self processor:self willBeginOCRForRegion:region];
+}
+
+#pragma mark - <CHOCRProcessorDelegate>
+
+- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text {
+    if ([_delegate respondsToSelector:@selector(processor:completeOCRWithText:)]) {
+        [_delegate processor:processor completedOCRWithText:text];
     }
 }
 
-- (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {
-    if ([_delegate respondsToSelector:@selector(output:willRecognizeRegion:)]) {
-        [_delegate output:output willRecognizeRegion:region];
+- (void)processor:(CHOCRProcessor *)processor willBeginOCRForRegion:(CHRegion *)region {
+    if ([_delegate respondsToSelector:@selector(processor:willBeginOCRForRegion:)]) {
+        [_delegate processor:processor willBeginOCRForRegion:processor];
     }
 }
 
