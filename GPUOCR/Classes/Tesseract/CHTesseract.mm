@@ -100,12 +100,15 @@ namespace tesseract {
     if (iterator) {
         CHText *result;
         do {
-            NSString *text = [NSString stringWithUTF8String: iterator->GetUTF8Text(iteratorLevel)];
-            if (text && text.length > 0) {
+            char * utfText = iterator->GetUTF8Text(iteratorLevel);
+            if (utfText != 0) {
+                NSString *text = [NSString stringWithUTF8String: utfText];
                 result = [[CHText alloc] init];
                 result.text = text;
                 result.confidence = iterator->Confidence(iteratorLevel);
+                delete utfText;
             }
+            
         } while (iterator->Next(iteratorLevel));
 
         delete iterator;

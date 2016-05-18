@@ -1,16 +1,17 @@
 //
-//  CHAnalysisOutput.m
+//  CHLayoutOutput.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 5/19/14.
 //  Copyright (c) 2014 Chris Hanshew Software, LLC. All rights reserved.
 //
 
-#import "CHAnalysisOutput.h"
+#import "CHLayoutOutput.h"
+#import "CHTesseract.h"
 
 #define kAnalysisOutputMaxConcurrentOperations 1
 
-@interface CHAnalysisOutput () {
+@interface CHLayoutOutput () {
     CHTesseract *_tesseract;
     NSOperationQueue *_operationQueue;
 }
@@ -19,7 +20,7 @@
 
 @end
 
-@implementation CHAnalysisOutput
+@implementation CHLayoutOutput
 
 #pragma mark - Init
 
@@ -37,7 +38,7 @@
 #pragma mark - New Frame Available Block
 
 -(void (^)())analyzeLayoutBlock {
-    __block CHAnalysisOutput *weakSelf = self;
+    __block CHLayoutOutput *weakSelf = self;
     __block CHTesseract *weakTesseract = _tesseract;
     return ^(void) {
         if (weakSelf.enabled && _operationQueue.operationCount == 0) {
@@ -45,8 +46,8 @@
             [weakSelf lockFramebufferForReading];
             
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
-            int height = weakSelf.maximumOutputSize.height;
-            int width = weakSelf.maximumOutputSize.width;
+            int height = imageSize.height;
+            int width = imageSize.width;
 
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
             
@@ -62,10 +63,10 @@
             
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
-                    [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
+                    [_tesseract setImageWithData:pixels withSize:imageSize bytesPerPixel:1];
                     NSArray *regions = [weakTesseract analyzeLayoutAtLevel: _level];
                     [weakSelf output:weakSelf completedAnalysisWithRegions:regions];
-                    [weakTesseract clear];
+                    [_tesseract clear];
                 }]];
             }
         }
@@ -74,13 +75,13 @@
 
 #pragma mark - Delegate
 
-- (void)willBeginAnalysisWithOutput:(CHAnalysisOutput *)output {
+- (void)willBeginAnalysisWithOutput:(CHLayoutOutput *)output {
     if ([_delegate respondsToSelector:@selector(willBeginAnalysisWithOutput:)]) {
         [_delegate willBeginAnalysisWithOutput:output];
     }
 }
 
--(void)output:(CHAnalysisOutput*)output completedAnalysisWithRegions:(NSArray *)regions {
+-(void)output:(CHLayoutOutput*)output completedAnalysisWithRegions:(NSArray *)regions {
     if ([_delegate respondsToSelector:@selector(output:completedAnalysisWithRegions:)]) {
         [_delegate output:output completedAnalysisWithRegions:regions];
     }

@@ -1,5 +1,5 @@
 //
-//  CHRecognitionOutput.m
+//  CHOCROutput.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 5/19/14.
@@ -9,45 +9,47 @@
 #define kDefaultBytesPerPixel 4
 #define kRecognitionOutputMaxConcurrentOperations 1
 
-#import "CHRecognitionOutput.h"
+#import "CHOCROutput.h"
+#import "CHTesseract.h"
 
-@interface CHRecognitionOutput () {
+@interface CHOCROutput () {
     CHTesseract *_tesseract;
     NSOperationQueue *_operationQueue;
 }
 
--(void (^)())analyzeLayoutBlock;
+-(void (^)())recognizeTextBlock;
 
 @end
 
-@implementation CHRecognitionOutput
+@implementation CHOCROutput
 
 #pragma mark - Init
 
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language {
     self = [super initWithImageSize:newImageSize resultsInBGRAFormat:resultsInBGRAFormat];
     if (self) {
+        _language = language;
         _tesseract = [[CHTesseract alloc]initForRecognitionWithLanguage:language];
         _operationQueue = [[NSOperationQueue alloc] init];
         _operationQueue.maxConcurrentOperationCount = kRecognitionOutputMaxConcurrentOperations;
-        [self setNewFrameAvailableBlock:[self analyzeLayoutBlock]];
+        [self setNewFrameAvailableBlock:[self recognizeTextBlock]];
     }
     return self;
 }
 
 #pragma mark - New Frame Available Block
 
--(void (^)())analyzeLayoutBlock {
-    __block CHRecognitionOutput *weakSelf = self;
-    __block CHTesseract *weakTesseract = _tesseract;
+-(void (^)())recognizeTextBlock {
+    __block CHOCROutput *weakSelf = self;
     return ^(void) {
-        if (weakSelf.enabled && _operationQueue.operationCount == 0) {
-            [weakSelf output:weakSelf willRecognizeRegion:_region];
+        if (weakSelf.enabled && _operationQueue.operationCount == 0 && _region) {
+            weakSelf.enabled = NO;
+            [weakSelf output:weakSelf willBeginOCRForRegion:weakSelf.region];
             [weakSelf lockFramebufferForReading];
             
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
-            int height = weakSelf.maximumOutputSize.height;
-            int width = weakSelf.maximumOutputSize.width;
+            int height = imageSize.height;
+            int width = imageSize.width;
 
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
 
@@ -60,27 +62,35 @@
             
             if (_operationQueue.operationCount == 0) {
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
-                    [weakTesseract setImageWithData:pixels withSize:weakSelf.maximumOutputSize bytesPerPixel:1];
-                    CHText *text = [weakTesseract recognizeTextAtLevel:_level];
-                    [weakSelf output:weakSelf completedRecognitionWithText:text];
-                    [weakTesseract clear];
+                    [_tesseract setImageWithData:pixels withSize:imageSize bytesPerPixel:1];
+                    CHText *text = [_tesseract recognizeTextAtLevel:_region.level];
+                    text.region = _region;
+                    [_delegate output:weakSelf completedOCRWithText:text];
+                    [_tesseract clear];
                 }]];
             }
+            weakSelf.enabled = YES;
         }
     };
 }
 
-#pragma mark - Delegate
-
-- (void)output:(CHRecognitionOutput *)output completedRecognitionWithText:(CHText *)text {
-    if ([_delegate respondsToSelector:@selector(output:completedRecognitionWithText:)]) {
-        [_delegate output:output completedRecognitionWithText:text];
+-(void)setRegion:(CHRegion *)region {
+    if (_operationQueue.operationCount == 0) {
+        _region = region;
     }
 }
 
-- (void)output:(CHRecognitionOutput *)output willRecognizeRegion:(CHRegion *)region {
-    if ([_delegate respondsToSelector:@selector(output:willRecognizeRegion:)]) {
-        [_delegate output:output willRecognizeRegion:region];
+#pragma mark - Delegate
+
+- (void)output:(CHOCROutput *)output completedOCRWithText:(CHText *)text {
+    if ([_delegate respondsToSelector:@selector(output:completedOCRWithText:)]) {
+        [_delegate output:output completedOCRWithText:text];
+    }
+}
+
+- (void)output:(CHOCROutput *)output willBeginOCRForRegion:(CHRegion *)region {
+    if ([_delegate respondsToSelector:@selector(output:willBeginOCRForRegion:)]) {
+        [_delegate output:output willBeginOCRForRegion:region];
     }
 }
 
