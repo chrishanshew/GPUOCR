@@ -12,15 +12,14 @@
 
 @interface StillImageViewController () <CHLayoutProcessorDelegate, CHOCRProcessorDelegate> {
 
-    CHRegionFilter *regionFilter;
-    CHLayoutProcessor *layoutProcessor;
-    CHOCRProcessor *ocrProcessor;
-
     GPUImagePicture *imageInput;
-    NSMutableArray *_regions;
+    CHRegionFilter *regionFilter;
+
+    NSArray *_regions;
     dispatch_queue_t _regionAccessQueue;
 }
 
+@property (nonatomic, strong, setter=setRegions:, getter=getRegions) NSArray *regions;
 @property (nonatomic, strong) IBOutlet UIButton *dismissButton;
 @property (nonatomic, strong) IBOutlet UIButton *processButton;
 
@@ -45,17 +44,8 @@
     imageInput = [[GPUImagePicture alloc] initWithImage:_image];
     regionFilter = [[CHRegionFilter alloc] init];
     [regionFilter forceProcessingAtSize:_image.size];
-    [regionFilter addTarget:(GPUImageView *)self.view];
+//    [regionFilter addTarget:(GPUImageView *)self.view];
     [imageInput addTarget:regionFilter];
-
-    layoutProcessor = [[CHLayoutProcessor alloc] initWithProcessingSize:_image.size];
-    layoutProcessor.delegate = self;
-    [layoutProcessor forceProcessingAtSize:_image.size];
-    
-    ocrProcessor = [[CHOCRProcessor alloc] initWithProcessingSize:_image.size];
-    ocrProcessor.delegate = self;
-    [ocrProcessor forceProcessingAtSize:_image.size];
-    
     [self updateSettings];
 }
 
@@ -71,13 +61,12 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [imageInput removeAllTargets];
+    _regions = [NSArray array];
 }
 
 -(void)updateSettings {
     Settings *settings = [Settings currentSettings];
-    
-    // Detection Level
-    layoutProcessor.level = settings.level;
     
     // Line Width and Color
     [regionFilter setLineWidth:settings.lineWidth];
@@ -89,9 +78,16 @@
 #pragma mark - IBActions
 
 -(IBAction)processImage:(id)sender {
-    [self removeAllRegions];
     [self updateSettings];
-    [imageInput removeTarget:ocrProcessor];
+
+    // Stop any future OCR processing by clearing regions.  This "resets" the OCR processing loop until new regions are analyzed.
+    _regions = [NSArray array];
+
+    // Add Layout Processor to determine detected regions
+    CHLayoutProcessor *layoutProcessor = [[CHLayoutProcessor alloc] initWithProcessingSize:_image.size];
+    layoutProcessor.delegate = self;
+    layoutProcessor.level = [Settings currentSettings].level;
+    [layoutProcessor forceProcessingAtSize:_image.size];
     [imageInput addTarget:layoutProcessor];
     
     [imageInput processImage];
@@ -107,41 +103,43 @@
 
 #pragma mark - Region Array Access
 
--(void)removeAllRegions {
-    dispatch_barrier_sync(_regionAccessQueue, ^{
-        if (_regions) {
-             [_regions removeAllObjects];
-        }
+-(NSArray *)getRegions {
+    __block NSArray *regions;
+    dispatch_sync(_regionAccessQueue, ^{
+        regions = [NSArray arrayWithArray:_regions];
     });
+    return regions;
 }
 
 -(void)setRegions:(NSArray *)regions {
-    dispatch_barrier_sync(_regionAccessQueue, ^{
-        _regions = [NSMutableArray arrayWithArray:regions];
+    dispatch_barrier_async(_regionAccessQueue, ^{
+        _regions = [NSArray arrayWithArray:regions];
     });
-}
-
--(CHRegion *)nextRegion {
-    __block CHRegion *region;
-    dispatch_sync(_regionAccessQueue, ^{
-        region = [_regions firstObject];
-        [_regions removeObject:region];
-    });
-    return region;
 }
 
 #pragma mark - <CHLayoutProcessorDelegate>
 
 - (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions {
-    _regions = [NSMutableArray arrayWithArray:regions];
-    [regionFilter setRegions:regions];
-
     [imageInput removeTarget:processor];
-    CHRegion *region = [self nextRegion];
-    if (region) {
-        [imageInput addTarget:ocrProcessor];
-        ocrProcessor.region  = region;
-        [imageInput processImage];
+    if (regions.count > 0) {
+        NSArray *sortedRegions = [regions sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            NSUInteger first = ((CHRegion *) a).index;
+            NSUInteger second = ((CHRegion *) b).index;
+            return [[NSNumber numberWithInteger:first] compare:[NSNumber numberWithInteger:second]];
+        }];
+        _regions = sortedRegions;
+        [regionFilter setRegions:sortedRegions];
+
+        CHRegion *region = [sortedRegions firstObject];
+        if (region) {
+            CHOCRProcessor *ocrProcessor = [[CHOCRProcessor alloc] initWithProcessingSize:_image.size];
+            ocrProcessor.delegate = self;
+            [ocrProcessor forceProcessingAtSize:_image.size];
+            [ocrProcessor addTarget:(GPUImageView *)self.view];
+            [imageInput addTarget:ocrProcessor];
+            ocrProcessor.region = region;
+            [imageInput processImage];
+        }
     }
 }
 
@@ -153,13 +151,15 @@
 
 - (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text {
     NSLog(@"%@", text.text);
-    
-    CHRegion *region = [self nextRegion];
-    if (region) {
-        ocrProcessor.region  = region;
+
+    // Queue the next region or end processing if all regions have been processed
+    NSUInteger index = text.region.index;
+    index +=1;
+    if ((_regions.count - 1) >= index) {
+        processor.region  = [_regions objectAtIndex:index];
         [imageInput processImage];
     } else {
-        // DONE
+        [imageInput removeTarget:processor];
     }
 }
 

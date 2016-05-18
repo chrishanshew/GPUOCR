@@ -70,7 +70,6 @@
 		0C4E20EB1CE90B3D00149633 /* CHRegionFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRegionFilter.m; sourceTree = "<group>"; };
 		0C4E20F01CE9111100149633 /* CHLayoutProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHLayoutProcessor.h; sourceTree = "<group>"; };
 		0C4E20F11CE9111100149633 /* CHLayoutProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHLayoutProcessor.m; sourceTree = "<group>"; };
-		0C5B1CD21CE6C3F200964D2E /* CHStillImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHStillImageProcessor.m; sourceTree = "<group>"; };
 		0C5B1CE21CE6D57F00964D2E /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
 		0C5B1CE31CE6D57F00964D2E /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		0C618BD51CE842FE00E0CD2B /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
@@ -107,22 +106,16 @@
 		0CED209C1CE29CB3001F79E9 /* eng.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = eng.traineddata; path = ../tessdata/eng.traineddata; sourceTree = "<group>"; };
 		0CED209D1CE29CB3001F79E9 /* osd.traineddata */ = {isa = PBXFileReference; lastKnownFileType = file; name = osd.traineddata; path = ../tessdata/osd.traineddata; sourceTree = "<group>"; };
 		E2DAB1D08EAC0BE46714D316 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
-		E2DAB233F64B85DD708D208A /* CHAnalysisResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHAnalysisResponse.m; sourceTree = "<group>"; };
 		E2DAB275F66558E13A4DE840 /* CHRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRegion.m; sourceTree = "<group>"; };
 		E2DAB5CCF2DF32179F68190F /* CHRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRegion.h; sourceTree = "<group>"; };
 		E2DAB6082A897EC90D4ADE5D /* CHText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHText.m; sourceTree = "<group>"; };
 		E2DAB6943C6E50C7104C71A4 /* CHOCROutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCROutput.h; sourceTree = "<group>"; };
-		E2DAB74C4641ACE541872C08 /* CHRecognizeResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRecognizeResponse.h; sourceTree = "<group>"; };
-		E2DAB759B6E2B4738F5EC419 /* CHRecognizeRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHRecognizeRequest.h; sourceTree = "<group>"; };
 		E2DAB80B850EE91D41FCA97C /* CHText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHText.h; sourceTree = "<group>"; };
 		E2DAB8791FEB91C56EFC14B8 /* StillImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StillImageViewController.m; sourceTree = "<group>"; };
 		E2DAB8B9664BB6D7A44CD837 /* CHOCRProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCRProcessor.m; sourceTree = "<group>"; };
 		E2DABA221133CC2F420B3B9D /* StillImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StillImageViewController.h; sourceTree = "<group>"; };
 		E2DABA2E274EB9CAA0FFD941 /* CHOCRProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHOCRProcessor.h; sourceTree = "<group>"; };
-		E2DABA394C513F70328D7C0E /* CHAnalysisRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHAnalysisRequest.h; sourceTree = "<group>"; };
-		E2DABB9B67528DCB03DF1880 /* CHRecognizeResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRecognizeResponse.m; sourceTree = "<group>"; };
 		E2DABBAA7EED4BBF8E63739B /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		E2DABC43B808A9316A41F31D /* CHRecognizeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHRecognizeRequest.m; sourceTree = "<group>"; };
 		E2DABDA27E759694FDF2EF15 /* CHOCROutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHOCROutput.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -153,20 +146,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0C5B1CD01CE6C3AA00964D2E /* Processor */ = {
-			isa = PBXGroup;
-			children = (
-				0C5B1CD21CE6C3F200964D2E /* CHStillImageProcessor.m */,
-				E2DABA394C513F70328D7C0E /* CHAnalysisRequest.h */,
-				E2DAB233F64B85DD708D208A /* CHAnalysisResponse.m */,
-				E2DABC43B808A9316A41F31D /* CHRecognizeRequest.m */,
-				E2DAB759B6E2B4738F5EC419 /* CHRecognizeRequest.h */,
-				E2DABB9B67528DCB03DF1880 /* CHRecognizeResponse.m */,
-				E2DAB74C4641ACE541872C08 /* CHRecognizeResponse.h */,
-			);
-			path = Processor;
-			sourceTree = "<group>";
-		};
 		0C5B1CE11CE6D54B00964D2E /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -250,7 +229,6 @@
 				0CED20531CE283BC001F79E9 /* Controller */,
 				0CED20561CE283BC001F79E9 /* GPUImage */,
 				0CED20571CE283BC001F79E9 /* Tesseract */,
-				0C5B1CD01CE6C3AA00964D2E /* Processor */,
 				0C5B1CE11CE6D54B00964D2E /* View */,
 				0C618BD11CE842C700E0CD2B /* Model */,
 			);

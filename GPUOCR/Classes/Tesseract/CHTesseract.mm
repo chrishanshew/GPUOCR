@@ -122,6 +122,7 @@ namespace tesseract {
     _tesseract->AnalyseLayout();
     tesseract::ResultIterator* iterator = _tesseract->GetIterator();
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
+    NSMutableArray *regions = [NSMutableArray array];
 
     if (iterator) {
 
@@ -131,10 +132,10 @@ namespace tesseract {
         int offset; float slope;
         _tesseract->GetTextDirection(&offset, &slope);
 
-        NSMutableArray *regions = [NSMutableArray array];
         CHRegion *region;
 
         int index = 0;
+
         do {
             region = [[CHRegion alloc] init];
             region.analysisTimestamp = timestamp;
@@ -145,17 +146,16 @@ namespace tesseract {
             [self getBoundingBox:iterator atLevel:iteratorLevel forRegion:region];
             [self getBaseline:iterator atLevel:iteratorLevel forRegion:region];
 
-            region.index = index++;
+            region.index = index;
+            index +=1;
             [regions addObject:region];
 
         } while (iterator->Next(iteratorLevel));
 
         delete iterator;
-        
-        return regions;
     }
     
-    return nil;
+    return regions;
 }
 
 //- (CHResultGroup *)detectionAtLevel:(CHTesseractAnalysisLevel)level {

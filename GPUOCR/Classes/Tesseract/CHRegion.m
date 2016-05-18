@@ -12,11 +12,15 @@
 }
 
 -(BOOL)isEqual:(id)object {
-    if ([object isKindOfClass:[CHRegion class]]) {
-        CHRegion *test = (CHRegion *)object;
-        return self.index == test.index;
+    if (object == self) {
+        return YES;
     }
-    return false;
+    if (![super isEqual:object]) {
+        return NO;
+    }
+
+    CHRegion *test = (CHRegion *)object;
+    return self.index == test.index && self.analysisTimestamp == test.analysisTimestamp;
 }
 
 @end

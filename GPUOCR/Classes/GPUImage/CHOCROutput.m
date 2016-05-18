@@ -64,7 +64,7 @@
                 [_operationQueue addOperation:[NSBlockOperation blockOperationWithBlock:^{
                     [_tesseract setImageWithData:pixels withSize:imageSize bytesPerPixel:1];
                     CHText *text = [_tesseract recognizeTextAtLevel:_region.level];
-                    text.region = _region;
+                    text.region = weakSelf.region;
                     [_delegate output:weakSelf completedOCRWithText:text];
                     [_tesseract clear];
                 }]];
@@ -75,9 +75,9 @@
 }
 
 -(void)setRegion:(CHRegion *)region {
-    if (_operationQueue.operationCount == 0) {
+//    if (_operationQueue.operationCount == 0) {
         _region = region;
-    }
+//    }
 }
 
 #pragma mark - Delegate

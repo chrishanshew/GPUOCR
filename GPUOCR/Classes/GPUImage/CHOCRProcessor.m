@@ -9,10 +9,12 @@
 {
     CGSize _processingSize;
     GLint _maxTextureSize;
-    GPUImageCropFilter *cropFilter;
-    GPUImageTransformFilter *transformFilter;
-    GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
-    CHOCROutput *recognitionOutput;
+    GPUImageCropFilter *_cropFilter;
+    GPUImageTransformFilter *_scaleTransformFilter;
+    GPUImageTransformFilter *_rotationTransformFilter;
+    GPUImageAdaptiveThresholdFilter *_adaptiveThresholdFilter;
+    GPUImageLuminanceThresholdFilter *_luminanceThresholdFilter;
+    CHOCROutput *_recognitionOutput;
 }
 
 -(void)setCropRegion:(CGRect)region;
@@ -25,35 +27,41 @@
     self = [super init];
     if (self) {
         _processingSize = size;
-        _maxTextureSize = [GPUImageContext maximumTextureSizeForThisDevice] / 1;
+        _maxTextureSize = [GPUImageContext maximumTextureSizeForThisDevice];
+
+        // TODO: Rotation to level baseline
+        // Rotation
+        _rotationTransformFilter = [[GPUImageTransformFilter alloc] init];
+
         // Crop
-        cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
+        _cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, 0, 1, 1)];
 
         // Scale
-        transformFilter = [[GPUImageTransformFilter alloc] init];
+        _scaleTransformFilter = [[GPUImageTransformFilter alloc] init];
 
         // Threshold
-        adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
-        adaptiveThresholdFilter.blurRadiusInPixels = 4;
+        _luminanceThresholdFilter = [[GPUImageLuminanceThresholdFilter alloc] init];
 
         // OCR
-        recognitionOutput = [[CHOCROutput alloc] initWithImageSize:size resultsInBGRAFormat:YES forLanguage:@"eng"];
-        recognitionOutput.delegate = self;
+        _recognitionOutput = [[CHOCROutput alloc] initWithImageSize:size resultsInBGRAFormat:YES forLanguage:@"eng"];
+        _recognitionOutput.delegate = self;
 
-        self.initialFilters = @[cropFilter];
-        [cropFilter addTarget:adaptiveThresholdFilter];
-        [adaptiveThresholdFilter addTarget:transformFilter];
-        [transformFilter addTarget:recognitionOutput];
-        self.terminalFilter = transformFilter;
+        self.initialFilters = @[_luminanceThresholdFilter];
+        [_luminanceThresholdFilter addTarget:_cropFilter];
+        [_cropFilter addTarget:_recognitionOutput];
+//        [_rotationTransformFilter addTarget:_recognitionOutput];
+//        [_scaleTransformFilter addTarget:_adaptiveThresholdFilter];
+//        [_adaptiveThresholdFilter addTarget:_recognitionOutput];
+        self.terminalFilter = _cropFilter;
     }
 
     return self;
 }
 
 -(void)setRegion:(CHRegion *)region {
-    if (recognitionOutput.enabled) {
+    if (_recognitionOutput.enabled) {
         _region = region;
-        recognitionOutput.region = region;
+        _recognitionOutput.region = region;
         CGRect regionRect = [region getRect];
         [self setCropRegion:regionRect];
     }
@@ -65,7 +73,11 @@
     
     // Padding
     // TODO: Affine transforms?
-    
+
+    // TODO: Rotation Transform based on slope of region
+
+    // TODO: Crop Padding
+
     CGFloat padding = 20; //px
     CGFloat originX = region.origin.x;
     CGFloat originY = region.origin.y;
@@ -88,17 +100,17 @@
     CGFloat cropScaleHeight = height / _processingSize.height;
     
     CGRect scaledCropRect = CGRectMake(cropScaleOriginX, cropScaleOriginY, cropScaleWidth, cropScaleHeight);
-    [cropFilter setCropRegion:scaledCropRect];
+    [_cropFilter setCropRegion:scaledCropRect];
     
     // Down stream size
     CGRect maxTextureWithAspect = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(width, height), CGRectMake(0, 0, _maxTextureSize, _maxTextureSize));
-    [recognitionOutput setImageSize:maxTextureWithAspect.size];
+    [_recognitionOutput setImageSize:maxTextureWithAspect.size];
 
-    CGFloat transformScaleX = maxTextureWithAspect.size.width / (maxTextureWithAspect.size.width - width);
-    CGFloat transformScaleY = maxTextureWithAspect.size.height / (maxTextureWithAspect.size.height - height);
-
-    CATransform3D transform = CATransform3DMakeScale(transformScaleX, transformScaleY, 1);
-    [transformFilter setTransform3D:transform];
+//    CGFloat transformScaleX = maxTextureWithAspect.size.width / (maxTextureWithAspect.size.width - width);
+//    CGFloat transformScaleY = maxTextureWithAspect.size.height / (maxTextureWithAspect.size.height - height);
+//
+//    CATransform3D transform = CATransform3DMakeScale(transformScaleX, transformScaleY, 1);
+//    [_scaleTransformFilter setTransform3D:transform];
 }
 
 // TODO: Override Force Processing
