@@ -11,7 +11,7 @@
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
-@interface CHLayoutProcessor () <CHLayoutOutputDelegate> {
+@interface CHLayoutProcessor () <CHLayoutOutputDelegate, CHLayoutProcessorDelegate> {
     CGSize _processingSize;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     CHLayoutOutput *analysisOutput;
@@ -75,7 +75,7 @@
 }
 
 - (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor {
-    if ([_delegate respondsToSelector:@selector(willBeginLayoutAnaylsis:)]) {
+    if ([_delegate respondsToSelector:@selector(willBeginLayoutAnalysis:)]) {
         [_delegate willBeginLayoutAnalysis:processor];
     }
 }

@@ -50,7 +50,6 @@
             GLubyte * outputBytes = [weakSelf rawBytesForImage];
             int height = imageSize.height;
             int width = imageSize.width;
-            int bytesPerPixel = weakSelf.bytesPerRowInOutput / width;
 
             NSMutableData *pixels = [NSMutableData dataWithCapacity:(height * width)];
 

@@ -5,7 +5,7 @@
 
 #import "CHOCRProcessor.h"
 
-@interface CHOCRProcessor () <CHOCRProcessorDelegate>
+@interface CHOCRProcessor () <CHOCROutputDelegate, CHOCRProcessorDelegate>
 {
     CGSize _processingSize;
     GLint _maxTextureSize;
@@ -92,7 +92,6 @@
     
     // Down stream size
     CGRect maxTextureWithAspect = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(width, height), CGRectMake(0, 0, _maxTextureSize, _maxTextureSize));
-    CGSize resampleSize = CGSizeMake(maxTextureWithAspect.size.width, maxTextureWithAspect.size.height);
     [recognitionOutput setImageSize:maxTextureWithAspect.size];
 
     CGFloat transformScaleX = maxTextureWithAspect.size.width / (maxTextureWithAspect.size.width - width);
@@ -106,25 +105,25 @@
 
 #pragma mark - <CHOCRProcessorDelegate>
 
-- (void)output:(CHOCROutput *)output completedRecognitionWithText:(CHText *)text {
+- (void)output:(CHOCROutput *)output completedOCRWithText:(CHText *)text {
     [self processor:self completedOCRWithText:text];
 }
 
-- (void)output:(CHOCROutput *)output willRecognizeRegion:(CHRegion *)region {
+- (void)output:(CHOCROutput *)output willBeginOCRForRegion:(CHRegion *)region {
    [self processor:self willBeginOCRForRegion:region];
 }
 
 #pragma mark - <CHOCRProcessorDelegate>
 
 - (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text {
-    if ([_delegate respondsToSelector:@selector(processor:completeOCRWithText:)]) {
+    if ([_delegate respondsToSelector:@selector(processor:completedOCRWithText:)]) {
         [_delegate processor:processor completedOCRWithText:text];
     }
 }
 
 - (void)processor:(CHOCRProcessor *)processor willBeginOCRForRegion:(CHRegion *)region {
     if ([_delegate respondsToSelector:@selector(processor:willBeginOCRForRegion:)]) {
-        [_delegate processor:processor willBeginOCRForRegion:processor];
+        [_delegate processor:processor willBeginOCRForRegion:region];
     }
 }
 

@@ -33,15 +33,23 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="9fI-th-Kq0" appends="YES" id="bRa-qb-caE"/>
+                            <outletCollection property="gestureRecognizers" destination="Ez8-mO-xe2" appends="YES" id="qIx-Zm-bhY"/>
                         </connections>
                     </view>
                     <connections>
                         <outlet property="longPressGesture" destination="9fI-th-Kq0" id="ohJ-DT-q71"/>
+                        <outlet property="tapGesture" destination="Ez8-mO-xe2" id="IJc-KO-Mg9"/>
                         <outlet property="view" destination="8bC-Xf-vdC" id="UDF-8C-kl7"/>
                         <segue destination="NBq-BK-4hE" kind="presentation" identifier="ShowSettingsController" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="a9M-JS-t7L"/>
+                        <segue destination="t6X-3q-qOg" kind="show" identifier="ShowStillImageController" id="UF3-wQ-VAg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Ez8-mO-xe2">
+                    <connections>
+                        <action selector="onTapGestureReceived:" destination="BYZ-38-t0r" id="GBd-FK-YeT"/>
+                    </connections>
+                </tapGestureRecognizer>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="1" id="9fI-th-Kq0">
                     <connections>
                         <action selector="onLongPressGestureReceived:" destination="BYZ-38-t0r" id="so8-Xl-iR4"/>
@@ -49,6 +57,58 @@
                 </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="17" y="-515"/>
+        </scene>
+        <!--Still Image View Controller-->
+        <scene sceneID="2C1-s5-eZc">
+            <objects>
+                <viewController id="t6X-3q-qOg" customClass="StillImageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Xmw-mV-qO0"/>
+                        <viewControllerLayoutGuide type="bottom" id="7fx-81-GAP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ktn-mD-lpN" customClass="GPUImageView">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eku-is-dYO">
+                                <rect key="frame" x="273" y="550" width="55" height="30"/>
+                                <state key="normal" title="Process"/>
+                                <connections>
+                                    <action selector="processImage:" destination="t6X-3q-qOg" eventType="touchUpInside" id="tWX-PD-B18"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0vi-rj-h6l">
+                                <rect key="frame" x="523" y="550" width="57" height="30"/>
+                                <state key="normal" title="Settings"/>
+                                <connections>
+                                    <action selector="showSettings:" destination="t6X-3q-qOg" eventType="touchUpInside" id="Atc-6O-Wbj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eG2-fI-6zs">
+                                <rect key="frame" x="20" y="20" width="37" height="30"/>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <action selector="dismiss:" destination="t6X-3q-qOg" eventType="touchUpInside" id="n9E-ng-yV9"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="0vi-rj-h6l" secondAttribute="trailing" id="06M-fP-uej"/>
+                            <constraint firstItem="7fx-81-GAP" firstAttribute="top" secondItem="0vi-rj-h6l" secondAttribute="bottom" constant="20" id="7fZ-rj-ffx"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="eG2-fI-6zs" secondAttribute="leading" id="JnA-9w-NDa"/>
+                            <constraint firstItem="eG2-fI-6zs" firstAttribute="top" secondItem="Xmw-mV-qO0" secondAttribute="bottom" id="Mj6-in-HIP"/>
+                            <constraint firstItem="eku-is-dYO" firstAttribute="centerX" secondItem="Ktn-mD-lpN" secondAttribute="centerX" id="SQn-1Y-VSI"/>
+                            <constraint firstItem="7fx-81-GAP" firstAttribute="top" secondItem="eku-is-dYO" secondAttribute="bottom" constant="20" id="uy8-gP-EHC"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <segue destination="NBq-BK-4hE" kind="presentation" identifier="ShowSettingsController" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="p9Z-vt-vMJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XaB-KT-h8j" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="726" y="-515"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="OW2-io-OAW">
@@ -257,4 +317,7 @@
     <resources>
         <image name="color_wheel" width="700" height="50"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="p9Z-vt-vMJ"/>
+    </inferredMetricsTieBreakers>
 </document>

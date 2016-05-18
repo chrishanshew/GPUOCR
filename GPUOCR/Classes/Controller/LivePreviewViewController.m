@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "LivePreviewViewController.h"
+#import "StillImageViewController.h"
 #import "Settings.h"
 #import "GPUImage.h"
 #import "CHLayoutProcessor.h"
@@ -30,13 +31,16 @@
     CHOCRProcessor *recognitionGroup;
 
     // Tap - Photo Recognition
+    UIImage *_selectedImage;
 }
 
 @property(nonatomic, strong) IBOutlet UILongPressGestureRecognizer *longPressGesture;
+@property(nonatomic, strong) IBOutlet UITapGestureRecognizer *tapGesture;
 @property(nonatomic, strong) IBOutlet UIButton *settingsButton;
 
 -(IBAction)showSettings:(id)sender;
 -(IBAction)onLongPressGestureReceived:(UILongPressGestureRecognizer *)sender;
+-(IBAction)onTapGestureReceived:(UITapGestureRecognizer *)sender;
 
 -(void)updateSettings;
 
@@ -51,10 +55,10 @@
 
         // TODO: CAMERA ALWAYS AT MAX
         _stillCamera = [[GPUImageStillCamera alloc] init];
-        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPresetPhoto];
+        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPreset3840x2160];
         _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
-        _processingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
+        _processingSize = [Settings sizeForCaptureSessionPreset:AVCaptureSessionPreset3840x2160 andOrientation:_stillCamera.outputImageOrientation];
 
         regionFilter = [[CHRegionFilter alloc] init];
         [regionFilter forceProcessingAtSize:_processingSize];
@@ -103,6 +107,14 @@
     [_stillCamera stopCameraCapture];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"ShowStillImageController"]) {
+        StillImageViewController *stillImageViewController = (StillImageViewController *)[segue destinationViewController];
+        stillImageViewController.image = _selectedImage;
+    }
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -122,10 +134,19 @@
     }
 }
 
+-(IBAction)onTapGestureReceived:(UITapGestureRecognizer *)sender {
+     [_stillCamera capturePhotoAsImageProcessedUpToFilter:resamplingFilter withOrientation:UIImageOrientationUp withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+         _selectedImage = processedImage;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self performSegueWithIdentifier:@"ShowStillImageController" sender:self];
+        });
+    }];
+    
+}
+
 #pragma mark - Notifications
 
 -(void)updateSettings {
-    BOOL running = [_stillCamera isRunning];
     Settings *settings = [Settings currentSettings];
     
     // Detection Level
@@ -158,7 +179,7 @@
 #pragma mark - <CHLayoutProcessorDelegate>
 
 - (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions {
-
+    [regionFilter setRegions:regions];
 }
 
 - (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor {
