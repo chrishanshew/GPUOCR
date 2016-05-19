@@ -7,11 +7,9 @@
 //
 
 #import "GPUImage.h"
-
-@class CHRegion;
+#import "CHRegion.h"
 
 @interface CHRegionGenerator : GPUImageFilter
-
 
 -(void)setRegions:(NSArray *)results;
 -(void)addRegion:(CHRegion *)region;

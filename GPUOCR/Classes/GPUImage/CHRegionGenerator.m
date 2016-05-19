@@ -9,7 +9,6 @@
 #import <OpenGLES/gltypes.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "CHRegionGenerator.h"
-#import "CHRegion.h"
 
 @interface CHRegionGenerator () {
     GLfloat _lineWidth;
@@ -17,23 +16,20 @@
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
     NSArray *_regions;
+    CGAffineTransform _regionTransform;
 }
+
+- (CGAffineTransform) transformFromRectToRect:(CGRect) fromRect toRect:(CGRect)toRect;
 
 @end
 
 NSString *const kCHOCRDrawRectVertexShader = SHADER_STRING
 (
-        uniform float width;
-        uniform float height;
         attribute vec4 position;
 
         void main()
         {
-            gl_Position =
-                    vec4(position.x * 2.0 / width - 1.0,
-                    position.y * 2.0 / height - 1.0,
-                    position.z,
-                    1.0);
+            gl_Position = vec4(((position.xy * 2.0) - 1.0), 0.0, 1.0);
         }
 );
 
@@ -59,8 +55,6 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         _regions = [NSArray array];
 
         runSynchronouslyOnVideoProcessingQueue(^{
-            _widthUniform = [filterProgram uniformIndex:@"width"];
-            _heightUniform = [filterProgram uniformIndex:@"height"];
             _colorUniform =[filterProgram uniformIndex:@"lineColor"];
         });
     }
@@ -69,18 +63,16 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
 -(void)forceProcessingAtSize:(CGSize)frameSize {
     [super forceProcessingAtSize:frameSize];
-    [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
-    [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
-    [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
-    glViewport(0, 0, frameSize.width, frameSize.height);
+    CGRect frameRect = CGRectMake(0,0, frameSize.width, frameSize.height);
+    CGRect openGLRect = CGRectMake(0,0,1,1);
+    _regionTransform = [self transformFromRectToRect:frameRect toRect:openGLRect];
 }
 
 -(void)forceProcessingAtSizeRespectingAspectRatio:(CGSize)frameSize {
     [super forceProcessingAtSizeRespectingAspectRatio:frameSize];
-    [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
-    [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
-    [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
-    glViewport(0, 0, frameSize.width, frameSize.height);
+    CGRect frameRect = CGRectMake(0,0, frameSize.width, frameSize.height);
+    CGRect openGLRect = CGRectMake(0,0,1,1);
+    _regionTransform = [self transformFromRectToRect:frameRect toRect:openGLRect];
 }
 
 - (void)setRegions:(NSArray *)results {
@@ -126,14 +118,12 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:[self sizeOfFBO] textureOptions:self.outputTextureOptions onlyTexture:NO];
         [outputFramebuffer activateFramebuffer];
 
-        CGRect rect;
         CGPoint leftStart, leftEnd, topEnd, rightEnd;
 
         NSUInteger currentVertexIndex = 0;
 
         for (CHRegion *region in [self getRegions]) {
-
-            rect = region.rect;
+            CGRect rect = CGRectApplyAffineTransform(region.rect, _regionTransform);
 
             leftStart = CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
             leftEnd = CGPointMake(rect.origin.x, rect.origin.y);
@@ -201,6 +191,13 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         [GPUImageContext setActiveShaderProgram:filterProgram];
         glLineWidth(_lineWidth);
     });
+}
+
+- (CGAffineTransform) transformFromRectToRect:(CGRect) fromRect toRect:(CGRect)toRect {
+    CGAffineTransform trans1 = CGAffineTransformMakeTranslation(-fromRect.origin.x, -fromRect.origin.y);
+    CGAffineTransform scale = CGAffineTransformMakeScale(toRect.size.width/fromRect.size.width, toRect.size.height/fromRect.size.height);
+    CGAffineTransform trans2 = CGAffineTransformMakeTranslation(toRect.origin.x, toRect.origin.y);
+    return CGAffineTransformConcat(CGAffineTransformConcat(trans1, scale), trans2);
 }
 
 @end
