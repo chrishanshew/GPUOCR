@@ -41,27 +41,29 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    imageInput = [[GPUImagePicture alloc] initWithImage:_image];
-    regionFilter = [[CHRegionFilter alloc] init];
-    [regionFilter forceProcessingAtSize:_image.size];
-//    [regionFilter addTarget:(GPUImageView *)self.view];
-    [imageInput addTarget:regionFilter];
-    [self updateSettings];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [imageInput processImage];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self updateSettings];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings) name:GPUOCRSettingsUpdatedNotification object:nil];
+    imageInput = [[GPUImagePicture alloc] initWithImage:_image];
+    regionFilter = [[CHRegionFilter alloc] init];
+    [regionFilter forceProcessingAtSize:_image.size];
+    [regionFilter addTarget:(GPUImageView *)self.view];
+    [imageInput addTarget:regionFilter];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [imageInput removeAllTargets];
+    [regionFilter removeAllTargets];
     _regions = [NSArray array];
 }
 
@@ -135,9 +137,8 @@
             CHOCRProcessor *ocrProcessor = [[CHOCRProcessor alloc] initWithProcessingSize:_image.size];
             ocrProcessor.delegate = self;
             [ocrProcessor forceProcessingAtSize:_image.size];
-            [ocrProcessor addTarget:(GPUImageView *)self.view];
             [imageInput addTarget:ocrProcessor];
-            ocrProcessor.region = region;
+            [ocrProcessor setRegion:region];
             [imageInput processImage];
         }
     }
@@ -149,21 +150,20 @@
 
 #pragma mark - <CHOCRProcessorDelegate>
 
-- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text {
+- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text inRegion:(CHRegion *)region {
     NSLog(@"%@", text.text);
 
     // Queue the next region or end processing if all regions have been processed
-    NSUInteger index = text.region.index;
-    index +=1;
-    if ((_regions.count - 1) >= index) {
-        processor.region  = [_regions objectAtIndex:index];
+    NSUInteger index = region.index;
+    if ((_regions.count - 1) >= ++index) {
+        [processor setRegion:[_regions objectAtIndex:index]];
         [imageInput processImage];
     } else {
         [imageInput removeTarget:processor];
     }
 }
 
-- (void)processor:(CHOCRProcessor *)processor willBeginOCRForRegion:(CHRegion *)region {
+- (void)processor:(CHOCRProcessor *)processor willBeginOCRInRegion:(CHRegion *)region {
 
 }
 

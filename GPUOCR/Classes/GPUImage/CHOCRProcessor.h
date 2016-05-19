@@ -12,10 +12,10 @@
 @protocol CHOCRProcessorDelegate <NSObject>
 
 @required
-- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text;
+- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text inRegion:(CHRegion *)region;
 
 @optional
-- (void)processor:(CHOCRProcessor *)processor willBeginOCRForRegion:(CHRegion *)region;
+- (void)processor:(CHOCRProcessor *)processor willBeginOCRInRegion:(CHRegion *)region;
 
 @end
 
@@ -23,7 +23,7 @@
 
 -(instancetype)initWithProcessingSize:(CGSize)size;
 
-@property(nonatomic, weak)id<CHOCRProcessorDelegate> delegate;
+@property(nonatomic, weak) id<CHOCRProcessorDelegate> delegate;
 @property(nonatomic, strong, setter=setRegion:) CHRegion *region;
 
 @end

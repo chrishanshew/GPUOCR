@@ -17,7 +17,8 @@ namespace tesseract {
 
 @interface CHTesseract() {
     tesseract::TessBaseAPI *_tesseract;
-    NSData *_pixelData;
+    NSMutableData *_pixelData;
+    CGSize _imageSize;
 }
 
 - (void)configureTesseractEnvironment;
@@ -39,6 +40,7 @@ namespace tesseract {
         _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO);
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSString *tessdataPath = [bundle resourcePath];
+        _pixelData = [NSMutableData dataWithLength:0];
         _tesseract->Init([[tessdataPath stringByAppendingString:@"/"]cStringUsingEncoding:NSUTF8StringEncoding], [@"osd" cStringUsingEncoding:NSUTF8StringEncoding]);
     }
     return self;
@@ -50,6 +52,7 @@ namespace tesseract {
         [self configureTesseractEnvironment];
         _tesseract = new tesseract::TessBaseAPI;
         _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO_OSD);
+        _pixelData = [NSMutableData dataWithLength:0];
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSString *tessdataPath = [bundle resourcePath];
         _tesseract->Init([[tessdataPath stringByAppendingString:@"/"]cStringUsingEncoding:NSUTF8StringEncoding], [@"osd" cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -64,6 +67,7 @@ namespace tesseract {
         [self configureTesseractEnvironment];
         _tesseract = new tesseract::TessBaseAPI;
         _tesseract->SetPageSegMode(tesseract::PageSegMode::PSM_AUTO);
+        _pixelData = [NSMutableData dataWithLength:0];
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSString *tessdataPath = [bundle resourcePath];
         _tesseract->Init([[tessdataPath stringByAppendingString:@"/"]cStringUsingEncoding:NSUTF8StringEncoding], [language cStringUsingEncoding:NSUTF8StringEncoding]);
@@ -81,24 +85,19 @@ namespace tesseract {
 #pragma mark - Tesseract API
 
 - (void)setImageWithData:(NSData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes {
-    _pixelData = data;
-    _tesseract->Clear();
-    _tesseract->SetImage((const unsigned char *)_pixelData.bytes, size.width, size.height, (int)bytes, (size.width * bytes));
-}
-
-- (void)setImage:(const unsigned char *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes {
-    _pixelData = [NSMutableData dataWithBytes:data length:(size.width * bytes) * size.height];
-    _tesseract->Clear();
+    _imageSize = size;
+    [_pixelData replaceBytesInRange:NSMakeRange(0, data.length) withBytes:data.bytes];
+    [_pixelData setLength:data.length];
     _tesseract->SetImage((const unsigned char *)_pixelData.bytes, size.width, size.height, (int)bytes, (size.width * bytes));
 }
 
 - (CHText *)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level {
-    _tesseract->Recognize(0);
+    _tesseract->Recognize(NULL);
     tesseract::ResultIterator* iterator = _tesseract->GetIterator();
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
-
+    CHText *result;
     if (iterator) {
-        CHText *result;
+
         do {
             char * utfText = iterator->GetUTF8Text(iteratorLevel);
             if (utfText != 0) {
@@ -112,15 +111,13 @@ namespace tesseract {
         } while (iterator->Next(iteratorLevel));
 
         delete iterator;
-
-        return result;
     }
-    return nil;
+
+    return result;
 }
 
 - (NSArray *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
-    _tesseract->AnalyseLayout();
-    tesseract::ResultIterator* iterator = _tesseract->GetIterator();
+    tesseract::PageIterator* iterator = _tesseract->AnalyseLayout();
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
     NSMutableArray *regions = [NSMutableArray array];
 
@@ -131,7 +128,6 @@ namespace tesseract {
 
         int offset; float slope;
         _tesseract->GetTextDirection(&offset, &slope);
-
         CHRegion *region;
 
         int index = 0;
@@ -139,12 +135,13 @@ namespace tesseract {
         do {
             region = [[CHRegion alloc] init];
             region.analysisTimestamp = timestamp;
-            region.level = level;
+            region.analysisLevel = level;
             region.offset = offset;
-            region.slope = slope;
+            region.textSlope = slope;
+            region.imageSize = _imageSize;
 
-            [self getBoundingBox:iterator atLevel:iteratorLevel forRegion:region];
-            [self getBaseline:iterator atLevel:iteratorLevel forRegion:region];
+            [self getBoundingBox:(tesseract::ResultIterator *)iterator atLevel:iteratorLevel forRegion:region];
+            [self getBaseline:(tesseract::ResultIterator *)iterator atLevel:iteratorLevel forRegion:region];
 
             region.index = index;
             index +=1;
@@ -154,7 +151,7 @@ namespace tesseract {
 
         delete iterator;
     }
-    
+
     return regions;
 }
 
@@ -247,6 +244,18 @@ namespace tesseract {
 
 - (void)clear {
     _tesseract->Clear();
+}
+
+- (void)clearAdaptiveClassifier {
+    _tesseract->ClearAdaptiveClassifier();
+}
+
+- (void)clearPersistentCache {
+    _tesseract->ClearPersistentCache();
+}
+
+- (void)end {
+    _tesseract->End();
 }
 
 - (NSString *)tesseractVersion {

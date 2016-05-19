@@ -4,6 +4,9 @@
 //
 
 #import "CHRegion.h"
+#import "Settings.h"
+#import "GPUImageHazeFilter.h"
+#import "GPUImageRawDataOutput.h"
 
 @implementation CHRegion
 

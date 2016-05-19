@@ -19,15 +19,15 @@
 - (void)output:(CHOCROutput *)output completedOCRWithText:(CHText *)text;
 
 @optional
-- (void)output:(CHOCROutput *)output willBeginOCRForRegion:(CHRegion *)region;
+- (void)outputWillBeginOCRForRegion:(CHOCROutput *)output;
 
 @end
 
 @interface CHOCROutput : GPUImageRawDataOutput <CHOCROutputDelegate>
 
-@property(nonatomic, weak)id<CHOCROutputDelegate> delegate;
-@property(nonatomic, strong, readonly)NSString* language;
-@property(nonatomic, strong, setter=setRegion:) CHRegion *region;
+@property (nonatomic, weak) id<CHOCROutputDelegate> delegate;
+@property (nonatomic, strong, readonly) NSString* language;
+@property (nonatomic) CHTesseractAnalysisLevel level;
 
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat forLanguage:(NSString *)language;
 

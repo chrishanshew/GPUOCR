@@ -23,8 +23,8 @@
 
 @interface CHLayoutOutput : GPUImageRawDataOutput <CHLayoutOutputDelegate>
 
-@property(nonatomic, weak)id<CHLayoutOutputDelegate> delegate;
-@property(nonatomic)CHTesseractAnalysisLevel level;
+@property (nonatomic, weak)id<CHLayoutOutputDelegate> delegate;
+@property (nonatomic)CHTesseractAnalysisLevel level;
 
 - (instancetype)initWithImageSize:(CGSize)newImageSize resultsInBGRAFormat:(BOOL)resultsInBGRAFormat;
 

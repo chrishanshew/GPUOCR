@@ -21,7 +21,6 @@
 
 // Default 1 bpp
 - (void)setImageWithData:(NSData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
-- (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 
 - (CHText *)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level;
 - (NSArray *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
@@ -29,6 +28,9 @@
 - (NSString *)hOCRText;
 
 - (void)clear;
+- (void)clearAdaptiveClassifier;
+- (void)clearPersistentCache;
+- (void)end;
 
 - (void)setVariableNamed:(NSString *)named withValue:(NSString *)value;
 - (NSString *)tesseractVersion;

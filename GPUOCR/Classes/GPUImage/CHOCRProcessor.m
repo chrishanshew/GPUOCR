@@ -4,20 +4,26 @@
 //
 
 #import "CHOCRProcessor.h"
+#import "CHTesseract.h"
 
-@interface CHOCRProcessor () <CHOCROutputDelegate, CHOCRProcessorDelegate>
+@interface CHOCRProcessor () <CHOCRProcessorDelegate>
 {
-    CGSize _processingSize;
+    CGSize _outputImageSize;
+    CHTesseract *_tesseract;
     GLint _maxTextureSize;
     GPUImageCropFilter *_cropFilter;
     GPUImageTransformFilter *_scaleTransformFilter;
     GPUImageTransformFilter *_rotationTransformFilter;
     GPUImageAdaptiveThresholdFilter *_adaptiveThresholdFilter;
     GPUImageLuminanceThresholdFilter *_luminanceThresholdFilter;
-    CHOCROutput *_recognitionOutput;
+    GPUImageRawDataOutput *_rawDataOutput;
+    dispatch_queue_t _processingQueue;
 }
 
--(void)setCropRegion:(CGRect)region;
+@property (nonatomic) BOOL isProcessing;
+
+- (void)newFrameAvailable;
+- (void)setCropRegion:(CGRect)region;
 
 @end
 
@@ -26,9 +32,9 @@
 -(instancetype)initWithProcessingSize:(CGSize)size {
     self = [super init];
     if (self) {
-        _processingSize = size;
-        _maxTextureSize = [GPUImageContext maximumTextureSizeForThisDevice];
-
+        _processingQueue = dispatch_queue_create("com.chrishanshew.gpuocr.ocrprocessor.processingqueue", NULL);
+        _maxTextureSize = [GPUImageContext maximumTextureSizeForThisDevice] / 2;
+        _isProcessing = NO;
         // TODO: Rotation to level baseline
         // Rotation
         _rotationTransformFilter = [[GPUImageTransformFilter alloc] init];
@@ -42,29 +48,66 @@
         // Threshold
         _luminanceThresholdFilter = [[GPUImageLuminanceThresholdFilter alloc] init];
 
-        // OCR
-        _recognitionOutput = [[CHOCROutput alloc] initWithImageSize:size resultsInBGRAFormat:YES forLanguage:@"eng"];
-        _recognitionOutput.delegate = self;
+        _rawDataOutput = [[GPUImageRawDataOutput alloc] initWithImageSize:size resultsInBGRAFormat:YES];
+        __block CHOCRProcessor *blockSelf = self;
+        [_rawDataOutput setNewFrameAvailableBlock:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [blockSelf newFrameAvailable];
+            });
+        }];
 
-        self.initialFilters = @[_luminanceThresholdFilter];
-        [_luminanceThresholdFilter addTarget:_cropFilter];
-        [_cropFilter addTarget:_recognitionOutput];
+        self.initialFilters = @[_cropFilter];
+        [_cropFilter addTarget:_luminanceThresholdFilter];
+        [_luminanceThresholdFilter addTarget:_rawDataOutput];
 //        [_rotationTransformFilter addTarget:_recognitionOutput];
 //        [_scaleTransformFilter addTarget:_adaptiveThresholdFilter];
 //        [_adaptiveThresholdFilter addTarget:_recognitionOutput];
-        self.terminalFilter = _cropFilter;
+        self.terminalFilter = _luminanceThresholdFilter;
     }
 
     return self;
 }
 
--(void)setRegion:(CHRegion *)region {
-    if (_recognitionOutput.enabled) {
-        _region = region;
-        _recognitionOutput.region = region;
-        CGRect regionRect = [region getRect];
-        [self setCropRegion:regionRect];
+- (void)newFrameAvailable {
+    if (!_region || _isProcessing || isEndProcessing) {
+        return;
     }
+
+    [self processor:self willBeginOCRInRegion:self.region];
+
+    [_rawDataOutput lockFramebufferForReading];
+    void * rawImageData = (void *) [_rawDataOutput rawBytesForImage];
+    [_rawDataOutput unlockFramebufferAfterReading];
+
+    __block CHOCRProcessor *blockSelf = self;
+    dispatch_async(_processingQueue, ^{
+        CFTimeInterval startTime = CACurrentMediaTime();
+        NSMutableData *pixels = [NSMutableData dataWithCapacity:(_outputImageSize.width * _outputImageSize.height)];
+
+        // TODO: Optimizable?
+        // starting at 0 may only apply to adaptive thresholder.  luminance uses alpha channel
+        for (int i = 0; i < ((4 * _outputImageSize.width) * _outputImageSize.height); i+=4) {
+            [pixels appendBytes:(const void *)&rawImageData[i] length:1];
+        }
+
+        if (!_tesseract) {
+            _tesseract = [[CHTesseract alloc] initForRecognitionWithLanguage:@"eng"];
+        }
+
+        [_tesseract setImageWithData:pixels withSize:_outputImageSize bytesPerPixel:1];
+        CHText *text = [_tesseract recognizeTextAtLevel:blockSelf.region.analysisLevel];
+        [_tesseract clear];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [blockSelf processor:blockSelf completedOCRWithText:text inRegion:blockSelf.region];
+        });
+        NSLog(@"OCR completed in %g s", CACurrentMediaTime() - startTime);
+    });
+}
+
+-(void)setRegion:(CHRegion *)region {
+    _region = region;
+    [self setCropRegion:[_region getRect]];
 }
 
 // TODO: CLEAN UP CALCULATIONS OR USE CORE GRAPHICS
@@ -84,27 +127,28 @@
     CGFloat width = region.size.width;
     CGFloat height = region.size.height;
     
-    if (originX - padding >= 0 && originY - padding >= 0 && (originX + width) + padding <= _processingSize.width && (originY + height) + padding <= _processingSize.height) {
-        originX -= padding;
-        originY -= padding;
-        width += (padding * 2);
-        height += (padding * 2);
-    }
-    
+//    if (originX - padding >= 0 && originY - padding >= 0 && (originX + width) + padding <= _region.imageSize.width && (originY + height) + padding <= _region.imageSize.height) {
+//        originX -= padding;
+//        originY -= padding;
+//        width += (padding * 2);
+//        height += (padding * 2);
+//    }
+//
     // Scaled Origin
-    CGFloat cropScaleOriginX = originX / _processingSize.width;
-    CGFloat cropScaleOriginY = originY / _processingSize.height;
+    CGFloat cropScaleOriginX = originX / _region.imageSize.width;
+    CGFloat cropScaleOriginY = originY / _region.imageSize.height;
     
     // Scaled Size
-    CGFloat cropScaleWidth = width / _processingSize.width;
-    CGFloat cropScaleHeight = height / _processingSize.height;
+    CGFloat cropScaleWidth = width / _region.imageSize.width;
+    CGFloat cropScaleHeight = height / _region.imageSize.height;
     
     CGRect scaledCropRect = CGRectMake(cropScaleOriginX, cropScaleOriginY, cropScaleWidth, cropScaleHeight);
     [_cropFilter setCropRegion:scaledCropRect];
     
     // Down stream size
     CGRect maxTextureWithAspect = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(width, height), CGRectMake(0, 0, _maxTextureSize, _maxTextureSize));
-    [_recognitionOutput setImageSize:maxTextureWithAspect.size];
+    [_rawDataOutput setImageSize:maxTextureWithAspect.size];
+    _outputImageSize = maxTextureWithAspect.size;
 
 //    CGFloat transformScaleX = maxTextureWithAspect.size.width / (maxTextureWithAspect.size.width - width);
 //    CGFloat transformScaleY = maxTextureWithAspect.size.height / (maxTextureWithAspect.size.height - height);
@@ -113,29 +157,32 @@
 //    [_scaleTransformFilter setTransform3D:transform];
 }
 
-// TODO: Override Force Processing
+#pragma mark - GPUImage Overrides
+
+-(void)endProcessing {
+    [super endProcessing];
+    dispatch_sync(_processingQueue, ^{
+        [_tesseract clear];
+        [_tesseract clearAdaptiveClassifier];
+        [_tesseract clearPersistentCache];
+        [_tesseract end];
+    });
+    _tesseract = nil;
+}
 
 #pragma mark - <CHOCRProcessorDelegate>
 
-- (void)output:(CHOCROutput *)output completedOCRWithText:(CHText *)text {
-    [self processor:self completedOCRWithText:text];
-}
-
-- (void)output:(CHOCROutput *)output willBeginOCRForRegion:(CHRegion *)region {
-   [self processor:self willBeginOCRForRegion:region];
-}
-
-#pragma mark - <CHOCRProcessorDelegate>
-
-- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text {
-    if ([_delegate respondsToSelector:@selector(processor:completedOCRWithText:)]) {
-        [_delegate processor:processor completedOCRWithText:text];
+- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text inRegion:(CHRegion *)region {
+    _isProcessing = NO;
+    if ([_delegate respondsToSelector:@selector(processor:completedOCRWithText:inRegion:)]) {
+        [_delegate processor:processor completedOCRWithText:text inRegion: region];
     }
 }
 
-- (void)processor:(CHOCRProcessor *)processor willBeginOCRForRegion:(CHRegion *)region {
-    if ([_delegate respondsToSelector:@selector(processor:willBeginOCRForRegion:)]) {
-        [_delegate processor:processor willBeginOCRForRegion:region];
+- (void)processor:(CHOCRProcessor *)processor willBeginOCRInRegion:(CHRegion *)region {
+    _isProcessing = YES;
+    if ([_delegate respondsToSelector:@selector(processor:willBeginOCRInRegion:)]) {
+        [_delegate processor:processor willBeginOCRInRegion:region];
     }
 }
 

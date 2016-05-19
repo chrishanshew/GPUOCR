@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 // Position Index
 @property(nonatomic) NSUInteger index; // Detection index relative to other results in group
 
-@property(nonatomic) CHTesseractAnalysisLevel level;
+@property(nonatomic) CHTesseractAnalysisLevel analysisLevel;
 
 // Raw Coordinates
 @property(nonatomic) NSInteger left;
@@ -35,11 +35,10 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 
 // Text Direction
 @property(nonatomic) NSInteger offset;
-@property(nonatomic) NSInteger slope;
+@property(nonatomic) NSInteger textSlope;
 
 // Input Image Info
 @property(nonatomic) CGSize imageSize;
-@property(nonatomic) NSUInteger bytesPerPixel;
 
 // Computed Geometry
 @property(nonatomic, readonly, getter=getRect) CGRect rect;

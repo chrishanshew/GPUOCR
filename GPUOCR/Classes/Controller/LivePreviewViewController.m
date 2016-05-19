@@ -55,10 +55,10 @@
 
         // TODO: CAMERA ALWAYS AT MAX
         _stillCamera = [[GPUImageStillCamera alloc] init];
-        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPreset3840x2160];
+        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPreset1280x720];
         _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
-        _processingSize = [Settings sizeForCaptureSessionPreset:AVCaptureSessionPreset3840x2160 andOrientation:_stillCamera.outputImageOrientation];
+        _processingSize = [Settings sizeForCaptureSessionPreset:AVCaptureSessionPreset1280x720 andOrientation:_stillCamera.outputImageOrientation];
 
         regionFilter = [[CHRegionFilter alloc] init];
         [regionFilter forceProcessingAtSize:_processingSize];
@@ -67,16 +67,8 @@
         analysisGroup = [[CHLayoutProcessor alloc] initWithProcessingSize:_processingSize];
         analysisGroup.delegate = self;
 
-        recognitionGroup = [[CHOCRProcessor alloc] initWithProcessingSize:_processingSize];
-        recognitionGroup.delegate = self;
-
-        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
-        [resamplingFilter forceProcessingAtSize:_processingSize];
-        [_stillCamera addTarget:resamplingFilter];
-        [resamplingFilter addTarget:regionFilter atTextureLocation:0];
-        [resamplingFilter addTarget:analysisGroup atTextureLocation:1];
-        [resamplingFilter addTarget:recognitionGroup atTextureLocation:2];
-        [resamplingFilter forceProcessingAtSize:_processingSize];
+//        recognitionGroup = [[CHOCRProcessor alloc] initWithProcessingSize:_processingSize];
+//        recognitionGroup.delegate = self;
 
         // Gesture Recognizers
         _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPressGestureReceived:)];
@@ -86,18 +78,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings) name:GPUOCRSettingsUpdatedNotification object:nil];
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
+        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
+        [resamplingFilter forceProcessingAtSize:_processingSize];
+        [_stillCamera addTarget:resamplingFilter];
+        [resamplingFilter addTarget:regionFilter atTextureLocation:0];
+        [resamplingFilter addTarget:analysisGroup atTextureLocation:1];
+//        [resamplingFilter addTarget:recognitionGroup atTextureLocation:2];
+        [resamplingFilter forceProcessingAtSize:_processingSize];
         GPUImageView *cameraView = (GPUImageView *)self.view;
         [regionFilter addTarget:cameraView];
         [self updateSettings];
     } else {
         // Rear Camera not available, present alert
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings) name:GPUOCRSettingsUpdatedNotification object:nil];
     [_stillCamera startCameraCapture];
 }
 
@@ -105,6 +105,9 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_stillCamera stopCameraCapture];
+    [_stillCamera removeAllTargets];
+    [resamplingFilter removeAllTargets];
+    [regionFilter removeAllTargets];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -141,7 +144,6 @@
             [self performSegueWithIdentifier:@"ShowStillImageController" sender:self];
         });
     }];
-    
 }
 
 #pragma mark - Notifications
@@ -187,11 +189,11 @@
 
 #pragma mark - <CHOCRProcessorDelegate>
 
-- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text {
+- (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text inRegion:(CHRegion *)region {
 
 }
 
-- (void)processor:(CHOCRProcessor *)processor willBeginOCRForRegion:(CHRegion *)region {
+- (void)processor:(CHOCRProcessor *)processor willBeginOCRInRegion:(CHRegion *)region {
 
 }
 
