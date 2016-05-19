@@ -7,7 +7,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "SettingsViewController.h"
 
-
 @interface SettingsViewController () {
     Settings *_settings;
     NSArray *_captureSessionPresets;
@@ -54,7 +53,6 @@ static NSInteger const hexColor[] = {0x000000, 0xfe0000, 0xff7900, 0xffb900, 0xf
     _linePreview.layer.borderColor = [_settings.lineColor CGColor];
     _linePreview.layer.borderWidth = _settings.lineWidth;
     
-    _selectModeControl.selectedSegmentIndex = _settings.mode;
     _selectLevelControl.selectedSegmentIndex = _settings.level;
     _selectDimensionControl.selectedSegmentIndex = [_captureSessionPresets indexOfObject:_settings.captureSessionPreset];
     
@@ -77,11 +75,6 @@ static NSInteger const hexColor[] = {0x000000, 0xfe0000, 0xff7900, 0xffb900, 0xf
 
 -(IBAction)onDismissTouched:(id)sender {
     [self dismissViewControllerAnimated:true completion:nil];
-}
-
--(IBAction)onSelectModeValueChanged:(id)sender {
-    _settings.mode = _selectModeControl.selectedSegmentIndex;
-    [_settings saveAsUserDefaults];
 }
 
 -(IBAction)onSelectLevelValueChanged:(id)sender {

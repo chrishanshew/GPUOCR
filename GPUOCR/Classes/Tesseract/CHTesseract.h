@@ -8,23 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-
-@class CHResultGroup;
-
-typedef NS_ENUM(NSUInteger, CHTesseractMode) {
-    CHTesseractModeAnalysis = 0,
-    CHTesseractModeAnalysisWithOSD,
-    CHTesseractModeAnalysisWithRecognition
-};
-
-
-typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
-    CHTesseractAnalysisLevelBlock = 0,
-    CHTesseractAnalysisLevelParagraph,
-    CHTesseractAnalysisLevelTextLine,
-    CHTesseractAnalysisLevelWord,
-    CHTesseractAnalysisLevelSymbol
-};
+#import "CHRegion.h"
+#import "CHText.h"
 
 @interface CHTesseract : NSObject
 
@@ -36,19 +21,20 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 
 // Default 1 bpp
 - (void)setImageWithData:(NSData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
-- (void)setImage:(const unsigned char *)image withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 
-- (void)recognize;
-- (NSString *)recognizeText;
-- (CHResultGroup *)recognizeAtLevel:(CHTesseractAnalysisLevel)level;
-- (CHResultGroup *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
-- (CHResultGroup *)detectionAtLevel:(CHTesseractAnalysisLevel)level;
+- (CHText *)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level;
+- (void)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level completion:(void(^)(CHText *text))completion;
+- (NSArray *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
+- (void)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level newRegionAvailable:(void(^)(CHRegion *region))newRegionAvailable completion:(void(^)(NSArray *regions))completion;
 
 - (NSString *)hOCRText;
-- (void)setVariableNamed:(NSString *)named withValue:(NSString *)value;
 
 - (void)clear;
+- (void)clearAdaptiveClassifier;
+- (void)clearPersistentCache;
+- (void)end;
 
+- (void)setVariableNamed:(NSString *)named withValue:(NSString *)value;
 - (NSString *)tesseractVersion;
 
 @end

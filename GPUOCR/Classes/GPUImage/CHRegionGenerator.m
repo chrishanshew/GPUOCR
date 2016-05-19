@@ -1,5 +1,5 @@
 //
-//  CHResultGenerator.m
+//  CHRegionGenerator.m
 //  CHOCR
 //
 //  Created by Chris Hanshew on 2/13/16.
@@ -8,31 +8,28 @@
 
 #import <OpenGLES/gltypes.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CHResultGenerator.h"
-#import "CHResult.h"
+#import "CHRegionGenerator.h"
 
-@interface CHResultGenerator () {
+@interface CHRegionGenerator () {
     GLfloat _lineWidth;
     GLfloat _widthUniform, _heightUniform, _colorUniform;
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
+    NSArray *_regions;
+    CGAffineTransform _regionTransform;
 }
+
+- (CGAffineTransform) transformFromRectToRect:(CGRect) fromRect toRect:(CGRect)toRect;
 
 @end
 
 NSString *const kCHOCRDrawRectVertexShader = SHADER_STRING
 (
-        uniform float width;
-        uniform float height;
         attribute vec4 position;
 
         void main()
         {
-            gl_Position =
-                    vec4(position.x * 2.0 / width - 1.0,
-                    position.y * 2.0 / height - 1.0,
-                    position.z,
-                    1.0);
+            gl_Position = vec4(((position.xy * 2.0) - 1.0), 0.0, 1.0);
         }
 );
 
@@ -48,46 +45,61 @@ NSString *const kCHOCRDrawRectFragmentShader = SHADER_STRING
 
 GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
-@implementation CHResultGenerator
+@implementation CHRegionGenerator
 
 - (id)init{
     
     self = [super initWithVertexShaderFromString:kCHOCRDrawRectVertexShader fragmentShaderFromString:kCHOCRDrawRectFragmentShader];
     if (self) {
         _resultsAccessQueue = dispatch_queue_create("com.chrishanshew.gpuocr.resultsaccessqueue", DISPATCH_QUEUE_CONCURRENT);
-        _results = [NSArray array];
+        _regions = [NSArray array];
+
+        runSynchronouslyOnVideoProcessingQueue(^{
+            _colorUniform =[filterProgram uniformIndex:@"lineColor"];
+        });
     }
     return self;
 }
 
 -(void)forceProcessingAtSize:(CGSize)frameSize {
     [super forceProcessingAtSize:frameSize];
-    _widthUniform = [filterProgram uniformIndex:@"width"];
-    _heightUniform = [filterProgram uniformIndex:@"height"];
-    _colorUniform =[filterProgram uniformIndex:@"lineColor"];
-    [self setFloat:frameSize.width forUniform:_widthUniform program:filterProgram];
-    [self setFloat:frameSize.height forUniform:_heightUniform program:filterProgram];
-    [self setVec4:kDefaultLineColor forUniform:_colorUniform program:filterProgram];
-    glViewport(0, 0, frameSize.width, frameSize.height);
+    CGRect frameRect = CGRectMake(0,0, frameSize.width, frameSize.height);
+    CGRect openGLRect = CGRectMake(0,0,1,1);
+    _regionTransform = [self transformFromRectToRect:frameRect toRect:openGLRect];
 }
 
-- (void)setResults:(NSArray *)results {
+-(void)forceProcessingAtSizeRespectingAspectRatio:(CGSize)frameSize {
+    [super forceProcessingAtSizeRespectingAspectRatio:frameSize];
+    CGRect frameRect = CGRectMake(0,0, frameSize.width, frameSize.height);
+    CGRect openGLRect = CGRectMake(0,0,1,1);
+    _regionTransform = [self transformFromRectToRect:frameRect toRect:openGLRect];
+}
+
+- (void)setRegions:(NSArray *)results {
     dispatch_barrier_async(_resultsAccessQueue, ^{
         NSUInteger length = results.count <= 512 ? results.count : 511;
-        _results = [NSArray arrayWithArray:[results subarrayWithRange: NSMakeRange(0, length)]];
+        _regions = [NSArray arrayWithArray:[results subarrayWithRange: NSMakeRange(0, length)]];
     });
 }
 
-- (NSArray *)getResults {
-    __block NSArray *results;
+-(void)addRegion:(CHRegion *)region {
+    dispatch_barrier_async(_resultsAccessQueue, ^{
+        if (_regions.count <= 512) {
+            _regions = [_regions arrayByAddingObject:region];
+        }
+    });
+}
+
+- (NSArray *)getRegions {
+    __block NSArray *regions;
     dispatch_sync(_resultsAccessQueue, ^{
-        results = [NSArray arrayWithArray:_results];
+        regions = [NSArray arrayWithArray:_regions];
     });
-    return results;
+    return regions;
 }
 
 
--(void)renderResultsWithFrameTime:(CMTime)frameTime {
+-(void)renderRegionsWithFrameTime:(CMTime)frameTime {
     if (self.preventRendering)
     {
         return;
@@ -106,14 +118,12 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:[self sizeOfFBO] textureOptions:self.outputTextureOptions onlyTexture:NO];
         [outputFramebuffer activateFramebuffer];
 
-        CGRect rect;
         CGPoint leftStart, leftEnd, topEnd, rightEnd;
 
         NSUInteger currentVertexIndex = 0;
 
-        for (CHResult *result in _results) {
-
-            rect = result.rect;
+        for (CHRegion *region in [self getRegions]) {
+            CGRect rect = CGRectApplyAffineTransform(region.rect, _regionTransform);
 
             leftStart = CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
             leftEnd = CGPointMake(rect.origin.x, rect.origin.y);
@@ -161,7 +171,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         glEnable(GL_BLEND);
         
         glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, lineCoordinates);
-        glDrawArrays(GL_LINES, 0, ((unsigned int)_results.count * 8));
+        glDrawArrays(GL_LINES, 0, ((unsigned int)_regions.count * 8));
 
         glDisable(GL_BLEND);
 
@@ -181,6 +191,13 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         [GPUImageContext setActiveShaderProgram:filterProgram];
         glLineWidth(_lineWidth);
     });
+}
+
+- (CGAffineTransform) transformFromRectToRect:(CGRect) fromRect toRect:(CGRect)toRect {
+    CGAffineTransform trans1 = CGAffineTransformMakeTranslation(-fromRect.origin.x, -fromRect.origin.y);
+    CGAffineTransform scale = CGAffineTransformMakeScale(toRect.size.width/fromRect.size.width, toRect.size.height/fromRect.size.height);
+    CGAffineTransform trans2 = CGAffineTransformMakeTranslation(toRect.origin.x, toRect.origin.y);
+    return CGAffineTransformConcat(CGAffineTransformConcat(trans1, scale), trans2);
 }
 
 @end

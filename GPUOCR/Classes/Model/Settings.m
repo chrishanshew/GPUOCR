@@ -13,7 +13,6 @@
 NSString * const GPUOCRSettingsUpdatedNotification = @"com.chrishanshew.gpuocr.nsnotificationcenter.settingsupdated";
 
 static NSString * const GPUOCRNSUserDefaultsHasSettingsKey = @"com.chrishanshew.gpuocr.nsuserdefaults.hassettings";
-static NSString * const GPUOCRNSUserDefaultsModeKey = @"com.chrishanshew.gpuocr.nsuserdefaults.mode";
 static NSString * const GPUOCRNSUserDefaultsLevelKey = @"com.chrishanshew.gpuocr.nsuserdefaults.level";
 static NSString * const GPUOCRNSUserDefaultsLineWidthKey = @"com.chrishanshew.gpuocr.nsuserdefaults.linewidth";
 static NSString * const GPUOCRNSUserDefaultsAVCapturePresetKey = @"com.chrishanshew.gpuocr.nsuserdefaults.avcapturepreset";
@@ -22,7 +21,6 @@ static NSString * const GPUOCRNSUserDefaultsHexColorKey = @"com.chrishanshew.gpu
 
 -(void)saveAsUserDefaults {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setInteger:_mode forKey:GPUOCRNSUserDefaultsModeKey];
     [userDefaults setInteger:_level forKey:GPUOCRNSUserDefaultsLevelKey];
     [userDefaults setFloat:_lineWidth forKey:GPUOCRNSUserDefaultsLineWidthKey];
     [userDefaults setObject:_captureSessionPreset forKey:GPUOCRNSUserDefaultsAVCapturePresetKey];
@@ -38,7 +36,6 @@ static NSString * const GPUOCRNSUserDefaultsHexColorKey = @"com.chrishanshew.gpu
     Settings* settings;
     if ([userDefaults boolForKey:GPUOCRNSUserDefaultsHasSettingsKey]) {
         settings = [[Settings alloc] init];
-        settings.mode = [userDefaults integerForKey:GPUOCRNSUserDefaultsModeKey];
         settings.level = [userDefaults integerForKey:GPUOCRNSUserDefaultsLevelKey];
         settings.lineWidth = [userDefaults floatForKey:GPUOCRNSUserDefaultsLineWidthKey];
         settings.captureSessionPreset = [userDefaults stringForKey:GPUOCRNSUserDefaultsAVCapturePresetKey];
@@ -54,7 +51,6 @@ static NSString * const GPUOCRNSUserDefaultsHexColorKey = @"com.chrishanshew.gpu
 
 +(instancetype)defaultSettings {
     Settings* settings = [[Settings alloc] init];
-    settings.mode = CHTesseractModeAnalysis;
     settings.level = CHTesseractAnalysisLevelTextLine;
     settings.lineWidth = 1.0;
     settings.lineColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0];
