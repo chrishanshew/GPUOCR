@@ -144,6 +144,11 @@
     }
 }
 
+- (void)processor:(CHLayoutProcessor *)processor newRegionAvailable:(CHRegion *)region {
+
+}
+
+
 - (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor {
     
 }

@@ -116,6 +116,10 @@ namespace tesseract {
     return result;
 }
 
+-(void)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level completion:(void(^)(CHText *text))completion {
+    completion([self recognizeTextAtLevel:level]);
+}
+
 - (NSArray *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level {
     tesseract::PageIterator* iterator = _tesseract->AnalyseLayout();
     tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
@@ -153,6 +157,44 @@ namespace tesseract {
     }
 
     return regions;
+}
+
+- (void)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level newRegionAvailable:(void(^)(CHRegion *region))newRegionAvailable completion:(void(^)(NSArray *regions))completion {
+    tesseract::PageIterator* iterator = _tesseract->AnalyseLayout();
+    tesseract::PageIteratorLevel iteratorLevel = (tesseract::PageIteratorLevel)level;
+    NSMutableArray *regions = [NSMutableArray array];
+    if (iterator) {
+
+        NSDate *date = [NSDate date];
+        NSUInteger timestamp = date.timeIntervalSince1970;
+
+        int offset; float slope;
+        _tesseract->GetTextDirection(&offset, &slope);
+        CHRegion *region;
+
+        int index = 0;
+
+        do {
+            region = [[CHRegion alloc] init];
+            region.analysisTimestamp = timestamp;
+            region.analysisLevel = level;
+            region.offset = offset;
+            region.textSlope = slope;
+            region.imageSize = _imageSize;
+
+            [self getBoundingBox:(tesseract::ResultIterator *)iterator atLevel:iteratorLevel forRegion:region];
+            [self getBaseline:(tesseract::ResultIterator *)iterator atLevel:iteratorLevel forRegion:region];
+
+            region.index = index;
+            index +=1;
+
+            newRegionAvailable(region);
+            [regions addObject:region];
+        } while (iterator->Next(iteratorLevel));
+
+        delete iterator;
+    }
+    completion(regions);
 }
 
 //- (CHResultGroup *)detectionAtLevel:(CHTesseractAnalysisLevel)level {

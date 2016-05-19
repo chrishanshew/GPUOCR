@@ -8,11 +8,14 @@
 
 #import "GPUImage.h"
 
+@class CHRegion;
+
 @interface CHRegionGenerator : GPUImageFilter
 
-@property(nonatomic, strong, readonly) NSArray *results;
 
 -(void)setRegions:(NSArray *)results;
+-(void)addRegion:(CHRegion *)region;
+-(NSArray *)getRegions;
 -(void)renderRegionsWithFrameTime:(CMTime)frameTime;
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
 -(void)setLineWidth:(float)width;

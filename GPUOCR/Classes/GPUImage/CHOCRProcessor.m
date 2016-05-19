@@ -174,9 +174,7 @@
 
 - (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text inRegion:(CHRegion *)region {
     _isProcessing = NO;
-    if ([_delegate respondsToSelector:@selector(processor:completedOCRWithText:inRegion:)]) {
-        [_delegate processor:processor completedOCRWithText:text inRegion: region];
-    }
+    [_delegate processor:processor completedOCRWithText:text inRegion: region];
 }
 
 - (void)processor:(CHOCRProcessor *)processor willBeginOCRInRegion:(CHRegion *)region {

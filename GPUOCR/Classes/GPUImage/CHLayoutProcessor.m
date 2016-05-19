@@ -37,7 +37,6 @@
         _processingSize = size;
         _level = CHTesseractAnalysisLevelBlock;
         _processingQueue = dispatch_queue_create("com.chrishanshew.gpuocr.layoutprocessor.processingqueue", NULL);
-
         adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
         adaptiveThresholdFilter.blurRadiusInPixels = kDefaultAdaptiveThresholderBlurRadius;
 
@@ -83,12 +82,17 @@
         }
 
         [_tesseract setImageWithData:pixels withSize:_processingSize bytesPerPixel:1];
-        NSArray *regions = [_tesseract analyzeLayoutAtLevel:_level];
+        [_tesseract analyzeLayoutAtLevel:_level newRegionAvailable:^(CHRegion *region) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [blockSelf processor:blockSelf newRegionAvailable:region];
+            });
+        } completion:^(NSArray *regions) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [blockSelf processor:blockSelf finishedLayoutAnalysisWithRegions:regions];
+            });
+        }];
         [_tesseract clear];
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [blockSelf processor:blockSelf finishedLayoutAnalysisWithRegions:regions];
-        });
         NSLog(@"Layout Analyzed in %g s", CACurrentMediaTime() - startTime);
     });
 }
@@ -117,11 +121,13 @@
 
 #pragma mark - <CHLayoutProcessorDelegate>
 
+- (void)processor:(CHLayoutProcessor *)processor newRegionAvailable:(CHRegion *)region {
+    [_delegate processor:processor newRegionAvailable:region];
+}
+
 - (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions {
     _isProcessing = NO;
-    if ([_delegate respondsToSelector:@selector(processor:finishedLayoutAnalysisWithRegions:)]) {
-        [_delegate processor:processor finishedLayoutAnalysisWithRegions:regions];
-    }
+    [_delegate processor:processor finishedLayoutAnalysisWithRegions:regions];
 }
 
 - (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor {

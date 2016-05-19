@@ -16,8 +16,10 @@
 
 @required
 - (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions;
+- (void)processor:(CHLayoutProcessor *)processor newRegionAvailable:(CHRegion *)region;
 
 @optional
+
 - (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor;
 
 @end

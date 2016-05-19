@@ -8,6 +8,7 @@
 
 #import "CHRegionFilter.h"
 #import "CHRegionGenerator.h"
+#import "CHRegion.h"
 
 @interface CHRegionFilter () {
     GPUImageAlphaBlendFilter *blendFilter;
@@ -56,8 +57,12 @@
     [regionGenerator setLineWidth:width];
 }
 
--(void)setRegions:(NSArray *)results {
-    [regionGenerator setRegions:results];
+-(void)setRegions:(NSArray *)regions {
+    [regionGenerator setRegions:regions];
+}
+
+-(void)addRegion:(CHRegion *)region {
+    [regionGenerator addRegion:region];
 }
 
 @end

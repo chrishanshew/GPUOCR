@@ -23,7 +23,9 @@
 - (void)setImageWithData:(NSData *)data withSize:(CGSize)size bytesPerPixel:(NSUInteger)bytes;
 
 - (CHText *)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level;
+- (void)recognizeTextAtLevel:(CHTesseractAnalysisLevel)level completion:(void(^)(CHText *text))completion;
 - (NSArray *)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level;
+- (void)analyzeLayoutAtLevel:(CHTesseractAnalysisLevel)level newRegionAvailable:(void(^)(CHRegion *region))newRegionAvailable completion:(void(^)(NSArray *regions))completion;
 
 - (NSString *)hOCRText;
 

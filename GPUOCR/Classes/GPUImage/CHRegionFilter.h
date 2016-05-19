@@ -8,10 +8,13 @@
 
 #import "GPUImage.h"
 
+@class CHRegion;
+
 @interface CHRegionFilter : GPUImageFilterGroup
 
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
 -(void)setLineWidth:(float)width;
--(void)setRegions:(NSArray *)results;
+-(void)setRegions:(NSArray *)regions;
+-(void)addRegion:(CHRegion *)region;
 
 @end

@@ -180,6 +180,10 @@
 
 #pragma mark - <CHLayoutProcessorDelegate>
 
+- (void)processor:(CHLayoutProcessor *)processor newRegionAvailable:(CHRegion *)region {
+//    [regionFilter addRegion:region];
+}
+
 - (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions {
     [regionFilter setRegions:regions];
 }

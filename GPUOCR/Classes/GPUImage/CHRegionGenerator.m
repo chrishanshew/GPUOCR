@@ -16,6 +16,7 @@
     GLfloat _widthUniform, _heightUniform, _colorUniform;
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
+    NSArray *_regions;
 }
 
 @end
@@ -55,7 +56,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
     self = [super initWithVertexShaderFromString:kCHOCRDrawRectVertexShader fragmentShaderFromString:kCHOCRDrawRectFragmentShader];
     if (self) {
         _resultsAccessQueue = dispatch_queue_create("com.chrishanshew.gpuocr.resultsaccessqueue", DISPATCH_QUEUE_CONCURRENT);
-        _results = [NSArray array];
+        _regions = [NSArray array];
 
         runSynchronouslyOnVideoProcessingQueue(^{
             _widthUniform = [filterProgram uniformIndex:@"width"];
@@ -85,16 +86,24 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 - (void)setRegions:(NSArray *)results {
     dispatch_barrier_async(_resultsAccessQueue, ^{
         NSUInteger length = results.count <= 512 ? results.count : 511;
-        _results = [NSArray arrayWithArray:[results subarrayWithRange: NSMakeRange(0, length)]];
+        _regions = [NSArray arrayWithArray:[results subarrayWithRange: NSMakeRange(0, length)]];
     });
 }
 
-- (NSArray *)getResults {
-    __block NSArray *results;
-    dispatch_sync(_resultsAccessQueue, ^{
-        results = [NSArray arrayWithArray:_results];
+-(void)addRegion:(CHRegion *)region {
+    dispatch_barrier_async(_resultsAccessQueue, ^{
+        if (_regions.count <= 512) {
+            _regions = [_regions arrayByAddingObject:region];
+        }
     });
-    return results;
+}
+
+- (NSArray *)getRegions {
+    __block NSArray *regions;
+    dispatch_sync(_resultsAccessQueue, ^{
+        regions = [NSArray arrayWithArray:_regions];
+    });
+    return regions;
 }
 
 
@@ -122,7 +131,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
         NSUInteger currentVertexIndex = 0;
 
-        for (CHRegion *region in _results) {
+        for (CHRegion *region in [self getRegions]) {
 
             rect = region.rect;
 
@@ -172,7 +181,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         glEnable(GL_BLEND);
         
         glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, lineCoordinates);
-        glDrawArrays(GL_LINES, 0, ((unsigned int)_results.count * 8));
+        glDrawArrays(GL_LINES, 0, ((unsigned int)_regions.count * 8));
 
         glDisable(GL_BLEND);
 
