@@ -55,10 +55,13 @@
 
         // TODO: CAMERA ALWAYS AT MAX
         _stillCamera = [[GPUImageStillCamera alloc] init];
-        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPreset1280x720];
+        [_stillCamera setCaptureSessionPreset:AVCaptureSessionPresetPhoto];
         _stillCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
 
-        _processingSize = [Settings sizeForCaptureSessionPreset:AVCaptureSessionPreset1280x720 andOrientation:_stillCamera.outputImageOrientation];
+        _processingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
+
+        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
+        [resamplingFilter forceProcessingAtSize:_processingSize];
 
         regionFilter = [[CHRegionFilter alloc] init];
         [regionFilter forceProcessingAtSize:_processingSize];
@@ -85,14 +88,11 @@
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSettings) name:GPUOCRSettingsUpdatedNotification object:nil];
     if ([GPUImageVideoCamera isBackFacingCameraPresent]) {
-        resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
-        [resamplingFilter forceProcessingAtSize:_processingSize];
         [_stillCamera addTarget:resamplingFilter];
         [resamplingFilter addTarget:regionFilter atTextureLocation:0];
         [resamplingFilter addTarget:analysisGroup atTextureLocation:1];
-//        [resamplingFilter addTarget:recognitionGroup atTextureLocation:2];
-        [resamplingFilter forceProcessingAtSize:_processingSize];
         GPUImageView *cameraView = (GPUImageView *)self.view;
+        cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
         [regionFilter addTarget:cameraView];
         [self updateSettings];
     } else {
@@ -106,7 +106,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_stillCamera stopCameraCapture];
     [_stillCamera removeAllTargets];
-    [resamplingFilter removeAllTargets];
     [regionFilter removeAllTargets];
 }
 
@@ -150,7 +149,7 @@
 
 -(void)updateSettings {
     Settings *settings = [Settings currentSettings];
-    
+
     // Detection Level
     analysisGroup.level = settings.level;
 
@@ -159,23 +158,15 @@
     CGFloat red, green, blue, alpha;
     [settings.lineColor getRed:&red green:&green blue:&blue alpha:&alpha];
     [regionFilter setLineColorWithRed:red green:green blue:blue alpha:alpha];
-    
+
     // Capture Preset
-//    if (![_stillCamera.captureSessionPreset isEqualToString:settings.captureSessionPreset]) {
-//        if (running) [_stillCamera stopCameraCapture];
-//        _stillCamera.captureSessionPreset = settings.captureSessionPreset;
-//        if (running) [_stillCamera startCameraCapture];
-//    }
-    
-    // Size
-//    CGSize newProcessingSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
-//    if (!CGSizeEqualToSize(_processingSize, newProcessingSize)) {
-//        if (running) [_stillCamera stopCameraCapture];
-//        _processingSize = newProcessingSize;
-//        [analysisGroup forceProcessingAtSize:_processingSize];
-//        [regionFilter forceProcessingAtSize:_processingSize];
-//        if (running) [_stillCamera startCameraCapture];
-//    }
+    CGSize newSize = [Settings sizeForCaptureSessionPreset:settings.captureSessionPreset andOrientation:_stillCamera.outputImageOrientation];
+    if (!CGSizeEqualToSize(newSize, _processingSize)) {
+        _processingSize = newSize;
+        [resamplingFilter forceProcessingAtSize:_processingSize];
+        [analysisGroup forceProcessingAtSize:_processingSize];
+        [regionFilter forceProcessingAtSize:_processingSize];
+    }
 }
 
 #pragma mark - <CHLayoutProcessorDelegate>

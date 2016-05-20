@@ -28,7 +28,6 @@ static NSString * const GPUOCRNSUserDefaultsHexColorKey = @"com.chrishanshew.gpu
     [userDefaults setObject:colorData forKey:GPUOCRNSUserDefaultsLineColorKey];
     [userDefaults setInteger:_hexColor forKey:GPUOCRNSUserDefaultsHexColorKey];
     [userDefaults setBool:YES forKey:GPUOCRNSUserDefaultsHasSettingsKey];
-    [[NSNotificationCenter defaultCenter] postNotificationName:GPUOCRSettingsUpdatedNotification object:self];
 }
 
 +(instancetype)currentSettings {

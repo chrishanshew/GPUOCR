@@ -12,7 +12,7 @@
 
 @interface CHRegionGenerator () {
     GLfloat _lineWidth;
-    GLfloat _widthUniform, _heightUniform, _colorUniform;
+    GLfloat _colorUniform;
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
     NSArray *_regions;
@@ -114,7 +114,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         self.preventRendering = YES;
 
         [GPUImageContext setActiveShaderProgram:filterProgram];
-        
+
         outputFramebuffer = [[GPUImageContext sharedFramebufferCache] fetchFramebufferForSize:[self sizeOfFBO] textureOptions:self.outputTextureOptions onlyTexture:NO];
         [outputFramebuffer activateFramebuffer];
 

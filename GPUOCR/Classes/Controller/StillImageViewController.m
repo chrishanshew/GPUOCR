@@ -19,13 +19,15 @@
     dispatch_queue_t _regionAccessQueue;
 }
 
-@property (nonatomic, strong, setter=setRegions:, getter=getRegions) NSArray *regions;
 @property (nonatomic, strong) IBOutlet UIButton *dismissButton;
 @property (nonatomic, strong) IBOutlet UIButton *processButton;
 
 -(IBAction)processImage:(id)sender;
 -(IBAction)dismiss:(id)sender;
 -(IBAction)showSettings:(id)sender;
+
+-(void)setRegions:(NSArray *)regions;
+-(NSArray *)getRegions;
 
 @end
 
@@ -62,9 +64,9 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self setRegions:[NSArray array]];
     [imageInput removeAllTargets];
     [regionFilter removeAllTargets];
-    _regions = [NSArray array];
 }
 
 -(void)updateSettings {
@@ -83,7 +85,7 @@
     [self updateSettings];
 
     // Stop any future OCR processing by clearing regions.  This "resets" the OCR processing loop until new regions are analyzed.
-    _regions = [NSArray array];
+    [self setRegions:[NSArray array]];
 
     // Add Layout Processor to determine detected regions
     CHLayoutProcessor *layoutProcessor = [[CHLayoutProcessor alloc] initWithProcessingSize:_image.size];
@@ -129,7 +131,7 @@
             NSUInteger second = ((CHRegion *) b).index;
             return [[NSNumber numberWithInteger:first] compare:[NSNumber numberWithInteger:second]];
         }];
-        _regions = sortedRegions;
+        [self setRegions:sortedRegions];
         [regionFilter setRegions:sortedRegions];
 
         CHRegion *region = [sortedRegions firstObject];
@@ -160,8 +162,9 @@
 
     // Queue the next region or end processing if all regions have been processed
     NSUInteger index = region.index;
-    if ((_regions.count - 1) >= ++index) {
-        [processor setRegion:[_regions objectAtIndex:index]];
+    NSArray *regions = [self getRegions];
+    if (++index <= regions.count - 1) {
+        [processor setRegion:[regions objectAtIndex:index]];
         [imageInput processImage];
     } else {
         [imageInput removeTarget:processor];
