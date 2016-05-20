@@ -11,6 +11,10 @@
 		0C4E20F21CE9111100149633 /* CHLayoutProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C4E20F11CE9111100149633 /* CHLayoutProcessor.m */; };
 		0C5B1CE41CE6D57F00964D2E /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5B1CE31CE6D57F00964D2E /* MenuCell.m */; };
 		0C618BD71CE842FE00E0CD2B /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C618BD61CE842FE00E0CD2B /* Settings.m */; };
+		0C9355A91CEEA01B0068AAC8 /* ControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9355A81CEEA01B0068AAC8 /* ControlsView.m */; };
+		0C9355AF1CEEA0420068AAC8 /* RoundButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C9355AE1CEEA0420068AAC8 /* RoundButtonView.m */; };
+		0C9355B11CEEA0520068AAC8 /* RoundButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C9355B01CEEA0520068AAC8 /* RoundButtonView.xib */; };
+		0C9355B31CEED5A80068AAC8 /* ControlsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C9355B21CEED5A80068AAC8 /* ControlsView.xib */; };
 		0CED202D1CE28181001F79E9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CED202C1CE28181001F79E9 /* main.m */; };
 		0CED20361CE28181001F79E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20341CE28181001F79E9 /* Main.storyboard */; };
 		0CED20381CE28181001F79E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CED20371CE28181001F79E9 /* Assets.xcassets */; };
@@ -72,6 +76,12 @@
 		0C5B1CE31CE6D57F00964D2E /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		0C618BD51CE842FE00E0CD2B /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		0C618BD61CE842FE00E0CD2B /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		0C9355A71CEEA01B0068AAC8 /* ControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsView.h; sourceTree = "<group>"; };
+		0C9355A81CEEA01B0068AAC8 /* ControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlsView.m; sourceTree = "<group>"; };
+		0C9355AD1CEEA0420068AAC8 /* RoundButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoundButtonView.h; sourceTree = "<group>"; };
+		0C9355AE1CEEA0420068AAC8 /* RoundButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoundButtonView.m; sourceTree = "<group>"; };
+		0C9355B01CEEA0520068AAC8 /* RoundButtonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RoundButtonView.xib; sourceTree = "<group>"; };
+		0C9355B21CEED5A80068AAC8 /* ControlsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ControlsView.xib; sourceTree = "<group>"; };
 		0CED20281CE28181001F79E9 /* GPUOCR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUOCR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CED202C1CE28181001F79E9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0CED20351CE28181001F79E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -149,6 +159,12 @@
 			children = (
 				0C5B1CE21CE6D57F00964D2E /* MenuCell.h */,
 				0C5B1CE31CE6D57F00964D2E /* MenuCell.m */,
+				0C9355A71CEEA01B0068AAC8 /* ControlsView.h */,
+				0C9355A81CEEA01B0068AAC8 /* ControlsView.m */,
+				0C9355B21CEED5A80068AAC8 /* ControlsView.xib */,
+				0C9355AD1CEEA0420068AAC8 /* RoundButtonView.h */,
+				0C9355AE1CEEA0420068AAC8 /* RoundButtonView.m */,
+				0C9355B01CEEA0520068AAC8 /* RoundButtonView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -410,7 +426,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CED209E1CE29CB3001F79E9 /* eng.traineddata in Resources */,
+				0C9355B31CEED5A80068AAC8 /* ControlsView.xib in Resources */,
 				0CED209F1CE29CB3001F79E9 /* osd.traineddata in Resources */,
+				0C9355B11CEEA0520068AAC8 /* RoundButtonView.xib in Resources */,
 				0CED20971CE296A0001F79E9 /* tessdata in Resources */,
 				0CED203B1CE28181001F79E9 /* LaunchScreen.storyboard in Resources */,
 				0CED20381CE28181001F79E9 /* Assets.xcassets in Resources */,
@@ -440,8 +458,10 @@
 				0CED202D1CE28181001F79E9 /* main.m in Sources */,
 				0CED20831CE28673001F79E9 /* CHTesseract.mm in Sources */,
 				0CED20591CE283BC001F79E9 /* LivePreviewViewController.m in Sources */,
+				0C9355A91CEEA01B0068AAC8 /* ControlsView.m in Sources */,
 				E2DAB29E7760F97A5D420725 /* SettingsViewController.m in Sources */,
 				0C4E20EC1CE90B3D00149633 /* CHRegionFilter.m in Sources */,
+				0C9355AF1CEEA0420068AAC8 /* RoundButtonView.m in Sources */,
 				E2DABAF8244CDB4835DB56A8 /* CHRegion.m in Sources */,
 				E2DAB8B398FEB2F6A7528495 /* CHText.m in Sources */,
 				E2DAB43AFC30A0ECFCAF9711 /* CHOCRProcessor.m in Sources */,

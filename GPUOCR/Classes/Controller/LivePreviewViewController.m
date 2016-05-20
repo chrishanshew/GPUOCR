@@ -14,6 +14,7 @@
 #import "CHLayoutProcessor.h"
 #import "CHOCRProcessor.h"
 #import "CHRegionFilter.h"
+#import "ControlsView.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
@@ -36,11 +37,13 @@
 
 @property(nonatomic, strong) IBOutlet UILongPressGestureRecognizer *longPressGesture;
 @property(nonatomic, strong) IBOutlet UITapGestureRecognizer *tapGesture;
-@property(nonatomic, strong) IBOutlet UIButton *settingsButton;
+@property(nonatomic, strong) IBOutlet UIView *controlViewPlaceholder;
+@property(nonatomic, strong) ControlsView *controlsView;
 
 -(IBAction)showSettings:(id)sender;
 -(IBAction)onLongPressGestureReceived:(UILongPressGestureRecognizer *)sender;
 -(IBAction)onTapGestureReceived:(UITapGestureRecognizer *)sender;
+-(IBAction)presentPhotoPicker:(id)sender;
 
 -(void)updateSettings;
 
@@ -70,6 +73,9 @@
         analysisGroup = [[CHLayoutProcessor alloc] initWithProcessingSize:_processingSize];
         analysisGroup.delegate = self;
 
+        _controlsView = [ControlsView new];
+        _controlsView = (ControlsView *)[[[NSBundle mainBundle] loadNibNamed:@"ControlsView" owner:_controlsView options:nil] firstObject];
+        
 //        recognitionGroup = [[CHOCRProcessor alloc] initWithProcessingSize:_processingSize];
 //        recognitionGroup.delegate = self;
 
@@ -81,7 +87,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Add Control Group to Place holder
+    [_controlsView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_controlViewPlaceholder addSubview:_controlsView];
+    [_controlViewPlaceholder addConstraints: [NSArray arrayWithObjects:
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0],
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeTop multiplier:1.0 constant:0],
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0],
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0],
+       nil]];
+   
+}
 
+-(void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -137,12 +156,18 @@
 }
 
 -(IBAction)onTapGestureReceived:(UITapGestureRecognizer *)sender {
-     [_stillCamera capturePhotoAsImageProcessedUpToFilter:resamplingFilter withOrientation:UIImageOrientationUp withCompletionHandler:^(UIImage *processedImage, NSError *error) {
-         _selectedImage = processedImage;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self performSegueWithIdentifier:@"ShowStillImageController" sender:self];
-        });
-    }];
+    // Hide Controls
+    _controlsView.hidden = !_controlsView.hidden;
+//     [_stillCamera capturePhotoAsImageProcessedUpToFilter:resamplingFilter withOrientation:UIImageOrientationUp withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+//         _selectedImage = processedImage;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self performSegueWithIdentifier:@"ShowStillImageController" sender:self];
+//        });
+//    }];
+}
+
+-(IBAction)presentPhotoPicker:(id)sender {
+    
 }
 
 #pragma mark - Notifications

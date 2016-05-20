@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ControlsView">
+            <connections>
+                <outlet property="leftButton" destination="WK3-60-q3f" id="MUL-We-wk8"/>
+                <outlet property="settingsButton" destination="0Wt-G1-Hih" id="O0l-jw-ZyM"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view opaque="NO" contentMode="scaleToFill" id="iN0-l3-epB" customClass="ControlsView">
+            <rect key="frame" x="0.0" y="0.0" width="538" height="70"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Wt-G1-Hih" userLabel="Settings">
+                    <rect key="frame" x="478" y="10" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="0Wt-G1-Hih" secondAttribute="height" multiplier="1:1" id="LH0-OV-r8e"/>
+                    </constraints>
+                    <state key="normal" image="ic_settings_white_48pt"/>
+                    <connections>
+                        <action selector="onSettingsButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="4c5-Ie-Tr6"/>
+                        <action selector="onSettingsButtonTapped:" destination="-1" eventType="touchUpInside" id="4yb-B9-dy2"/>
+                    </connections>
+                </button>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="VI5-SQ-Lvh">
+                    <rect key="frame" x="154" y="10" width="230" height="50"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_folder_white_48pt" translatesAutoresizingMaskIntoConstraints="NO" id="MR5-pd-h2Y" userLabel="Folder">
+                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="MR5-pd-h2Y" secondAttribute="height" multiplier="1:1" id="nnf-xF-0lp"/>
+                            </constraints>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_photo_camera_white_48pt" translatesAutoresizingMaskIntoConstraints="NO" id="S58-6m-Sx7" userLabel="Folder">
+                            <rect key="frame" x="90" y="0.0" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="S58-6m-Sx7" secondAttribute="height" multiplier="1:1" id="aZ5-jN-9ho"/>
+                            </constraints>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_videocam_white_48pt" translatesAutoresizingMaskIntoConstraints="NO" id="HIn-DS-U2y" userLabel="Folder">
+                            <rect key="frame" x="180" y="0.0" width="50" height="50"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="HIn-DS-U2y" secondAttribute="height" multiplier="1:1" id="TGq-hx-cld"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="MR5-pd-h2Y" firstAttribute="top" secondItem="VI5-SQ-Lvh" secondAttribute="top" id="6EZ-dD-UCq"/>
+                        <constraint firstItem="HIn-DS-U2y" firstAttribute="top" secondItem="VI5-SQ-Lvh" secondAttribute="top" id="7Yl-26-g9D"/>
+                        <constraint firstAttribute="bottom" secondItem="S58-6m-Sx7" secondAttribute="bottom" id="MsT-7H-K1i"/>
+                        <constraint firstAttribute="bottom" secondItem="MR5-pd-h2Y" secondAttribute="bottom" id="gsT-rQ-xlc"/>
+                        <constraint firstItem="S58-6m-Sx7" firstAttribute="top" secondItem="VI5-SQ-Lvh" secondAttribute="top" id="k1O-Dc-Erl"/>
+                        <constraint firstAttribute="bottom" secondItem="HIn-DS-U2y" secondAttribute="bottom" id="mo9-yg-5hA"/>
+                    </constraints>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WK3-60-q3f" userLabel="Left Button">
+                    <rect key="frame" x="10" y="10" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="WK3-60-q3f" secondAttribute="height" multiplier="1:1" id="qxn-Sz-S8n"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="qxn-Sz-S8n"/>
+                        </mask>
+                    </variation>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="VI5-SQ-Lvh" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="4Do-G0-5dA"/>
+                <constraint firstItem="0Wt-G1-Hih" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="UpE-Jf-P3g"/>
+                <constraint firstItem="WK3-60-q3f" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="Y0d-GD-zic"/>
+                <constraint firstItem="VI5-SQ-Lvh" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="ZN3-S5-cy3"/>
+                <constraint firstItem="WK3-60-q3f" firstAttribute="height" secondItem="VI5-SQ-Lvh" secondAttribute="height" id="b5G-wB-DZJ"/>
+                <constraint firstItem="WK3-60-q3f" firstAttribute="height" secondItem="0Wt-G1-Hih" secondAttribute="height" id="dMc-qw-M0I"/>
+                <constraint firstItem="WK3-60-q3f" firstAttribute="width" secondItem="0Wt-G1-Hih" secondAttribute="width" id="eOq-Uy-RNf"/>
+                <constraint firstItem="VI5-SQ-Lvh" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="fdA-Mt-kdN"/>
+                <constraint firstItem="0Wt-G1-Hih" firstAttribute="height" secondItem="VI5-SQ-Lvh" secondAttribute="height" id="okD-c3-uiX"/>
+                <constraint firstItem="WK3-60-q3f" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="pI9-aM-k78"/>
+                <constraint firstAttribute="bottom" secondItem="VI5-SQ-Lvh" secondAttribute="bottom" constant="10" id="qkX-K5-gyb"/>
+                <constraint firstItem="WK3-60-q3f" firstAttribute="width" secondItem="0Wt-G1-Hih" secondAttribute="height" multiplier="1:1" id="qvA-5A-3Bk"/>
+                <constraint firstAttribute="trailing" secondItem="0Wt-G1-Hih" secondAttribute="trailing" constant="10" id="uHS-Xj-fAX"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="leftButton" destination="WK3-60-q3f" id="fRV-Qg-ydY"/>
+                <outlet property="settingsButton" destination="0Wt-G1-Hih" id="JIy-Cb-dwO"/>
+                <outletCollection property="gestureRecognizers" destination="TPZ-Zc-Huq" appends="YES" id="RL1-9E-7yu"/>
+                <outletCollection property="gestureRecognizers" destination="dzG-bb-Of9" appends="YES" id="QKe-yC-5B2"/>
+                <outletCollection property="gestureRecognizers" destination="iob-yZ-xvN" appends="YES" id="Jaw-An-zgZ"/>
+            </connections>
+            <point key="canvasLocation" x="689" y="712"/>
+        </view>
+        <tapGestureRecognizer id="TPZ-Zc-Huq" userLabel="Folder Tapped">
+            <connections>
+                <action selector="onFolderImageTapped:" destination="iN0-l3-epB" id="e0m-yn-cpk"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="dzG-bb-Of9" userLabel="Camera Tapped">
+            <connections>
+                <action selector="onCameraImageTapped:" destination="iN0-l3-epB" id="Jdh-Pm-eEn"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="iob-yZ-xvN" userLabel="Video Tapped">
+            <connections>
+                <action selector="onVideoImageTapped:" destination="iN0-l3-epB" id="1gc-Ta-bnn"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="ic_folder_white_48pt" width="48" height="48"/>
+        <image name="ic_photo_camera_white_48pt" width="48" height="48"/>
+        <image name="ic_settings_white_48pt" width="48" height="48"/>
+        <image name="ic_videocam_white_48pt" width="48" height="48"/>
+    </resources>
+</document>

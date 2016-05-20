@@ -14,22 +14,23 @@
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="GPUImageView" customClass="GPUImageView">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="GPUImageView" customClass="GPUImageView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rph-NJ-ndx">
-                                <rect key="frame" x="523" y="550" width="57" height="30"/>
-                                <state key="normal" title="Settings"/>
-                                <connections>
-                                    <action selector="showSettings:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cvv-Vy-Fsi"/>
-                                </connections>
-                            </button>
+                            <view opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I8F-yQ-AGa" userLabel="Control Group Placeholder">
+                                <rect key="frame" x="0.0" y="540" width="600" height="50"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="aa3-F8-pLn"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="rph-NJ-ndx" secondAttribute="trailing" id="11L-5b-D6g"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rph-NJ-ndx" secondAttribute="bottom" constant="20" id="CHR-Vo-V2E"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="I8F-yQ-AGa" secondAttribute="bottom" constant="20" id="U6o-Gg-iil"/>
+                            <constraint firstItem="I8F-yQ-AGa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="v4D-PI-Yfj"/>
+                            <constraint firstAttribute="trailing" secondItem="I8F-yQ-AGa" secondAttribute="trailing" id="vwa-dM-NkG"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="9fI-th-Kq0" appends="YES" id="bRa-qb-caE"/>
@@ -37,6 +38,7 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="controlViewPlaceholder" destination="I8F-yQ-AGa" id="b8k-ks-lm9"/>
                         <outlet property="longPressGesture" destination="9fI-th-Kq0" id="ohJ-DT-q71"/>
                         <outlet property="tapGesture" destination="Ez8-mO-xe2" id="IJc-KO-Mg9"/>
                         <outlet property="view" destination="8bC-Xf-vdC" id="UDF-8C-kl7"/>
@@ -128,7 +130,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
-                                <blurEffect style="extraLight"/>
+                                <vibrancyEffect>
+                                    <blurEffect style="dark"/>
+                                </vibrancyEffect>
                             </visualEffectView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detection Level" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fej-0l-jzl">
                                 <rect key="frame" x="20" y="30" width="107" height="18"/>
@@ -319,6 +323,6 @@
         <image name="color_wheel" width="700" height="50"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="p9Z-vt-vMJ"/>
+        <segue reference="a9M-JS-t7L"/>
     </inferredMetricsTieBreakers>
 </document>
