@@ -13,7 +13,6 @@
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
 @interface CHLayoutProcessor () <CHLayoutProcessorDelegate> {
-    CGSize _processingSize;
     CHTesseract *_tesseract;
     GPUImageAdaptiveThresholdFilter *adaptiveThresholdFilter;
     GPUImageRawDataOutput *_rawDataOutput;
@@ -34,7 +33,6 @@
     self = [super init];
     if (self) {
         
-        _processingSize = size;
         _level = CHTesseractAnalysisLevelBlock;
         _processingQueue = dispatch_queue_create("com.chrishanshew.gpuocr.layoutprocessor.processingqueue", NULL);
         adaptiveThresholdFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
@@ -62,6 +60,8 @@
 
     [self willBeginLayoutAnalysis:self];
 
+    CGSize imageSize = _rawDataOutput.maximumOutputSize;
+
     [_rawDataOutput lockFramebufferForReading];
     void * rawImageData = (void *)[_rawDataOutput rawBytesForImage];
     [_rawDataOutput unlockFramebufferAfterReading];
@@ -69,11 +69,11 @@
     __block CHLayoutProcessor *blockSelf = self;
     dispatch_async(_processingQueue, ^{
         CFTimeInterval startTime = CACurrentMediaTime();
-        NSMutableData *pixels = [NSMutableData dataWithCapacity:(_processingSize.width * _processingSize.height)];
+        NSMutableData *pixels = [NSMutableData dataWithCapacity:(imageSize.width * imageSize.height)];
 
         // TODO: Optimizable?
         // starting at 0 may only apply to adaptive thresholder.  luminance uses alpha channel
-        for (int i = 0; i < ((4 * _processingSize.width) * _processingSize.height); i+=4) {
+        for (int i = 0; i < ((4 * imageSize.width) * imageSize.height); i+=4) {
             [pixels appendBytes:(const void *)&rawImageData[i] length:1];
         }
 
@@ -81,7 +81,7 @@
             _tesseract = [[CHTesseract alloc] initForAnalysis];
         }
 
-        [_tesseract setImageWithData:pixels withSize:_processingSize bytesPerPixel:1];
+        [_tesseract setImageWithData:pixels withSize:imageSize bytesPerPixel:1];
         [_tesseract analyzeLayoutAtLevel:_level newRegionAvailable:^(CHRegion *region) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [blockSelf processor:blockSelf newRegionAvailable:region];
@@ -107,6 +107,16 @@
 }
 
 #pragma mark - GPUImage Overrides
+
+-(void)forceProcessingAtSize:(CGSize)frameSize {
+    [super forceProcessingAtSize:frameSize];
+    [_rawDataOutput setImageSize:frameSize];
+}
+
+-(void)forceProcessingAtSizeRespectingAspectRatio:(CGSize)frameSize {
+    [super forceProcessingAtSizeRespectingAspectRatio:frameSize];
+    [_rawDataOutput setImageSize:frameSize];
+}
 
 -(void)endProcessing {
     [super endProcessing];

@@ -12,7 +12,7 @@
 
 @interface CHRegionGenerator () {
     GLfloat _lineWidth;
-    GLfloat _widthUniform, _heightUniform, _colorUniform;
+    GLfloat _colorUniform;
     GLfloat *lineCoordinates;
     dispatch_queue_t _resultsAccessQueue;
     NSArray *_regions;

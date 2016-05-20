@@ -25,7 +25,7 @@ static NSInteger const hexColor[] = {0x000000, 0xfe0000, 0xff7900, 0xffb900, 0xf
     self = [super initWithCoder:aDecoder];
     if (self) {
         _settings = [Settings currentSettings];
-        _captureSessionPresets = @[AVCaptureSessionPreset352x288, AVCaptureSessionPreset640x480, AVCaptureSessionPreset1280x720, AVCaptureSessionPreset1920x1080];
+        _captureSessionPresets = @[AVCaptureSessionPreset352x288, AVCaptureSessionPreset640x480, AVCaptureSessionPreset1280x720, AVCaptureSessionPreset1920x1080, AVCaptureSessionPreset3840x2160];
     }
     return self;
 }
@@ -41,6 +41,11 @@ static NSInteger const hexColor[] = {0x000000, 0xfe0000, 0xff7900, 0xffb900, 0xf
     _selectDimensionControl.selectedSegmentIndex = [_captureSessionPresets indexOfObject:_settings.captureSessionPreset];
     
     [self update];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:GPUOCRSettingsUpdatedNotification object:self];
 }
 
 -(void)update {
