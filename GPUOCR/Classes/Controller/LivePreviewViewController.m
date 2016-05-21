@@ -14,7 +14,7 @@
 #import "CHLayoutProcessor.h"
 #import "CHOCRProcessor.h"
 #import "CHRegionFilter.h"
-#import "ControlsView.h"
+#import "ControlOverlayView.h"
 
 #define kDefaultAdaptiveThresholderBlurRadius 4
 
@@ -37,13 +37,13 @@
 
 @property(nonatomic, strong) IBOutlet UILongPressGestureRecognizer *longPressGesture;
 @property(nonatomic, strong) IBOutlet UITapGestureRecognizer *tapGesture;
-@property(nonatomic, strong) IBOutlet UIView *controlViewPlaceholder;
-@property(nonatomic, strong) ControlsView *controlsView;
+@property(nonatomic, strong) ControlOverlayView *controlsView;
 
--(IBAction)showSettings:(id)sender;
+-(IBAction)showSettingsView:(id)sender;
+-(IBAction)showPhotoPickerView:(id)sender;
 -(IBAction)onLongPressGestureReceived:(UILongPressGestureRecognizer *)sender;
 -(IBAction)onTapGestureReceived:(UITapGestureRecognizer *)sender;
--(IBAction)presentPhotoPicker:(id)sender;
+
 
 -(void)updateSettings;
 
@@ -73,8 +73,8 @@
         analysisGroup = [[CHLayoutProcessor alloc] initWithProcessingSize:_processingSize];
         analysisGroup.delegate = self;
 
-        _controlsView = [ControlsView new];
-        _controlsView = (ControlsView *)[[[NSBundle mainBundle] loadNibNamed:@"ControlsView" owner:_controlsView options:nil] firstObject];
+        _controlsView = [ControlOverlayView new];
+        _controlsView = (ControlOverlayView *)[[[NSBundle mainBundle] loadNibNamed:@"ControlOverlayView" owner:_controlsView options:nil] firstObject];
         
 //        recognitionGroup = [[CHOCRProcessor alloc] initWithProcessingSize:_processingSize];
 //        recognitionGroup.delegate = self;
@@ -89,14 +89,16 @@
     [super viewDidLoad];
     // Add Control Group to Place holder
     [_controlsView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_controlViewPlaceholder addSubview:_controlsView];
-    [_controlViewPlaceholder addConstraints: [NSArray arrayWithObjects:
-       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0],
-       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeTop multiplier:1.0 constant:0],
-       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0],
-       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_controlViewPlaceholder attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0],
+    [self.view addSubview:_controlsView];
+    [self.view addConstraints: [NSArray arrayWithObjects:
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0],
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0],
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0],
+       [NSLayoutConstraint constraintWithItem:_controlsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0],
        nil]];
    
+    // Control View
+    [_controlsView.settingsButton addTarget:self action:@selector(showSettingsView:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(void)viewWillLayoutSubviews {
@@ -118,6 +120,7 @@
         // Rear Camera not available, present alert
     }
     [_stillCamera startCameraCapture];
+    [_controlsView drawCenter];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -143,7 +146,7 @@
 
 #pragma mark - IB Actions
 
--(IBAction)showSettings:(id)sender {
+-(IBAction)showSettingsView:(id)sender {
     [self performSegueWithIdentifier:@"ShowSettingsController" sender:self];
 }
 
@@ -166,7 +169,7 @@
 //    }];
 }
 
--(IBAction)presentPhotoPicker:(id)sender {
+-(IBAction)showPhotoPickerView:(id)sender {
     
 }
 

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ControlOverlayView">
+            <connections>
+                <outlet property="cameraImageView" destination="S58-6m-Sx7" id="yRe-Mp-8jl"/>
+                <outlet property="centerButton" destination="jUH-kG-SOL" id="ucd-Rh-c3a"/>
+                <outlet property="folderImageView" destination="MR5-pd-h2Y" id="Umf-lH-dhb"/>
+                <outlet property="settingsButton" destination="0Wt-G1-Hih" id="O0l-jw-ZyM"/>
+                <outlet property="stackView" destination="VI5-SQ-Lvh" id="KU4-XT-3KE"/>
+                <outlet property="videoImageView" destination="HIn-DS-U2y" id="eFR-IY-Cr4"/>
+                <outlet property="visualEffectView" destination="w36-uZ-XkW" id="Mvp-0v-V06"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view opaque="NO" contentMode="scaleToFill" id="iN0-l3-epB" customClass="ControlOverlayView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Wt-G1-Hih" userLabel="Settings">
+                    <rect key="frame" x="550" y="10" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="0Wt-G1-Hih" secondAttribute="height" multiplier="1:1" id="LH0-OV-r8e"/>
+                    </constraints>
+                    <state key="normal" image="ic_settings_white_48pt"/>
+                    <connections>
+                        <action selector="onSettingsButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="4c5-Ie-Tr6"/>
+                        <action selector="onSettingsButtonTapped:" destination="-1" eventType="touchUpInside" id="4yb-B9-dy2"/>
+                    </connections>
+                </button>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w36-uZ-XkW">
+                    <rect key="frame" x="0.0" y="530" width="600" height="70"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="UoG-xx-NLy">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="70"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="VI5-SQ-Lvh">
+                                <rect key="frame" x="200" y="15" width="200" height="40"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_folder_white_48pt" translatesAutoresizingMaskIntoConstraints="NO" id="MR5-pd-h2Y" userLabel="Folder">
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="MR5-pd-h2Y" secondAttribute="height" multiplier="1:1" id="nnf-xF-0lp"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_photo_camera_white_48pt" translatesAutoresizingMaskIntoConstraints="NO" id="S58-6m-Sx7" userLabel="Camera">
+                                        <rect key="frame" x="80" y="0.0" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="S58-6m-Sx7" secondAttribute="height" multiplier="1:1" id="aZ5-jN-9ho"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_videocam_white_48pt" translatesAutoresizingMaskIntoConstraints="NO" id="HIn-DS-U2y" userLabel="Video">
+                                        <rect key="frame" x="160" y="0.0" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="HIn-DS-U2y" secondAttribute="height" multiplier="1:1" id="TGq-hx-cld"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jUH-kG-SOL" userLabel="Center Button">
+                                <rect key="frame" x="270" y="5" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="jUH-kG-SOL" secondAttribute="height" multiplier="1:1" id="t5W-Mn-Atf"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="onCenterButtonTapped:" destination="-1" eventType="touchUpInside" id="IJ3-wJ-gQb"/>
+                                    <action selector="onCenterButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Xb3-8G-gXR"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="VI5-SQ-Lvh" firstAttribute="centerY" secondItem="UoG-xx-NLy" secondAttribute="centerY" id="APh-Sc-2bg"/>
+                            <constraint firstItem="VI5-SQ-Lvh" firstAttribute="centerX" secondItem="UoG-xx-NLy" secondAttribute="centerX" id="MWR-bC-JP9"/>
+                        </constraints>
+                    </view>
+                    <constraints>
+                        <constraint firstItem="jUH-kG-SOL" firstAttribute="centerY" secondItem="w36-uZ-XkW" secondAttribute="centerY" id="0fE-hI-rTB"/>
+                        <constraint firstAttribute="bottom" secondItem="jUH-kG-SOL" secondAttribute="bottom" constant="5" id="Bhn-0d-imb"/>
+                        <constraint firstItem="VI5-SQ-Lvh" firstAttribute="centerX" secondItem="w36-uZ-XkW" secondAttribute="centerX" id="CiA-mt-oFw"/>
+                        <constraint firstItem="jUH-kG-SOL" firstAttribute="top" secondItem="w36-uZ-XkW" secondAttribute="top" constant="5" id="Ggp-77-fY8"/>
+                        <constraint firstItem="jUH-kG-SOL" firstAttribute="centerX" secondItem="w36-uZ-XkW" secondAttribute="centerX" id="kGA-C5-fCP"/>
+                        <constraint firstAttribute="bottom" secondItem="VI5-SQ-Lvh" secondAttribute="bottom" constant="15" id="pKE-Xy-CZB"/>
+                        <constraint firstItem="VI5-SQ-Lvh" firstAttribute="top" secondItem="w36-uZ-XkW" secondAttribute="top" constant="15" id="uMJ-Q6-IBG"/>
+                        <constraint firstAttribute="height" constant="70" id="ujW-1F-Z8z"/>
+                    </constraints>
+                    <blurEffect style="extraLight"/>
+                </visualEffectView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="0Wt-G1-Hih" firstAttribute="width" secondItem="HIn-DS-U2y" secondAttribute="height" id="Ari-VQ-cfL"/>
+                <constraint firstAttribute="bottom" secondItem="w36-uZ-XkW" secondAttribute="bottom" id="Iqh-yj-apb"/>
+                <constraint firstItem="w36-uZ-XkW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eq2-7k-t1f"/>
+                <constraint firstItem="0Wt-G1-Hih" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="hor-TQ-LsS"/>
+                <constraint firstItem="0Wt-G1-Hih" firstAttribute="width" secondItem="HIn-DS-U2y" secondAttribute="width" id="t8b-MO-skI"/>
+                <constraint firstAttribute="trailing" secondItem="0Wt-G1-Hih" secondAttribute="trailing" constant="10" id="uHS-Xj-fAX"/>
+                <constraint firstAttribute="trailing" secondItem="w36-uZ-XkW" secondAttribute="trailing" id="utT-g3-1R8"/>
+                <constraint firstItem="0Wt-G1-Hih" firstAttribute="height" secondItem="HIn-DS-U2y" secondAttribute="height" id="xbh-dx-SjA"/>
+            </constraints>
+            <connections>
+                <outlet property="cameraImageView" destination="S58-6m-Sx7" id="ktb-Gy-TRD"/>
+                <outlet property="centerButton" destination="jUH-kG-SOL" id="NSe-Lq-iZh"/>
+                <outlet property="folderImageView" destination="MR5-pd-h2Y" id="ecA-am-Rbf"/>
+                <outlet property="settingsButton" destination="0Wt-G1-Hih" id="JIy-Cb-dwO"/>
+                <outlet property="videoImageView" destination="HIn-DS-U2y" id="oD6-QF-Zna"/>
+                <outletCollection property="gestureRecognizers" destination="TPZ-Zc-Huq" appends="YES" id="RL1-9E-7yu"/>
+                <outletCollection property="gestureRecognizers" destination="dzG-bb-Of9" appends="YES" id="QKe-yC-5B2"/>
+                <outletCollection property="gestureRecognizers" destination="iob-yZ-xvN" appends="YES" id="Jaw-An-zgZ"/>
+            </connections>
+            <point key="canvasLocation" x="755" y="596"/>
+        </view>
+        <tapGestureRecognizer id="TPZ-Zc-Huq" userLabel="Folder Tapped">
+            <connections>
+                <action selector="onFolderImageTapped:" destination="-1" id="IFe-d6-IXJ"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="dzG-bb-Of9" userLabel="Camera Tapped">
+            <connections>
+                <action selector="onCameraImageTapped:" destination="-1" id="Ta6-hR-gVs"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="iob-yZ-xvN" userLabel="Video Tapped">
+            <connections>
+                <action selector="onVideoImageTapped:" destination="-1" id="Ncj-kn-5UI"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="ic_folder_white_48pt" width="48" height="48"/>
+        <image name="ic_photo_camera_white_48pt" width="48" height="48"/>
+        <image name="ic_settings_white_48pt" width="48" height="48"/>
+        <image name="ic_videocam_white_48pt" width="48" height="48"/>
+    </resources>
+</document>

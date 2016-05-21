@@ -17,32 +17,17 @@
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="GPUImageView" customClass="GPUImageView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I8F-yQ-AGa" userLabel="Control Group Placeholder">
-                                <rect key="frame" x="0.0" y="540" width="600" height="50"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="aa3-F8-pLn"/>
-                                </constraints>
-                            </view>
-                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="bottomMargin" secondItem="I8F-yQ-AGa" secondAttribute="bottom" constant="20" id="U6o-Gg-iil"/>
-                            <constraint firstItem="I8F-yQ-AGa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="v4D-PI-Yfj"/>
-                            <constraint firstAttribute="trailing" secondItem="I8F-yQ-AGa" secondAttribute="trailing" id="vwa-dM-NkG"/>
-                        </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="9fI-th-Kq0" appends="YES" id="bRa-qb-caE"/>
                             <outletCollection property="gestureRecognizers" destination="Ez8-mO-xe2" appends="YES" id="qIx-Zm-bhY"/>
                         </connections>
                     </view>
                     <connections>
-                        <outlet property="controlViewPlaceholder" destination="I8F-yQ-AGa" id="b8k-ks-lm9"/>
                         <outlet property="longPressGesture" destination="9fI-th-Kq0" id="ohJ-DT-q71"/>
                         <outlet property="tapGesture" destination="Ez8-mO-xe2" id="IJc-KO-Mg9"/>
                         <outlet property="view" destination="8bC-Xf-vdC" id="UDF-8C-kl7"/>
-                        <segue destination="NBq-BK-4hE" kind="presentation" identifier="ShowSettingsController" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="a9M-JS-t7L"/>
+                        <segue destination="NBq-BK-4hE" kind="presentation" identifier="ShowSettingsController" modalPresentationStyle="currentContext" modalTransitionStyle="crossDissolve" id="a9M-JS-t7L"/>
                         <segue destination="t6X-3q-qOg" kind="show" identifier="ShowStillImageController" id="UF3-wQ-VAg"/>
                     </connections>
                 </viewController>
