@@ -35,6 +35,10 @@
     return self.index == test.index && self.analysisTimestamp == test.analysisTimestamp;
 }
 
+-(float)getSlope {
+    return (_start.y - _end.y) / (_start.x - _end.x);
+}
+
 -(float)intersectRatioToRegion:(CHRegion *)region {
     CGRect intersection = CGRectIntersection(self.rect, region.rect);
     int area = self.rect.size.width * self.rect.size.height;
