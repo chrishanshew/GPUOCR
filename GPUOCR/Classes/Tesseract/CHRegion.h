@@ -43,4 +43,6 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 // Computed Geometry
 @property(nonatomic, readonly, getter=getRect) CGRect rect;
 
+-(float)intersectRatioToRegion:(CHRegion *)region;
+
 @end
