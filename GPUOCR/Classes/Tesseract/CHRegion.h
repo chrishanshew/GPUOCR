@@ -33,14 +33,11 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 @property(nonatomic) CGPoint start;
 @property(nonatomic) CGPoint end;
 
-// Text Direction
-@property(nonatomic) NSInteger offset;
-@property(nonatomic) NSInteger textSlope;
-
 // Input Image Info
 @property(nonatomic) CGSize imageSize;
 
 // Computed Geometry
 @property(nonatomic, readonly, getter=getRect) CGRect rect;
+@property(nonatomic, readonly, getter=getSlope) float slope;
 
 @end

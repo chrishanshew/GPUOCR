@@ -130,8 +130,6 @@ namespace tesseract {
         NSDate *date = [NSDate date];
         NSUInteger timestamp = date.timeIntervalSince1970;
 
-        int offset; float slope;
-        _tesseract->GetTextDirection(&offset, &slope);
         CHRegion *region;
 
         int index = 0;
@@ -140,8 +138,6 @@ namespace tesseract {
             region = [[CHRegion alloc] init];
             region.analysisTimestamp = timestamp;
             region.analysisLevel = level;
-            region.offset = offset;
-            region.textSlope = slope;
             region.imageSize = _imageSize;
 
             [self getBoundingBox:(tesseract::ResultIterator *)iterator atLevel:iteratorLevel forRegion:region];
@@ -168,8 +164,6 @@ namespace tesseract {
         NSDate *date = [NSDate date];
         NSUInteger timestamp = date.timeIntervalSince1970;
 
-        int offset; float slope;
-        _tesseract->GetTextDirection(&offset, &slope);
         CHRegion *region;
 
         int index = 0;
@@ -178,8 +172,6 @@ namespace tesseract {
             region = [[CHRegion alloc] init];
             region.analysisTimestamp = timestamp;
             region.analysisLevel = level;
-            region.offset = offset;
-            region.textSlope = slope;
             region.imageSize = _imageSize;
 
             [self getBoundingBox:(tesseract::ResultIterator *)iterator atLevel:iteratorLevel forRegion:region];

@@ -26,4 +26,8 @@
     return self.index == test.index && self.analysisTimestamp == test.analysisTimestamp;
 }
 
+-(float)getSlope {
+    return (_start.y - _end.y) / (_start.x - _end.x);
+}
+
 @end
