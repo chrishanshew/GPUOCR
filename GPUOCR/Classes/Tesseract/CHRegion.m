@@ -10,11 +10,23 @@
 
 @interface CHRegion () {
     CGRect _rect;
+    float _slope;
+    CGPoint _midPoint;
 }
 
 @end
 
 @implementation CHRegion
+
+-(instancetype)init {
+    self = [super init];
+    if (self) {
+        _rect = CGRectNull;
+        _midPoint = CGPointZero;
+        _slope = NAN;
+    }
+    return self;
+}
 
 - (CGRect) getRect {
     if (CGRectIsEmpty(_rect)) {
@@ -36,14 +48,41 @@
 }
 
 -(float)getSlope {
-    return (_start.y - _end.y) / (_start.x - _end.x);
+    if (isnan(_slope)) {
+        _slope = (_start.y - _end.y) / (_start.x - _end.x);
+    }
+    return _slope;
 }
 
+-(CGPoint)getMidPoint {
+    if (CGPointEqualToPoint(_midPoint, CGPointZero)) {
+        _midPoint = CGPointMake(CGRectGetMidX(self.rect), CGRectGetMidY(self.rect));
+    }
+    return _midPoint;
+}
+
+-(BOOL)isSimilarRegion:(CHRegion *)region threshold:(float)threshold {
+
+    int xDiff = abs(self.rect.origin.x - region.rect.origin.x);
+    int yDiff = abs(self.rect.origin.y - region.rect.origin.y);
+    int widthDiff = abs(self.rect.size.width - region.rect.size.width);
+    int heightDiff = abs(self.rect.size.height - region.rect.size.height);
+
+    return NO;
+}
+
+
 -(float)intersectRatioToRegion:(CHRegion *)region {
+    if (CGRectEqualToRect(self.rect, region.rect)) {
+        return 1;
+    }
     CGRect intersection = CGRectIntersection(self.rect, region.rect);
-    int area = self.rect.size.width * self.rect.size.height;
-    int intersectArea = intersection.size.width * intersection.size.height;
-    return intersectArea / area;
+    if (!CGRectIsNull(intersection)) {
+        int area = self.rect.size.width * self.rect.size.height;
+        int intersectArea = intersection.size.width * intersection.size.height;
+        return intersectArea / area;
+    }
+    return 0;
 }
 
 @end

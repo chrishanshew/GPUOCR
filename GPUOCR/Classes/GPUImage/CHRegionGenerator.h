@@ -11,10 +11,7 @@
 
 @interface CHRegionGenerator : GPUImageFilter
 
--(void)setRegions:(NSArray *)results;
--(void)addRegion:(CHRegion *)region;
--(NSArray *)getRegions;
--(void)renderRegionsWithFrameTime:(CMTime)frameTime;
+-(void)renderRegions:(NSArray *)regions atFrameTime:(CMTime)frameTime;
 -(void)setLineColorWithRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
 -(void)setLineWidth:(float)width;
 

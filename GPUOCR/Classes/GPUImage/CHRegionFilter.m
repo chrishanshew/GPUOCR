@@ -15,6 +15,9 @@
     GPUImageGammaFilter *gammaFilter;
     CHRegionGenerator* regionGenerator;
     GPUImageLanczosResamplingFilter *resamplingFilter;
+
+    NSMutableArray *_regions;
+    dispatch_queue_t _resultsAccessQueue;
 }
 
 @end
@@ -25,6 +28,11 @@
 -(instancetype)init {
     self = [super init];
     if (self) {
+
+        _resultsAccessQueue = dispatch_queue_create("com.chrishanshew.gpuocr.resultsaccessqueue", DISPATCH_QUEUE_CONCURRENT);
+        _regions = [NSMutableArray array];
+
+        // GPUImage Filters
         resamplingFilter = [[GPUImageLanczosResamplingFilter alloc] init];
         [self addFilter:resamplingFilter];
         blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
@@ -43,7 +51,8 @@
 
         __block CHRegionGenerator *weakResultsGenerator = regionGenerator;
         [gammaFilter setFrameProcessingCompletionBlock:^(GPUImageOutput *output, CMTime time) {
-            [weakResultsGenerator renderRegionsWithFrameTime:time];
+            NSArray *regions = [self getRegions];
+            [weakResultsGenerator renderRegions:regions atFrameTime:time];
         }];
     }
     return self;
@@ -57,12 +66,45 @@
     [regionGenerator setLineWidth:width];
 }
 
--(void)setRegions:(NSArray *)regions {
-    [regionGenerator setRegions:regions];
+- (void)setRegions:(NSArray *)regions {
+    dispatch_barrier_async(_resultsAccessQueue, ^{
+        _regions = [NSArray arrayWithArray:regions];
+    });
 }
 
 -(void)addRegion:(CHRegion *)region {
-    [regionGenerator addRegion:region];
+
+    NSMutableArray *regions = [NSMutableArray arrayWithArray:[self getRegions]];
+    // Is there a matching index?
+    if ((regions.count - 1) > region.index) {
+        // Get stored region with matching index
+        CHRegion* test = [regions objectAtIndex:region.index];
+        float intersectPercent = [region intersectRatioToRegion:test];
+        // TODO: Determine if threshold value can be dynamically updated
+        if (intersectPercent > 0.85) { // Threshold
+            // We consider it a match
+            [regions replaceObjectAtIndex:region.index withObject:region];
+        } else {
+            // Determine which direction to traverse
+
+            if (test.rect.origin.x < region.rect.origin.x  || test.rect.origin.y < region.rect.origin.y) {
+
+            }
+        }
+
+    } else {
+        // NOT GOOD
+        // traversal begins at the end of the collection
+    }
+
+}
+
+- (NSArray *)getRegions {
+    __block NSArray *regions;
+    dispatch_sync(_resultsAccessQueue, ^{
+        regions = [NSArray arrayWithArray:_regions];
+    });
+    return regions;
 }
 
 @end

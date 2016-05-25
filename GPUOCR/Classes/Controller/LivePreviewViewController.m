@@ -176,7 +176,8 @@
 }
 
 - (void)processor:(CHLayoutProcessor *)processor finishedLayoutAnalysisWithRegions:(NSArray *)regions {
-    [regionFilter setRegions:regions];
+    //[regionFilter setRegions:regions];
+    NSLog(@"Count: %i", regions.count);
 }
 
 - (void)willBeginLayoutAnalysis:(CHLayoutProcessor *)processor {

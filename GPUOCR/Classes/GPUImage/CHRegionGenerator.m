@@ -14,8 +14,6 @@
     GLfloat _lineWidth;
     GLfloat _colorUniform;
     GLfloat *lineCoordinates;
-    dispatch_queue_t _resultsAccessQueue;
-    NSArray *_regions;
     CGAffineTransform _regionTransform;
 }
 
@@ -51,9 +49,6 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
     
     self = [super initWithVertexShaderFromString:kCHOCRDrawRectVertexShader fragmentShaderFromString:kCHOCRDrawRectFragmentShader];
     if (self) {
-        _resultsAccessQueue = dispatch_queue_create("com.chrishanshew.gpuocr.resultsaccessqueue", DISPATCH_QUEUE_CONCURRENT);
-        _regions = [NSArray array];
-
         runSynchronouslyOnVideoProcessingQueue(^{
             _colorUniform =[filterProgram uniformIndex:@"lineColor"];
         });
@@ -75,31 +70,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
     _regionTransform = [self transformFromRectToRect:frameRect toRect:openGLRect];
 }
 
-- (void)setRegions:(NSArray *)results {
-    dispatch_barrier_async(_resultsAccessQueue, ^{
-        NSUInteger length = results.count <= 512 ? results.count : 511;
-        _regions = [NSArray arrayWithArray:[results subarrayWithRange: NSMakeRange(0, length)]];
-    });
-}
-
--(void)addRegion:(CHRegion *)region {
-    dispatch_barrier_async(_resultsAccessQueue, ^{
-        if (_regions.count <= 512) {
-            _regions = [_regions arrayByAddingObject:region];
-        }
-    });
-}
-
-- (NSArray *)getRegions {
-    __block NSArray *regions;
-    dispatch_sync(_resultsAccessQueue, ^{
-        regions = [NSArray arrayWithArray:_regions];
-    });
-    return regions;
-}
-
-
--(void)renderRegionsWithFrameTime:(CMTime)frameTime {
+-(void)renderRegions:(NSArray *)regions atFrameTime:(CMTime)frameTime; {
     if (self.preventRendering)
     {
         return;
@@ -122,7 +93,10 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
 
         NSUInteger currentVertexIndex = 0;
 
-        for (CHRegion *region in [self getRegions]) {
+
+        for (CHRegion *region in regions) {
+
+            // TODO: lineCoordinates bounds check
             CGRect rect = CGRectApplyAffineTransform(region.rect, _regionTransform);
 
             leftStart = CGPointMake(rect.origin.x, rect.origin.y + rect.size.height);
@@ -171,7 +145,7 @@ GPUVector4 const kDefaultLineColor = {1.0, 0.0, 0.0, 1.0};
         glEnable(GL_BLEND);
         
         glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, lineCoordinates);
-        glDrawArrays(GL_LINES, 0, ((unsigned int)_regions.count * 8));
+        glDrawArrays(GL_LINES, 0, ((unsigned int)regions.count * 8));
 
         glDisable(GL_BLEND);
 

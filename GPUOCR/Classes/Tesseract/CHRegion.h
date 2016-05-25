@@ -11,7 +11,8 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
     CHTesseractAnalysisLevelParagraph,
     CHTesseractAnalysisLevelTextLine,
     CHTesseractAnalysisLevelWord,
-    CHTesseractAnalysisLevelSymbol
+    CHTesseractAnalysisLevelSymbol,
+    CHTesseractAnalysisLevelCount
 };
 
 @interface CHRegion : NSObject
@@ -39,6 +40,7 @@ typedef NS_ENUM(NSUInteger, CHTesseractAnalysisLevel) {
 // Computed Geometry
 @property(nonatomic, readonly, getter=getRect) CGRect rect;
 @property(nonatomic, readonly, getter=getSlope) float slope;
+@property(nonatomic, readonly, getter=getMidPoint) CGPoint midPoint;
 
 -(float)intersectRatioToRegion:(CHRegion *)region;
 
