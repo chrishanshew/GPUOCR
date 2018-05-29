@@ -70,8 +70,8 @@
         analysisGroup = [[CHLayoutProcessor alloc] initWithProcessingSize:_processingSize];
         analysisGroup.delegate = self;
 
-//        recognitionGroup = [[CHOCRProcessor alloc] initWithProcessingSize:_processingSize];
-//        recognitionGroup.delegate = self;
+        recognitionGroup = [[CHOCRProcessor alloc] initWithProcessingSize:_processingSize];
+        recognitionGroup.delegate = self;
 
         // Gesture Recognizers
         _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPressGestureReceived:)];
@@ -91,6 +91,7 @@
         [_stillCamera addTarget:resamplingFilter];
         [resamplingFilter addTarget:regionFilter atTextureLocation:0];
         [resamplingFilter addTarget:analysisGroup atTextureLocation:1];
+        [resamplingFilter addTarget:recognitionGroup atTextureLocation:2];
         GPUImageView *cameraView = (GPUImageView *)self.view;
         cameraView.fillMode = kGPUImageFillModePreserveAspectRatio;
         [regionFilter addTarget:cameraView];
@@ -166,6 +167,7 @@
         [resamplingFilter forceProcessingAtSize:_processingSize];
         [analysisGroup forceProcessingAtSize:_processingSize];
         [regionFilter forceProcessingAtSize:_processingSize];
+        [recognitionGroup forceProcessingAtSize:_processingSize];
     }
 }
 
@@ -185,7 +187,7 @@
 #pragma mark - <CHOCRProcessorDelegate>
 
 - (void)processor:(CHOCRProcessor *)processor completedOCRWithText:(CHText *)text inRegion:(CHRegion *)region {
-
+    NSLog(@"%@", text);
 }
 
 - (void)processor:(CHOCRProcessor *)processor willBeginOCRInRegion:(CHRegion *)region {
